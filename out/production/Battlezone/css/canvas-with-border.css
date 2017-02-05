@@ -1,0 +1,17 @@
+#canvas {
+    -fx-background-color: antiquewhite, white ;
+    -fx-background-insets: 0, 20 ;
+    -fx-padding: 20 ;
+}
+
+.progress-bar {
+    -fx-accent: black;
+    -fx-background-color: linear-gradient(
+        from 0px .75em to .75em 0px,
+        repeat,
+        -fx-accent 0%,
+        -fx-accent 49%,
+        derive(-fx-accent, 30%) 50%,
+        derive(-fx-accent, 30%) 99%
+        );
+}
