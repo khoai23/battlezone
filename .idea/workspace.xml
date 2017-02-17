@@ -2,21 +2,127 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_spo_0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_spo_1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_spo_2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_spo_3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_spo_4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_spo_5.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_top_0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_top_1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_top_2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_top_3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_top_4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_top_5.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_top_6.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_top_7.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_top_8.png" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\Controller.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\ImageHelper.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\Main.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\MainListener.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\sample.fxml" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\css\canvas-with-border.css" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\css\stylesheet.css" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Armour.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Astartes.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\GameData.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Item.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Squad.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\TreeViewable.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Unit.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Weapon.class" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\all_icon.jpg" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\all_icon.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\loading.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_6.png" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="JavaFxApplication.iws" />
@@ -152,6 +258,7 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="Khoai &lt;taolakhoai@gmail.com&gt;" />
         <option value="quan" />
       </list>
     </option>
@@ -674,7 +781,7 @@
       <workItem from="1483106199251" duration="357000" />
       <workItem from="1483327445435" duration="5861000" />
       <workItem from="1484141981644" duration="7119000" />
-      <workItem from="1487312074795" duration="10118000" />
+      <workItem from="1487312074795" duration="10433000" />
     </task>
     <task id="LOCAL-00001" summary="Finish rhino line in vehicle, adding bg_star and reformat images.&#10;&#10;TODO creating a viable star &amp; battle map">
       <created>1487342822613</created>
@@ -688,11 +795,17 @@
       <option name="project" value="LOCAL" />
       <updated>1487342888486</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="committing new images">
+      <created>1487343287487</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1487343287487</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78186000" />
+    <option name="totallyTimeSpent" value="78501000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
