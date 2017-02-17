@@ -1,128 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\Controller.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\ImageHelper.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\Main.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\MainListener.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\sample.fxml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\css\canvas-with-border.css" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\css\stylesheet.css" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Armour.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Astartes.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\GameData.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Item.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Squad.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\TreeViewable.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Unit.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\data\Weapon.class" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\all_icon.jpg" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\all_icon.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\loading.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_6.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_7.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\aquila_8.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_6.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_7.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\artificer_8.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_6.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_7.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\corvus_8.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_6.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_7.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\errant_8.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_6.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_7.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\indomitus_8.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_6.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_7.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron2_8.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_6.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_7.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\iron_8.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_6.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_7.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\maximus_8.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_6.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_7.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros2_8.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_6.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_7.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_unit\tartaros_8.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_0.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_1.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_2.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_3.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_4.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_5.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\rhino_6.png" afterPath="" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="removing the build folder">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/javax.json-1.0.4-javadoc.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/javax.json-1.0.4-sources.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/javax.json-1.0.4.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/javax.json-api-1.0-javadoc.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/javax.json-api-1.0-sources.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/javax.json-api-1.0.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/data/ItemData.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/javax_json_javax_json_api_1_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/org_glassfish_javax_json_1_0_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/data/Armour.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/data/Armour.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/data/GameData.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/data/GameData.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/UI/ImageHelper.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/UI/ImageHelper.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/data/Item.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/data/Item.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/UI/Main.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/UI/Main.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/UI/MainListener.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/UI/MainListener.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/data/Weapon.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/data/Weapon.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Armour.java" afterPath="$PROJECT_DIR$/src/data/Armour.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Battlezone.iml" afterPath="$PROJECT_DIR$/Battlezone.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/GameData.java" afterPath="$PROJECT_DIR$/src/data/GameData.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Item.java" afterPath="$PROJECT_DIR$/src/data/Item.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/UI/Main.java" afterPath="$PROJECT_DIR$/src/UI/Main.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Weapon.java" afterPath="$PROJECT_DIR$/src/data/Weapon.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="JavaFxApplication.iws" />
@@ -193,31 +95,60 @@
         <entry file="file://$PROJECT_DIR$/src/UI/Main.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="154" column="0" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#6391#6392#0" expanded="true" />
-                <element signature="e#6481#6482#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Armour.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/data/Armour.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
+              <caret line="4" column="16" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="16" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ImageHelper.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ItemData.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/res/data/ItemData.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.37709498">
+              <caret line="19" column="47" selection-start-line="19" selection-start-column="47" selection-end-line="19" selection-end-column="47" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GameData.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data/GameData.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="47" column="28" selection-start-line="47" selection-start-column="28" selection-end-line="47" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Squad.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data/Squad.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="12" column="5" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
+              <folding>
+                <element signature="e#596#597#0" expanded="true" />
+                <element signature="e#644#645#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Astartes.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data/Astartes.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="17" column="17" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ImageHelper.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/UI/ImageHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.30989584">
-              <caret line="17" column="43" selection-start-line="17" selection-start-column="43" selection-end-line="17" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="15" column="60" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="60" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1850#1851#0" expanded="true" />
@@ -245,8 +176,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -277,7 +208,6 @@
         <option value="$PROJECT_DIR$/res/css/canvas-with-border.css" />
         <option value="$PROJECT_DIR$/Battlezone.iml" />
         <option value="$PROJECT_DIR$/src/UI/stylesheet.css" />
-        <option value="$PROJECT_DIR$/src/data/GameData.java" />
         <option value="$PROJECT_DIR$/src/data/Unit.java" />
         <option value="$PROJECT_DIR$/src/data/TreeViewable.java" />
         <option value="$PROJECT_DIR$/src/data/Squad.java" />
@@ -285,13 +215,17 @@
         <option value="$PROJECT_DIR$/src/data/Marine.java" />
         <option value="$PROJECT_DIR$/src/data/Astartes.java" />
         <option value="$PROJECT_DIR$/src/UI/sample.fxml" />
-        <option value="$PROJECT_DIR$/src/data/Weapon.java" />
-        <option value="$PROJECT_DIR$/src/data/Armour.java" />
         <option value="$PROJECT_DIR$/src/data/Items.java" />
-        <option value="$PROJECT_DIR$/src/data/Item.java" />
         <option value="$PROJECT_DIR$/src/UI/Controller.java" />
-        <option value="$PROJECT_DIR$/src/UI/Main.java" />
         <option value="$PROJECT_DIR$/src/UI/ImageHelper.java" />
+        <option value="$PROJECT_DIR$/src/data/DataReader.java" />
+        <option value="$PROJECT_DIR$/src/data/Item.java" />
+        <option value="$PROJECT_DIR$/src/data/Armour.java" />
+        <option value="$PROJECT_DIR$/src/data/Weapon.java" />
+        <option value="$PROJECT_DIR$/res/data/ItemData" />
+        <option value="$PROJECT_DIR$/src/UI/Main.java" />
+        <option value="$PROJECT_DIR$/src/data/GameData.java" />
+        <option value="$PROJECT_DIR$/res/data/ItemData.json" />
       </list>
     </option>
   </component>
@@ -325,7 +259,7 @@
     <OptionsSetting value="true" id="Edit" />
     <OptionsSetting value="true" id="Undo Check Out" />
     <OptionsSetting value="true" id="Get Latest Version" />
-    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="2" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
@@ -396,6 +330,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="UI" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Main.java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Battlezone" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Battlezone" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -413,10 +369,6 @@
               <option name="myItemId" value="res" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="texture" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -429,6 +381,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -455,11 +411,11 @@
     <property name="FullScreen" value="false" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="OverrideImplement.overriding.sorted" value="false" />
-    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Downloaded.Files.Path.Enabled" value="true" />
     <property name="Repository.Attach.JavaDocs" value="true" />
     <property name="Repository.Attach.Sources" value="true" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="ChangesBrowser.SHOW_FLATTEN" value="true" />
@@ -781,7 +737,7 @@
       <workItem from="1483106199251" duration="357000" />
       <workItem from="1483327445435" duration="5861000" />
       <workItem from="1484141981644" duration="7119000" />
-      <workItem from="1487312074795" duration="10433000" />
+      <workItem from="1487312074795" duration="18278000" />
     </task>
     <task id="LOCAL-00001" summary="Finish rhino line in vehicle, adding bg_star and reformat images.&#10;&#10;TODO creating a viable star &amp; battle map">
       <created>1487342822613</created>
@@ -801,11 +757,17 @@
       <option name="project" value="LOCAL" />
       <updated>1487343287487</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="removing the build folder">
+      <created>1487343612704</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1487343612704</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78501000" />
+    <option name="totallyTimeSpent" value="86346000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -820,7 +782,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32899022" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32736155" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32899022" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25718608" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -856,7 +818,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Finish rhino line in vehicle, adding bg_star and reformat images.&#10;&#10;TODO creating a viable star &amp; battle map" />
     <MESSAGE value="committing new images" />
-    <option name="LAST_COMMIT_MESSAGE" value="committing new images" />
+    <MESSAGE value="removing the build folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="removing the build folder" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -867,20 +830,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/javafx-src.zip!/javafx/scene/control/Label.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34085214">
-          <caret line="40" column="63" selection-start-line="40" selection-start-column="63" selection-end-line="40" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/javafx-src.zip!/javafx/geometry/Bounds.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="20" selection-start-line="33" selection-start-column="20" selection-end-line="33" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/javafx-src.zip!/javafx/beans/property/ReadOnlyObjectProperty.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.05120482">
@@ -1082,48 +1031,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/src.zip!/java/util/Arrays.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5120482">
-          <caret line="3585" column="17" selection-start-line="3585" selection-start-column="17" selection-end-line="3585" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Squad.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="41" selection-end-column="5" />
-          <folding>
-            <element signature="e#191#192#0" expanded="true" />
-            <element signature="e#223#224#0" expanded="true" />
-            <element signature="e#245#246#0" expanded="true" />
-            <element signature="e#276#277#0" expanded="true" />
-            <element signature="e#674#675#0" expanded="true" />
-            <element signature="e#718#719#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/res/texture/all_icon.png">
       <provider selected="true" editor-type-id="images">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/GameData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Unit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.563253">
-          <caret line="11" column="1" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
-        </state>
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/javafx-src.zip!/javafx/scene/control/ControlUtils.java">
@@ -1174,16 +1084,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Astartes.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.71686745">
-          <caret line="22" column="5" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/UI/sample.fxml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33211678">
@@ -1214,21 +1114,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Item.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2560241">
-          <caret line="5" column="21" selection-start-line="5" selection-start-column="21" selection-end-line="5" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Weapon.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3313253">
-          <caret line="13" column="11" selection-start-line="13" selection-start-column="11" selection-end-line="13" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/javafx-src.zip!/javafx/collections/FXCollections.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3313253">
@@ -1246,35 +1131,106 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/UI/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="154" column="0" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#6391#6392#0" expanded="true" />
-            <element signature="e#6481#6482#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Armour.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/UI/ImageHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.30989584">
-          <caret line="17" column="43" selection-start-line="17" selection-start-column="43" selection-end-line="17" selection-end-column="43" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="60" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="60" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1850#1851#0" expanded="true" />
             <element signature="e#1903#1904#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Weapon.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.1328125">
+          <caret line="44" column="13" selection-start-line="44" selection-start-column="13" selection-end-line="44" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Armour.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5572917">
+          <caret line="27" column="21" selection-start-line="27" selection-start-column="21" selection-end-line="27" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Unit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48697916">
+          <caret line="11" column="1" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Squad.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="5" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
+          <folding>
+            <element signature="e#596#597#0" expanded="true" />
+            <element signature="e#644#645#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Astartes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="17" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/src.zip!/java/util/Arrays.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3179" column="26" selection-start-line="3179" selection-start-column="26" selection-end-line="3179" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/src.zip!/java/util/ArrayList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="403" column="19" selection-start-line="403" selection-start-column="19" selection-end-line="403" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/GameData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="47" column="28" selection-start-line="47" selection-start-column="28" selection-end-line="47" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Item.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40963855">
+          <caret line="8" column="23" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="16" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/data/ItemData.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37709498">
+          <caret line="19" column="47" selection-start-line="19" selection-start-column="47" selection-end-line="19" selection-end-column="47" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1343,7 +1299,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>xmlwise:xmlwise:1.2.11</last-edited>
+          <last-edited>org.glassfish:javax.json:1.0.4</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

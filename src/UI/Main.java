@@ -137,8 +137,10 @@ public class Main extends Application {
 
     public void initManageInventoryTab() {
         ObservableList<Item> data = FXCollections.observableArrayList();
-        data.add(new Weapon(1,1,4,7,"Bolter","Bolter Desc"));
-        data.add(new Armour(1,1,false,7,"Mk VII","Aquila Desc"));
+//        data.add(new Weapon(0,1,1,4,7,"Bolter","Bolter Desc"));
+//        data.add(new Armour(0,1,1,false,7,"Mk VII","Aquila Desc"));
+        GameData.getCurrentData().loadDefaultData();
+        data.addAll(GameData.getCurrentData().getAllItem());
 
         gameController.Type.setCellValueFactory(new PropertyValueFactory<Item,String>("type"));
         gameController.Name.setCellValueFactory(new PropertyValueFactory<Item,String>("name"));

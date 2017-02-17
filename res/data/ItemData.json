@@ -1,0 +1,39 @@
+{
+  "armour":[{
+    "name":"Aquila Armour",
+    "def":10,
+    "spd":5,
+    "isTermi":false,
+    "desc":"Mk.7 Armour, the most numerous version in the arsenal of the Chapter."
+  },{
+    "name":"Corvus Armour",
+    "def":12,
+    "spd":6,
+    "isTermi":false,
+    "desc":"Mk.6 Armour, famed for excellent mobility and stealth capacity."
+  }],
+  "weapon":[{
+    "name":"Knife",
+    "str":13,
+    "spd":2,
+    "hand":1,
+    "desc":"In the hand of demigods, even a humble knife can be deadly."
+  },{
+    "name":"Bolter",
+    "str":20,
+    "spd":5,
+    "hand":2,
+    "desc":"This trusty weapon is the default choice for an Astartes."
+  }],
+  "chassis":[{
+    "id":0,
+    "name":"Rhino",
+    "desc":"The Rhino chassis is the most common and likewise the most versatile."
+  }],
+  "vehicle_weapon":[{
+    "name":"Twin-linked Heavy Bolters",
+    "str": 28,
+    "spd": 20,
+    "des": "The default weapon loadout for a Razorback, this can lay down heavy fire upon the enemy."
+  }]
+}
