@@ -44,8 +44,11 @@ public class Controller {
     public javafx.scene.control.TableColumn<Item, Button> Scrap;
 
     @FXML
+    public Pane StarMap;
+
+    @FXML
     public void initialize() {
-        System.out.println("controller initialized");
+        System.out.println("Controller initialized.");
         MainScene.getStylesheets().add("file:res/css/stylesheet.css");
     }
 }

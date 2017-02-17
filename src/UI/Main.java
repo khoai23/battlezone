@@ -39,6 +39,7 @@ public class Main extends Application {
         initStatusTab();
         initManageUnitTab();
         initManageInventoryTab();
+        initStarMap();
     }
 
     public static void main(String[] args) {
@@ -108,7 +109,7 @@ public class Main extends Application {
 
         canvas = gameController.Avatar_Vehicle;
         canvas.setId("canvas");
-        ImageView[] listVehicle = ImageHelper.getVehicles(ImageHelper.predator,ImageHelper.Predator_Destructor,1);
+        ImageView[] listVehicle = ImageHelper.getVehicles(ImageHelper.razorback,ImageHelper.Razorback_HB,1);
         canvas.getChildren().addAll(listVehicle);
 //            System.out.println("Armour WH:" + listArmour[chosen[i]].getViewport().getWidth() + ";" +  listArmour[chosen[i]].getViewport().getHeight());
 
@@ -148,7 +149,7 @@ public class Main extends Application {
     }
 
     public void initStarMap() {
-
+        gameController.StarMap.getChildren().add(ImageHelper.getBackgroundImage());
     }
 }
 

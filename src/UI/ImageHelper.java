@@ -15,26 +15,26 @@ public class ImageHelper {
     public static void init() {
         rootIcon = new Image("file:res/texture/all_icon.png");
 
-        avatarImage = new Image[8][7];
+        backgroundImage = new Image("file:res/texture/bg_star.jpg");
+
+        armorImage = new Image[8][7];
 
         for(int i=0;i<8;i++) {
-            for (int j=0; j<7;j++) {
-//                avatarImage[i][j] = new Image("file:res/texture/view_unit/spr_" + "aquila" + "_colors_" + j + ".png");
-                avatarImage[i][j] = new Image("file:res/texture/view_unit/" + getArmourNameById(i) + "_" + j + ".png");
-            }
+            // armor default with 7 parts
+            armorImage[i] = loadPrefixedImage("view_unit/" + getArmourNameById(i) + "_",7);
         }
 
         vehicleImage = new Image[5][];
 
         // rhino chassis with top hatch in 7
         vehicleImage[0] = loadPrefixedImage("view_vehicle/rhino_",7);
-        // predator turret lasc/auto
+        // predator turret lasc/auto 2x3
         vehicleImage[1] = loadPrefixedImage("view_vehicle/pred_top_",6);
-        // predator sponsons lasc/hb
-        vehicleImage[2] = loadPrefixedImage("view_vehicle/pred_spon_",6);
-        // predator pintle storm bolter
+        // predator sponsons lasc/hb 2x3
+        vehicleImage[2] = loadPrefixedImage("view_vehicle/pred_spo_",6);
+        // predator pintle storm bolter 3
         vehicleImage[3] = loadPrefixedImage("view_vehicle/pred_pintle_",3);
-        // razorback top mount hb/mm/lasc
+        // razorback turret hb/mm/lasc 3x3
         vehicleImage[4] = loadPrefixedImage("view_vehicle/raz_top_",9);
         // ??
 //        vehicleImage[3] = loadPrefixedImage("raz_top_",9);
@@ -51,6 +51,18 @@ public class ImageHelper {
         return array;
     }
 
+    /**
+     * Getting the current background for star map
+     * */
+    public static ImageView getBackgroundImage() {
+        return new ImageView(backgroundImage);
+    }
+
+    /**
+     * Get the corresponding name by id, used for loading resource
+     * @param id armor id
+     * @return string
+     * */
     public static String getArmourNameById(int id) {
         switch (id) {
             case aquilaArmour: return "aquila";
@@ -58,6 +70,7 @@ public class ImageHelper {
             case errantArmour: return "errant";
             case ironArmour: return "iron";
             case ironArmour_alt: return "iron2";
+            case maximusArmour: return "maximus";
             case indomitusArmour: return "indomitus";
             case tartarosArmour: return "tartaros";
             case tartarosArmour_alt: return "tartaros2";
@@ -70,6 +83,11 @@ public class ImageHelper {
     }
 
     private static ImageView[] unitImageList = null;
+    /**
+     * Get the armor's images
+     * @param id armor id
+     * @return array of ImageView
+     * */
     public static ImageView[] getArmourImageById(int id) {
         ImageView[] list;
         if(unitImageList == null) {
@@ -81,7 +99,7 @@ public class ImageHelper {
             list = unitImageList;
         }
         for(int i=0;i<7;i++) {
-            list[i].setImage(avatarImage[id][i]);
+            list[i].setImage(armorImage[id][i]);
             list[i].setFitWidth(150);
             list[i].setFitHeight(200);
             // color using scheme, with 4-7 as secondary distribution
@@ -108,6 +126,13 @@ public class ImageHelper {
     }
 
     private static ImageView[] vehiclesImageList = null;
+    /**
+     * Get the vehicle's images
+     * @param id vehicle id
+     * @param type vehicle type
+     * @param deco decoration for rhino/razorback
+     * @return array of ImageView
+     * */
     public static ImageView[] getVehicles(int id, int type, int deco) {
         ImageView[] list;
         if (vehiclesImageList == null) {
@@ -152,7 +177,7 @@ public class ImageHelper {
                 list[counter++].setImage(vehicleImage[2][type*3]);
 
                 list[counter].setImage(vehicleImage[2][type*3+1]);
-                list[counter++].setEffect(primaryColor);
+                list[counter++].setEffect(secondaryColor);
 
                 list[counter].setImage(vehicleImage[2][type*3+2]);
                 list[counter++].setEffect(weaponColor);
@@ -161,12 +186,12 @@ public class ImageHelper {
                 list[counter].setImage(vehicleImage[0][3+deco]);
                 list[counter++].setEffect(secondaryColor);
             }
-
-            if(id==rhino || id==razorback) {
-                // top hatch
-                list[counter].setImage(vehicleImage[0][6]);
-                list[counter].setEffect(primaryColor);
-            }
+//
+//            if(id==rhino || id==razorback) {
+//                // top hatch
+//                list[counter].setImage(vehicleImage[0][6]);
+//                list[counter].setEffect(primaryColor);
+//            }
 
             for(int i=0;i<list.length;i++) {
                 list[i].setFitHeight(150);
@@ -180,10 +205,17 @@ public class ImageHelper {
 
     private static Image rootIcon = null;
 
-    private static Image[][] avatarImage = null;
+    private static Image backgroundImage = null;
+
+    private static Image[][] armorImage = null;
 
     private static Image[][] vehicleImage = null;
 
+    /**
+     * Get the icon's images
+     * @param id icon id
+     * @return ImageView
+     * */
     public static Node getIconById(int id) {
         Rectangle2D rectangle = getIconRectById(id);
         ImageView cropper = new ImageView(rootIcon);
@@ -231,7 +263,7 @@ public class ImageHelper {
     /**
      * Creating a adjustment that recolor an item from white base
      * @param clr the color needed to be changed into
-     * @return the ColorAdjust that can be used in setEffect
+     * @return ColorAdjust (use in setEffect)
      * */
     public static ColorAdjust modifyBaseColor(Color clr) {
         ColorAdjust adjust = new ColorAdjust();
