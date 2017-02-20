@@ -1,6 +1,9 @@
 package UI;
 
 import data.*;
+import data.Item.Item;
+import data.Unit.Astartes;
+import data.Unit.Squad;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -103,13 +106,14 @@ public class Main extends Application {
     public void initManageUnitTab() {
         Pane canvas = gameController.Avatar_Unit; //(AnchorPane)mainScene.lookup("#Avatar_Unit");
         canvas.setId("canvas");
-        ImageView[] listArmour = ImageHelper.getArmourImageById(ImageHelper.errantArmour);
+//        ImageView[] listArmour = ImageHelper.getArmourImageById(ImageHelper.errantArmour);
 //        int[] chosen = new int[]{10,6,9,0};
+        ImageView[] listArmour = ImageHelper.getArmourImageByName("errant");
         canvas.getChildren().addAll(listArmour);
 
         canvas = gameController.Avatar_Vehicle;
         canvas.setId("canvas");
-        ImageView[] listVehicle = ImageHelper.getVehicles(ImageHelper.razorback,ImageHelper.Razorback_HB,1);
+        ImageView[] listVehicle = ImageHelper.getVehicleById(ImageHelper.predator, ImageHelper.Predator_Destructor);
         canvas.getChildren().addAll(listVehicle);
 //            System.out.println("Armour WH:" + listArmour[chosen[i]].getViewport().getWidth() + ";" +  listArmour[chosen[i]].getViewport().getHeight());
 
@@ -118,7 +122,7 @@ public class Main extends Application {
 
         rootItem.setExpanded(true);
         for (int i = 1; i < 16; i++) {
-            Astartes newUnit = new Astartes("Warrior no." + i,new int[0]);
+            Astartes newUnit = new Astartes("no." + i,new int[0]);
             newUnit.role = i;
             TreeItem<TreeViewable> item = new TreeItem<TreeViewable> (newUnit,ImageHelper.getIconById(newUnit.getIconId()));
 
@@ -137,8 +141,6 @@ public class Main extends Application {
 
     public void initManageInventoryTab() {
         ObservableList<Item> data = FXCollections.observableArrayList();
-//        data.add(new Weapon(0,1,1,4,7,"Bolter","Bolter Desc"));
-//        data.add(new Armour(0,1,1,false,7,"Mk VII","Aquila Desc"));
         GameData.getCurrentData().loadDefaultData();
         data.addAll(GameData.getCurrentData().getAllItem());
 

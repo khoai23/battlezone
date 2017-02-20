@@ -1,6 +1,6 @@
 package UI;
 
-import data.Item;
+import data.Item.Item;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
@@ -10,10 +10,6 @@ import javafx.scene.layout.Pane;
 import java.awt.*;
 
 public class Controller {
-
-    public Controller()  {
-        System.out.println("controller constructor run");
-    }
 
     @FXML
     public Pane Master_Avatar;

@@ -1,39 +1,90 @@
 {
   "armour":[{
     "name":"Aquila Armour",
-    "def":10,
+    "def":13,
     "spd":5,
     "isTermi":false,
+    "imgName":"aquila",
     "desc":"Mk.7 Armour, the most numerous version in the arsenal of the Chapter."
   },{
     "name":"Corvus Armour",
-    "def":12,
+    "def":14,
     "spd":6,
     "isTermi":false,
+    "imgName":"corvus",
     "desc":"Mk.6 Armour, famed for excellent mobility and stealth capacity."
+  },{
+    "name":"Maximus Armour",
+    "def":16,
+    "spd":6,
+    "isTermi":false,
+    "imgName":"maximus",
+    "desc":"Mk.4 Armour, widely regarded as the best powered armor among all existing Mark."
+  },{
+    "name":"Iron Armour",
+    "def":17,
+    "spd":3,
+    "isTermi":false,
+    "imgName":"corvus",
+    "desc":"Mk.3 Armour, which sacrificed its mobility in exchange for even greater protection."
+  },{
+    "name":"Errant Armour",
+    "def":14,
+    "spd":5,
+    "isTermi":false,
+    "imgName":"errant",
+    "desc":"Mk.8 Armour, with better protection in comparison to the more modern mark."
+  },{
+    "name":"Artificer Armour",
+    "def":19,
+    "spd":6,
+    "isTermi":false,
+    "imgName":"artificer",
+    "desc":"Customized armors made by the Chapter's Techmarines, these boast extreme protective power and capability."
   }],
   "weapon":[{
     "name":"Knife",
     "str":13,
     "spd":2,
     "hand":1,
+    "type":"melee",
+    "imgName":"",
     "desc":"In the hand of demigods, even a humble knife can be deadly."
   },{
     "name":"Bolter",
     "str":20,
     "spd":5,
     "hand":2,
+    "imgName":"bolter",
+    "type":"medium,bolt",
     "desc":"This trusty weapon is the default choice for an Astartes."
   }],
   "chassis":[{
     "id":0,
     "name":"Rhino",
     "desc":"The Rhino chassis is the most common and likewise the most versatile."
+  },{
+    "id":1,
+    "name":"Land Raider",
+    "desc":"The Land Raider performs as Superheavy troops carrier, with the firepower of a heavy tank and ability to carry Terminators into battle."
   }],
   "vehicle_weapon":[{
     "name":"Twin-linked Heavy Bolters",
     "str": 28,
     "spd": 20,
-    "des": "The default weapon loadout for a Razorback, this can lay down heavy fire upon the enemy."
+    "type":"long,bolt",
+    "des": "The default weapon loadout for a Razorback, this can lay down heavy fire upon enemy formations."
+  },{
+    "name":"Twin-linked Heavy Flamers",
+    "str": 24,
+    "spd": 2,
+    "type": "short,flame,aoe",
+    "des": "Exclusive to the Blood Angels and their successors, its short range is mitigated by the destructive fire it spew forth."
+  },{
+    "name":"Twin-linked Multi Melta",
+    "str": 90,
+    "spd": 2,
+    "type": "short,melta",
+    "des": "The prized melta weaponry can penetrate the thickest of armors, but needed to close in to launch their attack."
   }]
 }

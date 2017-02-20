@@ -1,10 +1,13 @@
 package data;
 
+import data.Item.Armour;
+import data.Item.Item;
+import data.Item.Weapon;
+import data.Unit.Unit;
+
 import javax.json.*;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by Quan on 12/23/2016.
@@ -23,15 +26,20 @@ public class GameData implements Serializable {
     public int colorScheme;
     ArrayList<Unit> roster;
     ArrayList<Weapon> weapons;
+    ArrayList<String> weaponsImageName;
     ArrayList<Armour> armours;
+    ArrayList<String> armoursImageName;
 
     public GameData() {
         chapterName = "Death Bringer";
         chapterMaster = "Karkos";
-        roster = new ArrayList<Unit>();
-        weapons = new ArrayList<Weapon>();
-        armours = new ArrayList<Armour>();
+        roster = new ArrayList<>();
+        weapons = new ArrayList<>();
+        weaponsImageName = new ArrayList<>();
+        armours = new ArrayList<>();
+        armoursImageName = new ArrayList<>();
         colorScheme = scheme_center;
+        loadDefaultData();
     }
 
     public static String filePath = "res/data/ItemData.json";
@@ -46,17 +54,28 @@ public class GameData implements Serializable {
             JsonArray weaponArray = itemData.getJsonArray("weapon");
 
             armours.clear();
+            armoursImageName.clear();
             for(int i=0;i<armorArray.size();i++) {
                 armours.add(new Armour(armorArray.getJsonObject(i),i));
+                armoursImageName.add(armorArray.getJsonObject(i).getString("imgName"));
             }
 
             weapons.clear();
             for(int i=0;i<weaponArray.size();i++) {
                 weapons.add(new Weapon(weaponArray.getJsonObject(i),i));
+                weaponsImageName.add(weaponArray.getJsonObject(i).getString("imgName"));
             }
         } catch (FileNotFoundException e) {
-            System.out.print("File not found @" + filePath+"\n");
+            System.out.print("File not found @" + filePath + "\n");
         }
+    }
+
+    public ArrayList<String> getWeaponsImageName() {
+        return weaponsImageName;
+    }
+
+    public ArrayList<String> getArmoursImageName() {
+        return armoursImageName;
     }
 
     public Item[] getAllItem() {
