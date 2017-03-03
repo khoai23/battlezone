@@ -1,17 +1,23 @@
 package data.Unit;
 
 import UI.ImageHelper;
+import data.Battle.AttackFormat;
 import data.TreeViewable;
 import data.Unit.Unit;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Quan on 12/27/2016.
  */
-public class Squad implements Unit, TreeViewable {
+public class Squad implements Unit {
     private String squadName;
+    public ArrayList<Astartes> members;
 
     public Squad(String name) {
         squadName = name;
+        members = new ArrayList<>();
     }
 
     public Squad() {
@@ -25,12 +31,19 @@ public class Squad implements Unit, TreeViewable {
 
     @Override
     public int getMovement() {
-        return 0;
+        return 2;
     }
 
     @Override
-    public int getAttack() {
-        return 0;
+    public List<AttackFormat> getAttack(int range) {
+        List<AttackFormat> list = new ArrayList<>();
+        for(Astartes a:members) list.addAll(a.getAttack(range));
+        return list;
+    }
+
+    @Override
+    public boolean handleAttack(List<AttackFormat> attacks) {
+        return false;
     }
 
     @Override

@@ -1,12 +1,24 @@
 package data.StarMap;
 
+import UI.ImageHelper;
+import UI.Main;
+import data.GameData;
+import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+
+import java.io.Serializable;
+
 /**
  * Created by Quan on 2/20/2017.
  */
-public class System {
+public class System implements Serializable {
     public String name;
+    public int starType;
     public float posX;
-    public float poxY;
+    public float posY;
     public Planet[] listPlanet;
 
     public System(String name) {
@@ -16,10 +28,26 @@ public class System {
         for(int i=0;i<planetNum;i++) {
             listPlanet[i] = new Planet(i+1);
         }
+        posX = (float)(Math.random() * ( 1280 - 76));
+        posY = (float)(Math.random() * ( 720  - 73));
+        starType = (int)Math.floor(Math.random() * 6);
+    }
+
+    public Node getSystemImage() {
+        Label systemName = new Label(name);
+        ImageView image =  ImageHelper.getStarById(starType);
+        systemName.setGraphic(image);
+        systemName.setTextFill(Color.WHITE);
+        systemName.setContentDisplay(ContentDisplay.TOP);
+//        image.setX(posX);
+//        image.setY(posY);
+        systemName.setLayoutX(posX);
+        systemName.setLayoutY(posY);
+        return systemName;
     }
 }
 
-class Planet {
+class Planet implements Serializable {
     public final int designation;
     public int habitat;
     public long population;
@@ -27,9 +55,17 @@ class Planet {
 
     public Planet(int number) {
         designation = number;
-        // planet type forge and fortress are not randomized
-        habitat = (int)Math.floor(Math.random() * 5);
-
+        // planet type forge/fortress/daemon are not randomized
+        habitat = (int)Math.floor(Math.random() * 5) * 3 + (int)(Math.floor(Math.random() * 3));
+        // habitat type*3+specific
+        if(habitat < 3 * habitat_type_death) {
+            // dead, no population
+            population = 0;
+        } else {
+            int power = habitat/3;
+            if(power == habitat_type_feral || power == habitat_type_death) power = 2;
+            population = (int)(100 * Math.pow(1000,power-1) * Math.random());
+        }
     }
 
     // TODO a roman number generator
@@ -44,4 +80,5 @@ class Planet {
     public static final int habitat_type_hive=4;
     public static final int habitat_type_forge=5;
     public static final int habitat_type_fortress=6;
+    public static final int habitat_type_daemon=7;
 }

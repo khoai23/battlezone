@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -18,9 +19,9 @@
 
 <TabPane fx:id="MainScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../../res/css/canvas-with-border.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.Controller">
   <tabs>
-    <Tab closable="false" text="Status">
+    <Tab fx:id="StatusTab" closable="false" text="Status">
       <content>
-        <AnchorPane id="canvas" fx:id="StatusPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+        <AnchorPane fx:id="StatusPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
                   <Label fx:id="Line_11" layoutX="185.0" layoutY="74.0" text="Line1 Line1 Line1 Line1" />
                   <Label fx:id="Line_31" layoutX="28.0" layoutY="224.0" text="Line1 Line1 Line1 Line1" />
@@ -39,7 +40,7 @@
                </children></AnchorPane>
       </content>
     </Tab>
-      <Tab closable="false" text="Manage Squads">
+      <Tab fx:id="UnitTab" closable="false" text="Manage Squads">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -92,7 +93,7 @@
                </children></AnchorPane>
          </content>
       </Tab>
-    <Tab closable="false" text="Manage Inventory">
+    <Tab fx:id="InventoryTab" closable="false" text="Manage Inventory">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -109,7 +110,7 @@
                </children></AnchorPane>
       </content>
     </Tab>
-      <Tab closable="false" text="Star Map">
+      <Tab fx:id="StarTab" closable="false" text="Star Map">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
@@ -121,9 +122,28 @@
                </children></AnchorPane>
          </content>
       </Tab>
-      <Tab closable="false" text="Battlefield">
+      <Tab fx:id="BattleTab" closable="false" text="Battlefield">
          <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            <AnchorPane fx:id="Battlefield" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <ScrollPane fx:id="BattleScrollPane" layoutX="10.0" layoutY="10.0" prefHeight="550.0" prefWidth="780.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                     <content>
+                        <AnchorPane fx:id="BattleArena" prefHeight="545.0" prefWidth="775.0" />
+                     </content></ScrollPane>
+                  <ScrollPane fx:id="VoxLogScrollPane" layoutX="440.0" layoutY="360.0" prefHeight="200.0" prefWidth="350.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                     <content>
+                        <AnchorPane fx:id="VoxLog" prefHeight="195.0" prefWidth="345.0" />
+                     </content></ScrollPane>
+                  <ToolBar fx:id="MainControl" layoutX="540.0" layoutY="-10.0" prefHeight="40.0" prefWidth="230.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                    <items>
+                      <Button fx:id="MinimapBtn" mnemonicParsing="false" text="Minimap" />
+                        <Button fx:id="VoxLogBtn" mnemonicParsing="false" text="Vox" />
+                        <Button fx:id="ExtraBtn" mnemonicParsing="false" text="Extra" />
+                        <Button fx:id="EndTurnBtn" mnemonicParsing="false" text="End Turn" />
+                    </items>
+                  </ToolBar>
+                  <Pane fx:id="Minimap" layoutX="226.0" layoutY="-95.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+               </children></AnchorPane>
          </content>
       </Tab>
   </tabs>

@@ -1,12 +1,19 @@
 package data.Unit;
 
+import data.Battle.AttackFormat;
+import data.TreeViewable;
+
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * Created by Quan on 12/23/2016.
  */
-public interface Unit {
+public interface Unit extends Serializable, TreeViewable {
     // An unit may be a squad or a vehicle, as they are the individual in each battle
-    public int getStrength();
-    public int getMovement();
-    public int getAttack();
-    public int getType();
+    int getStrength();
+    int getMovement();
+    List<AttackFormat> getAttack(int range);
+    boolean handleAttack(List<AttackFormat> attacks);
+    int getType();
 }

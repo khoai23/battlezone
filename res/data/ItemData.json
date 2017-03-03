@@ -25,7 +25,7 @@
     "def":17,
     "spd":3,
     "isTermi":false,
-    "imgName":"corvus",
+    "imgName":"iron",
     "desc":"Mk.3 Armour, which sacrificed its mobility in exchange for even greater protection."
   },{
     "name":"Errant Armour",
@@ -42,6 +42,10 @@
     "imgName":"artificer",
     "desc":"Customized armors made by the Chapter's Techmarines, these boast extreme protective power and capability."
   }],
+
+
+
+
   "weapon":[{
     "name":"Knife",
     "str":13,
@@ -51,6 +55,30 @@
     "imgName":"",
     "desc":"In the hand of demigods, even a humble knife can be deadly."
   },{
+    "name":"Chainsword",
+    "str":23,
+    "spd":7,
+    "hand":1,
+    "type":"melee,chain",
+    "imgName":"chainsword",
+    "desc":"The main melee weapon of the Astartes, their teeth can bite through steel with little effort."
+  },{
+    "name":"Power Sword",
+    "str":25,
+    "spd":6,
+    "hand":1,
+    "type":"melee,power",
+    "imgName":"psword",
+    "desc":"The most common form of power weapon, its power field can penetrate most armor with little issue."
+  },{
+    "name":"Power Axe",
+    "str":35,
+    "spd":4,
+    "hand":1,
+    "type":"melee,power",
+    "imgName":"paxe",
+    "desc":"The axe sacrifices finesse and speed for even more striking power."
+  },{
     "name":"Bolter",
     "str":20,
     "spd":5,
@@ -58,33 +86,227 @@
     "imgName":"bolter",
     "type":"medium,bolt",
     "desc":"This trusty weapon is the default choice for an Astartes."
+  },{
+    "name":"Flamer",
+    "str":17,
+    "spd":1,
+    "hand":2,
+    "imgName":"flamer",
+    "type":"short,assault,flame,aoe",
+    "desc":"A flamethrower loaded with promethium that incinerate steel as easily as flesh."
+  },{
+    "name":"Plasma Gun",
+    "str":56,
+    "spd":3,
+    "hand":2,
+    "imgName":"plasma",
+    "type":"medium,hot",
+    "desc":"This weapon traded its safety in exchange for excellent destructive power."
+  },{
+    "name":"Melta Gun",
+    "str":85,
+    "spd":1,
+    "hand":2,
+    "imgName":"melta",
+    "type":"short,assault,melta",
+    "desc":"As per its name, it can melt adamantium and flesh with equal ease, yet is hindered by its short range."
+  },{
+    "name":"Storm Bolter",
+    "str":20,
+    "spd":8,
+    "hand":2,
+    "imgName":"sbolter",
+    "type":"assault,medium,bolt",
+    "desc":"Essentially two bolters in one package, this weapon can lay down a curtain of fire by itself."
+  },{
+    "name":"Sniper Gun",
+    "str":41,
+    "spd":1,
+    "hand":2,
+    "imgName":"sniper",
+    "type":"long",
+    "desc":"Combine adequate power and long range, this is the favorite weapon for the Scouts who cannot take a beating."
+  },{
+    "name":"Bolt Pistol",
+    "str":20,
+    "spd":2,
+    "hand":1,
+    "imgName":"bpistol",
+    "type":"short,bolt",
+    "desc":"Handheld version of the ubiquitous bolter, similarly versatile and powerful."
+  },{
+    "name":"Plasma Pistol",
+    "str":56,
+    "spd":1,
+    "hand":1,
+    "imgName":"ppistol",
+    "type":"short,assault,hot",
+    "desc":"A rare weapon, it bring no less destructive power compare to its larger cousin."
+  },{
+    "name":"Heavy Bolter",
+    "str":30,
+    "spd":9,
+    "hand":3,
+    "type":"long,heavy,bolt",
+    "imgName":"hbolt",
+    "desc":"Upscaled and with dedicated feeding mechanism, it can cut through infantry with horrifying ease."
+  },{
+    "name":"Missile Launcher",
+    "str":70,
+    "spd":1,
+    "hand":3,
+    "type":"long,heavy,missile",
+    "imgName":"missile",
+    "desc":"With two different warheads, it excels at nothing yet terrible at neither."
+  },{
+    "name":"Plasma Cannon",
+    "str":63,
+    "spd":3,
+    "hand":3,
+    "type":"long,heavy,hot,splash",
+    "imgName":"pcannon",
+    "desc":"Rare. Powerful, especially against light vehicles and/or heavy infantry."
+  },{
+    "name":"Multi Melta",
+    "str":90,
+    "spd":1,
+    "hand":3,
+    "type":"medium,heavy,melta",
+    "imgName":"mmelta",
+    "desc":"This monstrous weapon can annihilate tanks easily, should any foolish enough to come to its range."
+  },{
+    "name":"Lascannon",
+    "str":88,
+    "spd":1,
+    "hand":3,
+    "type":"extreme,heavy",
+    "imgName":"lascannon",
+    "desc":"Deadly against single target and heavily armoured vehicles, complemented with excellent range."
   }],
+
+
+
   "chassis":[{
     "id":0,
     "name":"Rhino",
-    "desc":"The Rhino chassis is the most common and likewise the most versatile."
+    "imgName":"rhino",
+    "desc":"The Rhino chassis is the most common and likewise the most versatile vehicle."
   },{
     "id":1,
     "name":"Land Raider",
+    "imgName":"lraider",
     "desc":"The Land Raider performs as Superheavy troops carrier, with the firepower of a heavy tank and ability to carry Terminators into battle."
   }],
+
+
+
   "vehicle_weapon":[{
+    "name":"Pintle-mounted Storm Bolter",
+    "str": 20,
+    "spd": 8,
+    "type": "medium,bolt",
+    "des": "While potentially useful, many vehicle do not mount such weapon due to the distraction it provided."
+  },{
     "name":"Twin-linked Heavy Bolters",
     "str": 28,
     "spd": 20,
-    "type":"long,bolt",
-    "des": "The default weapon loadout for a Razorback, this can lay down heavy fire upon enemy formations."
+    "type":"long,bolt,twin-linked",
+    "imgName":"razor_hb",
+    "des": "The default weapon loadout for a Razorback, this can lay down heavy fire at a distance."
   },{
     "name":"Twin-linked Heavy Flamers",
     "str": 24,
     "spd": 2,
     "type": "short,flame,aoe",
+    "imgName":"razor_hf",
     "des": "Exclusive to the Blood Angels and their successors, its short range is mitigated by the destructive fire it spew forth."
   },{
-    "name":"Twin-linked Multi Melta",
+    "name":"Multi Melta",
     "str": 90,
     "spd": 2,
-    "type": "short,melta",
+    "type": "medium,melta",
+    "imgName":"razor_mm",
     "des": "The prized melta weaponry can penetrate the thickest of armors, but needed to close in to launch their attack."
+  },{
+    "name":"Twin-linked Lascannon",
+    "str": 85,
+    "spd": 2,
+    "type": "extreme",
+    "imgName":"razor_las",
+    "des": "Longest range among all Razorback variants, it fits perfectly with a combat squad of Devastators."
+  },{
+    "name":"Autocannon",
+    "str": 55,
+    "spd": 8,
+    "type": "long,heavy,coaxial",
+    "imgName":"pred_turret_auto",
+    "des": "The main armament of Predator Annihilators, its shells are most effective against heavy infantry and light vehicles."
+  },{
+    "name":"Sponsons Heavy Bolters",
+    "str": 28,
+    "spd": 18,
+    "type": "long,bolt,sponson",
+    "imgName":"pred_sponson_hb",
+    "des": "Complementing the main weapon, the side-mounted heavy bolters can cut down swathes of light infantry."
+  },{
+    "name":"Twin-linked Lascannon",
+    "str": 95,
+    "spd": 2,
+    "type": "extreme,heavy,twin-linked",
+    "imgName":"pred_turret_lasc",
+    "des": "The main armament of Predator Destructor, the twinned lascannon can penetrate all by the heaviest of armor."
+  },{
+    "name":"Sponsons Lascannon",
+    "str": 88,
+    "spd": 2,
+    "type": "extreme,heavy,sponson",
+    "imgName":"pred_sponson_las",
+    "des": "On the rare possibility that the main weapon failed to kill, this can definitely finish the job."
+  },{
+    "name": "Demolisher Cannon",
+    "str": 85,
+    "spd": 1,
+    "type": "medium,ordnance,concussive",
+    "des":"The powerful Demolisher cannon can easily obliterate a squad of infantry with a single shot."
+  }],
+
+
+
+  "vehicle_type":[{
+    "name":"Rhino",
+    "chassis": 0,
+    "spd":4,
+    "weapons":[],
+    "armor": 20,
+    "hp":50,
+    "carry":10,
+    "desc":"The Rhino APC had been the Astartes' main transport since its rediscovery."
+  },{
+    "name":"Razorback",
+    "chassis": 0,
+    "spd":4,
+    "weapons":[[1,2,3,4]],
+    "armor": 25,
+    "hp":65,
+    "carry":5,
+    "desc":"A variant of the Rhino, the Razorback sacrifice some troops carrying capacity in exchange for a deadly primary weapon."
+  },{
+    "name":"Predator",
+    "chassis": 0,
+    "spd":4,
+    "weapons":[[5,7],[6,8]],
+    "armor": 35,
+    "hp":85,
+    "carry":0,
+    "desc":"A full-pledged tank in its own right, the mighty Predator driven by an Astartes is a foe to be reckoned with."
+  },{
+    "name":"Vindicator",
+    "chassis": 0,
+    "spd":4,
+    "weapons":[[9]],
+    "armor":40,
+    "hp":60,
+    "carry":0,
+    "desc":"A siege vehicle armed with the devastating Demolisher Cannon and a Siege Shield, it excels at fighting in close quarters."
   }]
 }

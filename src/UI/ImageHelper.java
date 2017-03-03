@@ -1,6 +1,10 @@
 package UI;
 
 import data.GameData;
+import data.StarMap.*;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.effect.ColorAdjust;
@@ -8,7 +12,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
+import java.awt.event.MouseEvent;
+import java.lang.System;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Quan on 12/27/2016.
@@ -19,17 +28,38 @@ public class ImageHelper {
 
         backgroundImage = new Image("file:res/texture/bg_star.jpg");
 
-        armorImage = new Image[8][9];
+        starImage = loadPrefixedImage("starmap/star_",6);
 
-        for(int i=0;i<8;i++) {
+        planetImage = loadPrefixedImage("starmap/star_",24);
+
+        // TODO add contested (purple)
+        Image[] mapImage = new Image[10];
+        mapImage[0] = new Image("file:res/texture/battlemap/sqr_empty.png");
+        mapImage[1] = new Image("file:res/texture/battlemap/sqr_empty_selected.png");
+        mapImage[2] = new Image("file:res/texture/battlemap/sqr_impassable.png");
+        mapImage[3] = new Image("file:res/texture/battlemap/sqr_impassable_selected.png");
+        mapImage[4] = new Image("file:res/texture/battlemap/sqr_objective.png");
+        mapImage[5] = new Image("file:res/texture/battlemap/sqr_objective_selected.png");
+        mapImage[6] = new Image("file:res/texture/battlemap/sqr_friendly.png");
+        mapImage[7] = new Image("file:res/texture/battlemap/sqr_friendly_selected.png");
+        mapImage[8] = new Image("file:res/texture/battlemap/sqr_hostile.png");
+        mapImage[9] = new Image("file:res/texture/battlemap/sqr_hostile_selected.png");
+
+        combatMapImage = mapImage;
+
+        int armorNum = GameData.getArmoursImageName().size();
+        armorImage = new Image[armorNum][9];
+
+        for(int i=0;i<armorNum;i++) {
             // armor default with 9 parts
             armorImage[i] = loadPrefixedImage("view_unit/" + getArmourNameById(i) + "_",9);
         }
 
-        weaponImage = new Image[4][5];
-        for(int i=0;i<4;i++) {
+        int weaponNum = GameData.getWeaponsImageName().size();
+        weaponImage = new Image[weaponNum][5];
+        for(int i=0;i<weaponNum;i++) {
             // armor default with 8 parts
-            weaponImage[i] = loadPrefixedImage("view_weapon/" + getWeaponNameById(i) + "_",5);
+            weaponImage[i] = loadPrefixedImage("view_weapon/weapon_" + getWeaponNameById(i) + "_",5);
         }
 
         vehicleImage = new Image[5][];
@@ -67,51 +97,93 @@ public class ImageHelper {
     }
 
     /**
+     * Getting the corresponding star by id
+     * */
+    public static ImageView getStarById(int id) {
+        return new ImageView(starImage[id]);
+    }
+
+    /**
      * Get the corresponding name by id, used for loading resource
      * @param id armor id
      * @return string
      * */
     public static String getArmourNameById(int id) {
-        ArrayList<String> armorlist = GameData.getCurrentData().getArmoursImageName();
+        List<String> armorlist = GameData.getArmoursImageName();
 
         if(id<armorlist.size() && !armorlist.get(id).equals("")) {
             return armorlist.get(id);
         }
 
         return "aquila";
-//        switch (id) {
-//            case aquilaArmour: return "aquila";
-//            case corvusArmour: return "corvus";
-//            case errantArmour: return "errant";
-//            case ironArmour: return "iron";
-//            case ironArmour_alt: return "iron2";
-//            case maximusArmour: return "maximus";
-//            case indomitusArmour: return "indomitus";
-//            case tartarosArmour: return "tartaros";
-//            case tartarosArmour_alt: return "tartaros2";
-//
-//            case artificerArmour: return "artificer";
-//
-//            default:
-//                return "aquila";
-//        }
     }
 
     /**
      * Get the corresponding name by id, used for loading resource
      * @param id weapon id
      * @return string
-     * TODO fix to use datafile instead
      * */
     public static String getWeaponNameById(int id) {
-        switch (id) {
-            case 0: return "bolter";
-            case 1: return "plasma";
-            case 2: return "melta";
-            case 3: return "flamer";
-            default:
-                return "bpistol";
+        List<String> weaponlist = GameData.getWeaponsImageName();
+
+        if(id<weaponlist.size() && !weaponlist.get(id).equals("")) {
+            return weaponlist.get(id);
         }
+
+        return "";
+    }
+
+    public static ImageView[] rightWeaponImageList = null;
+    public static ImageView[] leftWeaponImageList = null;
+    public static ImageView[] getWeaponImageById(int id, boolean isLeft) {
+        if(id>=GameData.getWeaponsImageName().size() || getWeaponNameById(id).equals("")) return new ImageView[0];
+        ImageView[] list;
+        if(isLeft) {
+            if(leftWeaponImageList == null) {
+                leftWeaponImageList = new ImageView[5];
+                for (int i=0;i<5;i++) {
+                    leftWeaponImageList[i] = new ImageView();
+                }
+            }
+            list = leftWeaponImageList;
+        } else {
+            if(rightWeaponImageList == null) {
+                rightWeaponImageList = new ImageView[5];
+                for (int i=0;i<5;i++) {
+                    rightWeaponImageList[i] = new ImageView();
+                    rightWeaponImageList[i].setScaleX(-1);
+//                    rightWeaponImageList[i].setX(150);
+                }
+            }
+            list = rightWeaponImageList;
+        }
+
+        int colorscheme = GameData.getCurrentData().colorScheme;
+        for (int i=0;i<5;i++) {
+            list[i].setImage(weaponImage[id][i]);
+            list[i].setFitWidth(150);
+            list[i].setFitHeight(200);
+            if(i==1) {
+                list[i].setEffect(weaponColor);
+            } else if(i==2) {
+                list[i].setEffect(ornamentColor);
+            } else if(i==3) {
+                if((colorscheme == GameData.scheme_monotone || colorscheme == GameData.scheme_center
+                ) || !isLeft) {
+                    list[i].setEffect(primaryColor);
+                } else {
+                    list[i].setEffect(secondaryColor);
+                }
+            } else if(i==4) {
+                if((colorscheme == GameData.scheme_half || colorscheme == GameData.scheme_quad) && !isLeft) {
+                    list[i].setEffect(secondaryColor);
+                } else {
+                    list[i].setEffect(primaryColor);
+                }
+            }
+        }
+
+        return list;
     }
 
     private static ImageView[] unitImageList = null;
@@ -123,17 +195,18 @@ public class ImageHelper {
     public static ImageView[] getArmourImageById(int id) {
         ImageView[] list;
         if(unitImageList == null) {
-            list = new ImageView[7];
-            for(int i=0;i<7;i++)
+            list = new ImageView[9];
+            for(int i=0;i<9;i++)
                 list[i] = new ImageView();
             unitImageList = list;
         } else {
             list = unitImageList;
         }
-        for(int i=0;i<7;i++) {
+        for(int i=0;i<9;i++) {
             list[i].setImage(armorImage[id][i]);
             list[i].setFitWidth(150);
             list[i].setFitHeight(200);
+
             // color using scheme, with 4-7 as secondary distribution
             if(i==0 || i==1 || (i==2 && (GameData.getCurrentData().colorScheme == GameData.scheme_monotone ||
                             GameData.getCurrentData().colorScheme == GameData.scheme_center))
@@ -147,10 +220,10 @@ public class ImageHelper {
                 list[i].setEffect(pauldronColor);
             } else {
                 if(i - 5 == GameData.getCurrentData().colorScheme) {
-                    list[i].setOpacity(1.0);
+                    list[i].setVisible(true);
                     list[i].setEffect(secondaryColor);
                 } else {
-                    list[i].setOpacity(0.0);
+                    list[i].setVisible(false);
                 }
             }
         }
@@ -163,8 +236,8 @@ public class ImageHelper {
      * @return array of ImageView
      * */
     public static ImageView[] getArmourImageByName(String name) {
-        int idx = GameData.getCurrentData().getArmoursImageName().indexOf(name);
-        if(idx<0 || idx >= armorImage.length) idx = 0;
+        int idx = GameData.getArmoursImageName().indexOf(name);
+        if(idx < 0 || idx >= armorImage.length) idx = 0;
         return getArmourImageById(idx);
     }
 
@@ -250,19 +323,72 @@ public class ImageHelper {
         return list;
     }
 
-    public static boolean isHeavyWeapon(int id) {
-        return false;
+
+    public static ImageView getSquareById(int id) {
+        ImageView result = new ImageView();
+        setSquareWithId(result,id);
+        return result;
     }
 
-    private static Image rootIcon = null;
+    public static void setSquareWithId(ImageView img, int id) {
+        String cssStyle;
+        switch (id) {
+            case 0: cssStyle = "land-empty"; break;
+            case 1: cssStyle = "land-obstacle"; break;
+            case 2: cssStyle = "land-impassable"; break;
+            case 3: cssStyle = "land-friendly"; break;
+            case 4: cssStyle = "land-hostile"; break;
+            case 5: cssStyle = "land-contested"; break;
+            default: cssStyle = "land-impassable"; break;
+        }
+        img.getStyleClass().clear();
+        img.getStyleClass().add(cssStyle);
+    }
 
-    private static Image backgroundImage = null;
+    static int[][] currentMapping;
+    static List<ImageView> currentDisplay;
+    public static List<ImageView> getMapFromIntMap(int[][] map, float sqr_size) {
+        ArrayList<ImageView> data = new ArrayList<>();
+        ImageView temp;
+        float x,y;
+        for(int i=0;i<map.length;i++) {
+            for(int j=0;j<map[i].length;j++) {
+                temp = new ImageView();
+                setSquareWithId(temp,map[i][j]);
+                temp.setFitWidth(sqr_size);
+                temp.setFitHeight(sqr_size);
+                x = i * sqr_size * 27 / 32; y = j * sqr_size;
+                if(i%2==0) y+=sqr_size/2;// else x+=sqr_size;
+                temp.setX(x);
+                temp.setY(y);
+                // TODO move this function out of the ImageView group
+                final int itemX = i; final int itemY = j;
+                temp.setOnMouseClicked(event -> {
+                    System.out.println("Position clicked " + itemX + " " + itemY);
+                    int[][] newMap = GameData.getCurrentData().getCurrentBattle().handleClick(itemX,itemY);
+                    if(newMap!=null) updateFromIntMap(newMap);
+                });
+                data.add(temp);
+            }
+        }
+        currentMapping = map;
+        currentDisplay = data;
+        return data;
+    }
 
-    private static Image[][] armorImage = null;
-
-    private static Image[][] weaponImage = null;
-
-    private static Image[][] vehicleImage = null;
+    public static List<ImageView> updateFromIntMap(int[][] map) {
+        int counter = 0;
+        for(int i=0;i<map.length;i++)
+            for(int j=0;j<map[i].length;j++) {
+                if(map[i][j] != currentMapping[i][j]) {
+                    setSquareWithId(currentDisplay.get(counter),map[i][j]);
+                    //System.out.println("Sqr ("+i+","+j+")("+counter+") replaced " + currentMapping[i][j] + "->" + map[i][j]);
+                }
+                counter++;
+            }
+        currentMapping = map;
+        return currentDisplay;
+    }
 
     /**
      * Get the icon's images
@@ -278,6 +404,26 @@ public class ImageHelper {
         cropper.setEffect(currentColor);
         return cropper;
     }
+
+    public static boolean isHeavyWeapon(int id) {
+        return false;
+    }
+
+    private static Image rootIcon = null;
+
+    private static Image backgroundImage = null;
+
+    private static Image[] starImage = null;
+
+    private static Image[] planetImage = null;
+
+    private static Image[] combatMapImage = null;
+
+    private static Image[][] armorImage = null;
+
+    private static Image[][] weaponImage = null;
+
+    private static Image[][] vehicleImage = null;
 
     public static Rectangle2D getIconRectById(int id) {
         switch (id) {
@@ -369,4 +515,9 @@ public class ImageHelper {
     public static final int Predator_Annihilator = 0;
     public static final int Predator_Destructor = 1;
 
+    public static final int square_empty=0;
+    public static final int square_impassable=1;
+    public static final int square_objective=2;
+    public static final int square_friendly=3;
+    public static final int square_hostile=4;
 }

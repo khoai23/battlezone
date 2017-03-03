@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+
+<AnchorPane fx:id="PickerScene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane fx:id="CurrentSelection" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="150.0" />
+      <TextField fx:id="ChapterName" layoutX="177.0" layoutY="27.0" prefHeight="25.0" prefWidth="200.0" promptText="Chapter Name" />
+      <ChoiceBox fx:id="ChapterType" layoutX="390.0" layoutY="27.0" />
+      <ChoiceBox fx:id="Progenitor" layoutX="176.0" layoutY="67.0" prefHeight="25.0" prefWidth="150.0" />
+      <CheckBox fx:id="Option1" layoutX="176.0" layoutY="106.0" mnemonicParsing="false" text="Option 1" />
+      <CheckBox fx:id="Option2" layoutX="176.0" layoutY="133.0" mnemonicParsing="false" text="Option 2" />
+      <CheckBox fx:id="Option3" layoutX="176.0" layoutY="161.0" mnemonicParsing="false" text="Option 3" />
+      <TextField fx:id="YourName" layoutX="177.0" layoutY="189.0" promptText="Your Name" />
+      <ColorPicker fx:id="Primary" layoutX="378.0" layoutY="65.0" promptText="Primary Color" />
+      <ColorPicker fx:id="Secondary" layoutX="378.0" layoutY="100.0" promptText="Secondary Color" />
+      <ColorPicker fx:id="Ornamental" layoutX="378.0" layoutY="135.0" promptText="Ornament Color" />
+      <ColorPicker fx:id="Weapon" layoutX="378.0" layoutY="170.0" promptText="Weapon Color" />
+      <Pane fx:id="CurrentAvatar" layoutX="14.0" layoutY="224.0" prefHeight="125.0" prefWidth="125.0" />
+      <Button fx:id="SelectBtn" layoutX="14.0" layoutY="362.0" mnemonicParsing="false" text="Select" />
+      <Button fx:id="BrowseBtn" layoutX="70.0" layoutY="362.0" mnemonicParsing="false" text="Browse..." />
+      <ScrollPane fx:id="Unavailable" layoutX="164.0" layoutY="224.0" prefHeight="200.0" prefWidth="150.0" />
+      <Button fx:id="TakeBtn" layoutX="325.0" layoutY="274.0" mnemonicParsing="false" text="&gt;&gt;" />
+      <Button fx:id="GiveBtn" layoutX="325.0" layoutY="312.0" mnemonicParsing="false" text="&lt;&lt;" />
+      <ScrollPane fx:id="Available" layoutX="370.0" layoutY="225.0" prefHeight="200.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>

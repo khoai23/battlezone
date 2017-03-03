@@ -16,3 +16,51 @@
         derive(-fx-accent, 30%) 99%
         );
 }
+
+.land-empty {
+    -fx-image: url("../texture/battlemap/sqr_empty.png");
+}
+
+.land-empty:hover {
+    -fx-image: url("../texture/battlemap/sqr_empty_selected.png");
+}
+
+.land-obstacle {
+    -fx-image: url("../texture/battlemap/sqr_obstacle.png");
+}
+
+.land-obstacle:hover {
+    -fx-image: url("../texture/battlemap/sqr_obstacle_selected.png");
+}
+
+.land-impassable {
+    -fx-image: url("../texture/battlemap/sqr_impassable.png");
+}
+
+.land-impassable:hover {
+    -fx-image: url("../texture/battlemap/sqr_impassable_selected.png");
+}
+
+.land-friendly {
+    -fx-image: url("../texture/battlemap/sqr_friendly.png");
+}
+
+.land-friendly:hover {
+    -fx-image: url("../texture/battlemap/sqr_friendly_selected.png");
+}
+
+.land-hostile {
+    -fx-image: url("../texture/battlemap/sqr_hostile.png");
+}
+
+.land-hostile:hover {
+    -fx-image: url("../texture/battlemap/sqr_hostile_selected.png");
+}
+
+.land-contested {
+    -fx-image: url("../texture/battlemap/sqr_contested.png");
+}
+
+.land-contested:hover {
+    -fx-image: url("../texture/battlemap/sqr_contested_selected.png");
+}
