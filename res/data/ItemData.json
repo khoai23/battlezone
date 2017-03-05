@@ -190,7 +190,7 @@
     "id":0,
     "name":"Rhino",
     "imgName":"rhino",
-    "desc":"The Rhino chassis is the most common and likewise the most versatile vehicle."
+    "desc":"The Rhino chassis is the most common and likewise the most versatile base."
   },{
     "id":1,
     "name":"Land Raider",
@@ -204,70 +204,86 @@
     "name":"Pintle-mounted Storm Bolter",
     "str": 20,
     "spd": 8,
-    "type": "medium,bolt",
-    "des": "While potentially useful, many vehicle do not mount such weapon due to the distraction it provided."
+    "type": "medium,bolt,pintle",
+    "imgName":"pred_pintle",
+    "desc": "While potentially useful, many vehicle do not mount such weapon due to the distraction it provided."
+  },{
+    "name":"Pintle-mounted Storm Bolter (automatic)",
+    "str": 20,
+    "spd": 8,
+    "type": "medium,bolt,automated",
+    "imgName":"rhino_pintle",
+    "desc": "Come with an extra cogitator, this weapon do not use the skill of the gunner, at the expense of its own accuracy."
+  },{
+    "name":"Pintle-mounted Multi Melta",
+    "str": 90,
+    "spd": 1,
+    "type": "medium,melta,pintle",
+    "imgName":"raider_mm",
+    "desc": "Sometimes, the Land Raider aren't armed enough. This multi melta is the answer to that predicament."
   },{
     "name":"Twin-linked Heavy Bolters",
     "str": 28,
     "spd": 20,
     "type":"long,bolt,twin-linked",
-    "imgName":"razor_hb",
-    "des": "The default weapon loadout for a Razorback, this can lay down heavy fire at a distance."
+    "imgName":"raz_hb",
+    "desc": "The default weapon loadout for a Razorback, this can lay down heavy fire at a distance."
   },{
     "name":"Twin-linked Heavy Flamers",
     "str": 24,
     "spd": 2,
     "type": "short,flame,aoe",
-    "imgName":"razor_hf",
-    "des": "Exclusive to the Blood Angels and their successors, its short range is mitigated by the destructive fire it spew forth."
+    "imgName":"raz_hf",
+    "desc": "Exclusive to the Blood Angels and their successors, its short range is mitigated by the destructive fire it spew forth."
   },{
-    "name":"Multi Melta",
+    "name":"Twin-linked Multi Melta",
     "str": 90,
     "spd": 2,
-    "type": "medium,melta",
-    "imgName":"razor_mm",
-    "des": "The prized melta weaponry can penetrate the thickest of armors, but needed to close in to launch their attack."
+    "type": "medium,melta,twin-linked",
+    "imgName":"raz_mm",
+    "desc": "The prized melta weaponry can penetrate the thickest of armors, but needed to close in to launch their attack."
   },{
     "name":"Twin-linked Lascannon",
     "str": 85,
     "spd": 2,
     "type": "extreme",
-    "imgName":"razor_las",
-    "des": "Longest range among all Razorback variants, it fits perfectly with a combat squad of Devastators."
+    "imgName":"raz_las",
+    "desc": "With the longest range among all Razorback variants, it fits perfectly with a combat squad of Devastators."
   },{
     "name":"Autocannon",
     "str": 55,
     "spd": 8,
     "type": "long,heavy,coaxial",
     "imgName":"pred_turret_auto",
-    "des": "The main armament of Predator Annihilators, its shells are most effective against heavy infantry and light vehicles."
+    "desc": "The main armament of Predator Destructor, its shells are most effective against heavy infantry and light vehicles."
   },{
     "name":"Sponsons Heavy Bolters",
     "str": 28,
     "spd": 18,
     "type": "long,bolt,sponson",
     "imgName":"pred_sponson_hb",
-    "des": "Complementing the main weapon, the side-mounted heavy bolters can cut down swathes of light infantry."
+    "desc": "Complementing the main weapon, the side-mounted heavy bolters can cut down swathes of light infantry."
   },{
     "name":"Twin-linked Lascannon",
     "str": 95,
     "spd": 2,
     "type": "extreme,heavy,twin-linked",
     "imgName":"pred_turret_lasc",
-    "des": "The main armament of Predator Destructor, the twinned lascannon can penetrate all by the heaviest of armor."
+    "desc": "The main armament of Predator Annihilator, the twinned lascannon can penetrate all by the heaviest of armor."
   },{
     "name":"Sponsons Lascannon",
     "str": 88,
     "spd": 2,
     "type": "extreme,heavy,sponson",
     "imgName":"pred_sponson_las",
-    "des": "On the rare possibility that the main weapon failed to kill, this can definitely finish the job."
+    "desc": "On the rare possibility that the main weapon failed to kill, this can definitely finish the job."
   },{
     "name": "Demolisher Cannon",
     "str": 85,
     "spd": 1,
     "type": "medium,ordnance,concussive",
-    "des":"The powerful Demolisher cannon can easily obliterate a squad of infantry with a single shot."
+    "imgName":"demo_cannon",
+    "desc":"The powerful Demolisher cannon can easily obliterate a squad of infantry with a single shot."
   }],
 
 
@@ -277,6 +293,7 @@
     "chassis": 0,
     "spd":4,
     "weapons":[],
+    "pintle":1,
     "armor": 20,
     "hp":50,
     "carry":10,
@@ -285,7 +302,8 @@
     "name":"Razorback",
     "chassis": 0,
     "spd":4,
-    "weapons":[[1,2,3,4]],
+    "weapons":[[3,4,5,6]],
+    "pintle":1,
     "armor": 25,
     "hp":65,
     "carry":5,
@@ -294,7 +312,8 @@
     "name":"Predator",
     "chassis": 0,
     "spd":4,
-    "weapons":[[5,7],[6,8]],
+    "weapons":[[7,9],[8,10]],
+    "pintle":0,
     "armor": 35,
     "hp":85,
     "carry":0,
@@ -303,7 +322,8 @@
     "name":"Vindicator",
     "chassis": 0,
     "spd":4,
-    "weapons":[[9]],
+    "weapons":[[11]],
+    "pintle":1,
     "armor":40,
     "hp":60,
     "carry":0,

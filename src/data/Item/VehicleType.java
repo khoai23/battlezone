@@ -16,6 +16,7 @@ public class VehicleType implements Serializable {
     int speed;
     int armor;
     int defaultHp;
+    int pintle;
     int[][] loadOutData;
     String description;
     int carry;
@@ -29,6 +30,7 @@ public class VehicleType implements Serializable {
         carry = obj.getInt("carry");
         armor = obj.getInt("armor");
         defaultHp = obj.getInt("hp");
+        pintle = obj.getInt("pintle");
         JsonArray weapon_set = obj.getJsonArray("weapons");
         int weaponNum = weapon_set.size();
         if( weaponNum == 0) return;
@@ -51,6 +53,24 @@ public class VehicleType implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public int getPintle() {
+        return pintle;
+    }
+
+    public int getChassis() {
+        return chassis;
+    }
+
+    public int getLoadoutPrimary(int loadout) {
+        if(loadOutData.length <= loadout || loadout <= -1) return -1;
+        return loadOutData[loadout][0];
+    }
+
+    public int getLoadoutSecondary(int loadout) {
+        if(loadOutData.length <= loadout || loadout <= -1 || loadOutData[loadout].length <= 1) return -1;
+        return loadOutData[loadout][1];
     }
 
     public String getDescription() {

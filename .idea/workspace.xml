@@ -1,111 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Completed StarMap and BattleMap, with primitive and incomplete Battle Class&#10;Building NewGame scene">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_10.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_11.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_12.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_13.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_14.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_15.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_18.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_21.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_5.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_6.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_7.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_8.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/planet_9.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_contested.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_contested_selected.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_empty.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_empty_selected.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_friendly.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_friendly_selected.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_hostile.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_hostile_selected.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_impassable.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_impassable_selected.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_objective.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_objective_selected.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_obstacle.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/battlemap/sqr_obstacle_selected.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/star_0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/star_1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/star_2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/star_3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/star_4.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/star_5.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/starmap/starhulk.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_crozius_0.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_crozius_1.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_crozius_2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_crozius_3.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/Battle/AttackFormat.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/Battle/Battle.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/Unit/Company.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/Battle/Field.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/UI/SelectorScene.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/StarMap/StarMap.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/Unit/Vehicle.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/Item/VehicleType.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/Item/VehicleWeapon.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/UI/selectorScene.fxml" />
-      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\UI\sample.fxml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/UI/Controller.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/UI/Controller.class" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_autocannon_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_autocannon_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_autocannon_2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_ccw_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_ccw_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_ccw_2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_gatling_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/dread_gatling_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_sponson_hb_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_sponson_hb_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_sponson_hb_3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_sponson_las_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_sponson_las_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_sponson_las_3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_turret_auto_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_turret_auto_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_turret_auto_2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_turret_lasc_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_turret_lasc_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_turret_lasc_2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_hb_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_hb_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_hb_3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_hf_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_hf_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_hf_3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_las_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_las_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_las_3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_mm_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_mm_1.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/raz_mm_3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/UI/MainScene.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/data/Item/VehicleChassis.java" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\out\production\Battlezone\texture\view_vehicle\pred_top_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_spo_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_spo_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_spo_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_spo_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_spo_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_spo_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_top_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_top_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_top_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_top_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_top_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\pred_top_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_0.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_1.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_10.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_11.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_2.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_3.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_4.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_5.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_6.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_7.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_8.png" afterPath="" />
+      <change type="DELETED" beforePath="D:\Workspace\Battlezone\res\texture\view_vehicle\raz_top_9.png" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/data/GameData.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/data/GameData.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/UI/ImageHelper.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/UI/ImageHelper.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/UI/Main.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/UI/Main.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/UI/MainListener.class" afterPath="$PROJECT_DIR$/out/production/Battlezone/UI/MainListener.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/aquila_1.png" afterPath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/aquila_1.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_unit/aquila_1.png" afterPath="$PROJECT_DIR$/res/texture/view_unit/aquila_1.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/aquila_2.png" afterPath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/aquila_2.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_unit/aquila_2.png" afterPath="$PROJECT_DIR$/res/texture/view_unit/aquila_2.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/aquila_7.png" afterPath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/aquila_7.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_unit/aquila_7.png" afterPath="$PROJECT_DIR$/res/texture/view_unit/aquila_7.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/aquila_8.png" afterPath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/aquila_8.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_unit/aquila_8.png" afterPath="$PROJECT_DIR$/res/texture/view_unit/aquila_8.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/artificer_3.png" afterPath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/artificer_3.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_unit/artificer_3.png" afterPath="$PROJECT_DIR$/res/texture/view_unit/artificer_3.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/artificer_5.png" afterPath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/artificer_5.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_unit/artificer_5.png" afterPath="$PROJECT_DIR$/res/texture/view_unit/artificer_5.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/artificer_6.png" afterPath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/artificer_6.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_unit/artificer_6.png" afterPath="$PROJECT_DIR$/res/texture/view_unit/artificer_6.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/artificer_7.png" afterPath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/artificer_7.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_unit/artificer_7.png" afterPath="$PROJECT_DIR$/res/texture/view_unit/artificer_7.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/artificer_8.png" afterPath="$PROJECT_DIR$/out/production/Battlezone/texture/view_unit/artificer_8.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_unit/artificer_8.png" afterPath="$PROJECT_DIR$/res/texture/view_unit/artificer_8.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_bpistol_0.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_bpistol_0.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_bpistol_1.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_bpistol_1.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_bpistol_2.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_bpistol_2.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_flamer_0.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_flamer_0.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_flamer_1.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_flamer_1.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_missile_0.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_missile_0.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_missile_1.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_missile_1.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_ppistol_0.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_ppistol_0.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_ppistol_1.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_ppistol_1.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_sbolter_0.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_sbolter_0.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_weapon/weapon_sbolter_1.png" afterPath="$PROJECT_DIR$/res/texture/view_weapon/weapon_sbolter_1.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Unit/Astartes.java" afterPath="$PROJECT_DIR$/src/data/Unit/Astartes.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/UI/Controller.java" afterPath="$PROJECT_DIR$/src/UI/Controller.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_vehicle/pred_pintle_0.png" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_pintle_0.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_vehicle/pred_pintle_1.png" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_pintle_1.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_vehicle/pred_pintle_2.png" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/pred_pintle_2.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_vehicle/rhino_pintle_0.png" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/rhino_pintle_0.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_vehicle/rhino_pintle_1.png" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/rhino_pintle_1.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/texture/view_vehicle/rhino_pintle_2.png" afterPath="$PROJECT_DIR$/res/texture/view_vehicle/rhino_pintle_2.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Battle/AttackFormat.java" afterPath="$PROJECT_DIR$/src/data/Battle/AttackFormat.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/GameData.java" afterPath="$PROJECT_DIR$/src/data/GameData.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/UI/ImageHelper.java" afterPath="$PROJECT_DIR$/src/UI/ImageHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Item/Item.java" afterPath="$PROJECT_DIR$/src/data/Item/Item.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/data/ItemData.json" afterPath="$PROJECT_DIR$/res/data/ItemData.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/UI/Main.java" afterPath="$PROJECT_DIR$/src/UI/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Unit/Squad.java" afterPath="$PROJECT_DIR$/src/data/Unit/Squad.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/StarMap/System.java" afterPath="$PROJECT_DIR$/src/data/StarMap/System.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/Quan.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Quan.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/UI/SelectorScene.java" afterPath="$PROJECT_DIR$/src/UI/SelectorScene.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/data/TraitData.json" afterPath="$PROJECT_DIR$/res/data/TraitData.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Unit/Unit.java" afterPath="$PROJECT_DIR$/src/data/Unit/Unit.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Item/Weapon.java" afterPath="$PROJECT_DIR$/src/data/Item/Weapon.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Battlezone/css/stylesheet.css" afterPath="$PROJECT_DIR$/out/production/Battlezone/css/stylesheet.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/css/stylesheet.css" afterPath="$PROJECT_DIR$/res/css/stylesheet.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Unit/Vehicle.java" afterPath="$PROJECT_DIR$/src/data/Unit/Vehicle.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Item/VehicleType.java" afterPath="$PROJECT_DIR$/src/data/Item/VehicleType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/data/Item/VehicleWeapon.java" afterPath="$PROJECT_DIR$/src/data/Item/VehicleWeapon.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="D:\Workspace\Battlezone\src\UI\sample.fxml" afterPath="$PROJECT_DIR$/src/UI/mainScene.fxml" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -171,93 +157,80 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainScene.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/UI/MainScene.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.5755208">
+              <caret line="185" column="64" selection-start-line="185" selection-start-column="64" selection-end-line="185" selection-end-column="64" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Vehicle.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data/Unit/Vehicle.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="61" column="5" selection-start-line="61" selection-start-column="5" selection-end-line="61" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AttackFormat.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data/Battle/AttackFormat.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="40" column="27" selection-start-line="40" selection-start-column="27" selection-end-line="40" selection-end-column="27" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="VehicleWeapon.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data/Item/VehicleWeapon.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="11" column="18" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Weapon.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data/Item/Weapon.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="13" column="21" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="VehicleType.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data/Item/VehicleType.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="68" column="5" selection-start-line="68" selection-start-column="5" selection-end-line="68" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/UI/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33333334">
-              <caret line="154" column="93" selection-start-line="154" selection-start-column="93" selection-end-line="154" selection-end-column="93" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="175" column="13" selection-start-line="175" selection-start-column="13" selection-end-line="175" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SelectorScene.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/UI/SelectorScene.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="selectorScene.fxml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/UI/selectorScene.fxml">
-          <provider editor-type-id="JavaFX-Scene-Builder">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.3793104">
-              <caret line="14" column="35" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="35" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/UI/Controller.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ImageHelper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/UI/ImageHelper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="349" column="78" selection-start-line="349" selection-start-column="78" selection-end-line="349" selection-end-column="78" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Battle.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/data/Battle/Battle.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="85" column="57" selection-start-line="85" selection-start-column="57" selection-end-line="85" selection-end-column="57" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Field.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/data/Battle/Field.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="106" column="25" selection-start-line="106" selection-start-column="25" selection-end-line="106" selection-end-column="25" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Unit.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/data/Unit/Unit.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -266,7 +239,7 @@
         <entry file="file://$PROJECT_DIR$/src/data/GameData.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="129" column="45" selection-start-line="129" selection-start-column="45" selection-end-line="129" selection-end-column="45" />
+              <caret line="161" column="43" selection-start-line="161" selection-start-column="43" selection-end-line="161" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -274,14 +247,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mainScene.fxml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/UI/mainScene.fxml">
-          <provider editor-type-id="JavaFX-Scene-Builder">
-            <state />
-          </provider>
+      <file leaf-file-name="Squad.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data/Unit/Squad.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.0689654">
-              <caret line="96" column="6" selection-start-line="96" selection-start-column="6" selection-end-line="96" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="39" column="52" selection-start-line="39" selection-start-column="52" selection-end-line="39" selection-end-column="52" />
+              <folding>
+                <element signature="e#596#597#0" expanded="true" />
+                <element signature="e#620#621#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ItemData.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/data/ItemData.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="214" column="27" selection-start-line="214" selection-start-column="27" selection-end-line="214" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -341,28 +324,30 @@
         <option value="$PROJECT_DIR$/src/data/Unit/Company.java" />
         <option value="$PROJECT_DIR$/src/data/TreeViewable.java" />
         <option value="$PROJECT_DIR$/src/data/Item/Type.java" />
-        <option value="$PROJECT_DIR$/src/data/Item/VehicleWeapon.java" />
         <option value="$PROJECT_DIR$/src/data/StarMap/StarMap.java" />
         <option value="$PROJECT_DIR$/src/data/StarMap/System.java" />
-        <option value="$PROJECT_DIR$/res/data/TraitData.json" />
         <option value="$PROJECT_DIR$/src/data/Battle.java" />
-        <option value="$PROJECT_DIR$/src/data/Battle/AttackFormat.java" />
         <option value="$PROJECT_DIR$/src/data/Item/Weapon.java" />
         <option value="$PROJECT_DIR$/src/data/Unit/Astartes.java" />
-        <option value="$PROJECT_DIR$/res/data/ItemData.json" />
-        <option value="$PROJECT_DIR$/src/data/Unit/Vehicle.java" />
-        <option value="$PROJECT_DIR$/src/data/Item/VehicleType.java" />
         <option value="$PROJECT_DIR$/src/UI/mainScene.fxml" />
         <option value="$PROJECT_DIR$/src/UI/Controller.java" />
-        <option value="$PROJECT_DIR$/src/data/GameData.java" />
         <option value="$PROJECT_DIR$/res/css/stylesheet.css" />
         <option value="$PROJECT_DIR$/src/data/Unit/Squad.java" />
         <option value="$PROJECT_DIR$/src/data/Battle/Field.java" />
-        <option value="$PROJECT_DIR$/src/UI/ImageHelper.java" />
         <option value="$PROJECT_DIR$/src/data/Battle/Battle.java" />
-        <option value="$PROJECT_DIR$/src/UI/SelectorScene.java" />
         <option value="$PROJECT_DIR$/src/data/Unit/Unit.java" />
+        <option value="$PROJECT_DIR$/src/UI/SelectorScene.java" />
+        <option value="$PROJECT_DIR$/res/data/TraitData.json" />
+        <option value="$PROJECT_DIR$/src/data/Item/VehicleType.java" />
         <option value="$PROJECT_DIR$/src/UI/Main.java" />
+        <option value="$PROJECT_DIR$/src/data/Item/VehicleChassis.java" />
+        <option value="$PROJECT_DIR$/res/data/ItemData.json" />
+        <option value="$PROJECT_DIR$/src/UI/ImageHelper.java" />
+        <option value="$PROJECT_DIR$/src/UI/MainScene.java" />
+        <option value="$PROJECT_DIR$/src/data/GameData.java" />
+        <option value="$PROJECT_DIR$/src/data/Battle/AttackFormat.java" />
+        <option value="$PROJECT_DIR$/src/data/Item/VehicleWeapon.java" />
+        <option value="$PROJECT_DIR$/src/data/Unit/Vehicle.java" />
       </list>
     </option>
   </component>
@@ -376,6 +361,9 @@
         <option name="mavenHome" value="Bundled (Maven 3)" />
       </MavenGeneralSettings>
     </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState />
   </component>
   <component name="NamedScopeManager">
     <order />
@@ -431,28 +419,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="Battlezone" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Battlezone" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Battlezone" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="UI" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SelectorScene.java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -685,28 +651,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="texture" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="battlemap" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Battlezone" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Battlezone" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -731,8 +675,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -762,7 +706,7 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="ChangesBrowser.SHOW_FLATTEN" value="true" />
-    <property name="SearchEverywhereHistoryKey" value="Image&#9;FILE&#9;file://D:/Workspace/Battlezone/src/UI/ImageHelper.java&#10;Ma&#9;FILE&#9;file://D:/Workspace/Battlezone/src/UI/Main.java&#10;Gam&#9;FILE&#9;file://D:/Workspace/Battlezone/src/data/GameData.java&#10;Imag&#9;FILE&#9;file://D:/Workspace/Battlezone/src/UI/ImageHelper.java&#10;GameData&#9;FILE&#9;file://D:/Workspace/Battlezone/src/data/GameData.java" />
+    <property name="SearchEverywhereHistoryKey" value="Game&#9;FILE&#9;file://D:/Workspace/Battlezone/src/data/GameData.java&#10;Image&#9;FILE&#9;file://D:/Workspace/Battlezone/src/UI/ImageHelper.java&#10;Ma&#9;FILE&#9;file://D:/Workspace/Battlezone/src/UI/Main.java&#10;Gam&#9;FILE&#9;file://D:/Workspace/Battlezone/src/data/GameData.java&#10;Imag&#9;FILE&#9;file://D:/Workspace/Battlezone/src/UI/ImageHelper.java&#10;GameData&#9;FILE&#9;file://D:/Workspace/Battlezone/src/data/GameData.java" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -1096,7 +1040,8 @@
       <workItem from="1488103896161" duration="6573000" />
       <workItem from="1488277854413" duration="13391000" />
       <workItem from="1488506981567" duration="6595000" />
-      <workItem from="1488563859368" duration="14698000" />
+      <workItem from="1488563859368" duration="31442000" />
+      <workItem from="1488718424708" duration="1416000" />
     </task>
     <task id="LOCAL-00001" summary="Finish rhino line in vehicle, adding bg_star and reformat images.&#10;&#10;TODO creating a viable star &amp; battle map">
       <created>1487342822613</created>
@@ -1134,11 +1079,17 @@
       <option name="project" value="LOCAL" />
       <updated>1487586847715</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Completed StarMap and BattleMap, with primitive and incomplete Battle Class&#10;Building NewGame scene&#10;Fixed some issues with previous images.">
+      <created>1488583517295</created>
+      <option name="number" value="00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1488583517295</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="247989000" />
+    <option name="totallyTimeSpent" value="266149000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1155,18 +1106,16 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32899022" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32899022" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32899022" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980332" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32899022" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32736155" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32899022" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25718608" sideWeight="0.6703755" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32899022" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24962178" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1178,10 +1127,12 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32899022" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980332" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32899022" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1234,7 +1185,8 @@
     <MESSAGE value="Adding resource ItemData.json and corresponding file" />
     <MESSAGE value="Adding view_weapon folders, battle scarring for armors, and reupload the rhino chassis.&#10;Fixing the ImageHelper class to comply to these change.&#10;Use ItemData.json for all armors" />
     <MESSAGE value="Completed StarMap and BattleMap, with primitive and incomplete Battle Class&#10;Building NewGame scene" />
-    <option name="LAST_COMMIT_MESSAGE" value="Completed StarMap and BattleMap, with primitive and incomplete Battle Class&#10;Building NewGame scene" />
+    <MESSAGE value="Completed StarMap and BattleMap, with primitive and incomplete Battle Class&#10;Building NewGame scene&#10;Fixed some issues with previous images." />
+    <option name="LAST_COMMIT_MESSAGE" value="Completed StarMap and BattleMap, with primitive and incomplete Battle Class&#10;Building NewGame scene&#10;Fixed some issues with previous images." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1245,20 +1197,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/data/TreeViewable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.30722892">
-          <caret line="6" column="29" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Item/Item.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33433735">
-          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/data/Item/Armour.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.15361446">
@@ -1285,19 +1223,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/data/TraitData.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2777778">
-          <caret line="14" column="61" selection-start-line="14" selection-start-column="61" selection-end-line="14" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/src.zip!/java/util/Arrays.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.029010238">
           <caret line="3265" column="7" selection-start-line="3265" selection-start-column="7" selection-end-line="3265" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1309,57 +1238,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Item/Weapon.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="11" selection-start-line="15" selection-start-column="11" selection-end-line="15" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Unit/Astartes.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20307167">
-          <caret line="121" column="46" selection-start-line="121" selection-start-column="46" selection-end-line="121" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Item/VehicleWeapon.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4641638">
-          <caret line="16" column="24" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Battle/AttackFormat.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5221843">
-          <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/data/Unit/Company.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2320819">
           <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Unit/Vehicle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1450512">
-          <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Item/VehicleType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1412,7 +1294,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.61445785">
           <caret line="75" column="34" selection-start-line="75" selection-start-column="34" selection-end-line="75" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1427,10 +1308,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.35324675">
           <caret line="31" column="11" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
-          <folding>
-            <element signature="e#1186#1187#0" expanded="false" />
-            <element signature="e#1215#1216#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1438,14 +1315,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4857143">
           <caret line="184" column="29" selection-start-line="184" selection-start-column="29" selection-end-line="184" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/data/ItemData.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="296" column="28" selection-start-line="296" selection-start-column="28" selection-end-line="296" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1461,7 +1330,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="66" column="41" selection-start-line="66" selection-start-column="41" selection-end-line="66" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1469,7 +1337,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="58" column="54" selection-start-line="58" selection-start-column="54" selection-end-line="58" selection-end-column="54" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1477,7 +1344,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="67" column="41" selection-start-line="67" selection-start-column="41" selection-end-line="67" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1485,7 +1351,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="79" column="47" selection-start-line="79" selection-start-column="47" selection-end-line="79" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1493,7 +1358,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3313253">
           <caret line="38" column="13" selection-start-line="38" selection-start-column="13" selection-end-line="38" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1501,18 +1365,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3313253">
           <caret line="205" column="28" selection-start-line="205" selection-start-column="28" selection-end-line="205" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Unit/Squad.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38253012">
-          <caret line="33" column="16" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
-          <folding>
-            <element signature="e#596#597#0" expanded="true" />
-            <element signature="e#620#621#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1520,15 +1372,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-2.1692708">
           <caret line="60" column="19" selection-start-line="60" selection-start-column="19" selection-end-line="60" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Battle/Field.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="106" column="25" selection-start-line="106" selection-start-column="25" selection-end-line="106" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1536,17 +1379,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5903614">
           <caret line="44" column="9" selection-start-line="44" selection-start-column="9" selection-end-line="44" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data/Battle/Battle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="85" column="57" selection-start-line="85" selection-start-column="57" selection-end-line="85" selection-end-column="57" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1554,7 +1386,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8192771">
           <caret line="51" column="15" selection-start-line="51" selection-start-column="15" selection-end-line="51" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1569,19 +1400,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/UI/ImageHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="349" column="78" selection-start-line="349" selection-start-column="78" selection-end-line="349" selection-end-column="78" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_91/javafx-src.zip!/javafx/application/Application.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3313253">
           <caret line="304" column="25" selection-start-line="304" selection-start-column="25" selection-end-line="304" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1596,41 +1418,110 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/UI/Controller.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/UI/selectorScene.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.3793104">
-          <caret line="14" column="35" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/UI/SelectorScene.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/data/Unit/Unit.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI/mainScene.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.0689654">
+          <caret line="46" column="24" selection-start-line="46" selection-start-column="24" selection-end-line="46" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI/selectorScene.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.27605635">
+          <caret line="14" column="35" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI/SelectorScene.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.89759034">
+          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Battle/Battle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="85" column="57" selection-start-line="85" selection-start-column="57" selection-end-line="85" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/data/TraitData.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.1923075">
+          <caret line="22" column="7" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Battle/Field.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="106" column="25" selection-start-line="106" selection-start-column="25" selection-end-line="106" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.38554215">
+          <caret line="23" column="16" selection-start-line="23" selection-start-column="16" selection-end-line="23" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Item/VehicleChassis.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.38554215">
+          <caret line="15" column="49" selection-start-line="15" selection-start-column="49" selection-end-line="15" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI/ImageHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="420" column="42" selection-start-line="420" selection-start-column="42" selection-end-line="420" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="175" column="13" selection-start-line="175" selection-start-column="13" selection-end-line="175" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/data/ItemData.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="214" column="27" selection-start-line="214" selection-start-column="27" selection-end-line="214" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Item/VehicleType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="68" column="5" selection-start-line="68" selection-start-column="5" selection-end-line="68" selection-end-column="5" />
           <folding />
         </state>
       </provider>
@@ -1638,28 +1529,72 @@
     <entry file="file://$PROJECT_DIR$/src/data/GameData.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="129" column="45" selection-start-line="129" selection-start-column="45" selection-end-line="129" selection-end-column="45" />
+          <caret line="161" column="43" selection-start-line="161" selection-start-column="43" selection-end-line="161" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/UI/mainScene.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/data/Unit/Astartes.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.0689654">
-          <caret line="96" column="6" selection-start-line="96" selection-start-column="6" selection-end-line="96" selection-end-column="6" />
+        <state vertical-scroll-proportion="0.3327645">
+          <caret line="120" column="30" selection-start-line="120" selection-start-column="30" selection-end-line="120" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/UI/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/data/Unit/Squad.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="154" column="93" selection-start-line="154" selection-start-column="93" selection-end-line="154" selection-end-column="93" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="39" column="52" selection-start-line="39" selection-start-column="52" selection-end-line="39" selection-end-column="52" />
+          <folding>
+            <element signature="e#596#597#0" expanded="true" />
+            <element signature="e#620#621#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Item/Weapon.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="13" column="21" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Item/VehicleWeapon.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="18" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Battle/AttackFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="27" selection-start-line="40" selection-start-column="27" selection-end-line="40" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data/Unit/Vehicle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="61" column="5" selection-start-line="61" selection-start-column="5" selection-end-line="61" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/UI/MainScene.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5755208">
+          <caret line="185" column="64" selection-start-line="185" selection-start-column="64" selection-end-line="185" selection-end-column="64" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

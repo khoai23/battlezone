@@ -16,6 +16,8 @@ public class SelectorScene extends Scene{
     public SelectorScene(FXMLLoader loader, double width, double height) throws IOException {
         super(loader.load(),width,height);
         controller = loader.getController();
+        controller.CurrentSelection.setId("canvas");
+        controller.CurrentAvatar.setId("canvas");
     }
 
     public static SelectorScene createSelectorScene() throws IOException {
@@ -29,4 +31,5 @@ public class SelectorScene extends Scene{
 class SelectorController {
     @FXML
     public Pane CurrentSelection;
+    public Pane CurrentAvatar;
 }

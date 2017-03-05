@@ -1,10 +1,7 @@
 package data;
 
 import data.Battle.Battle;
-import data.Item.Armour;
-import data.Item.Item;
-import data.Item.VehicleType;
-import data.Item.Weapon;
+import data.Item.*;
 import data.StarMap.StarMap;
 import data.Unit.Astartes;
 import data.Unit.Squad;
@@ -34,11 +31,14 @@ public class GameData implements Serializable {
     public Astartes you;
     public StarMap map;
     ArrayList<Unit> roster;
-    ArrayList<Weapon> weapons;
-    ArrayList<String> weaponsImageName;
-    ArrayList<Armour> armours;
-    ArrayList<String> armoursImageName;
-    ArrayList<VehicleType> variants;
+    List<Weapon> weapons;
+    List<String> weaponsImageName;
+    List<Armour> armours;
+    List<String> armoursImageName;
+    List<VehicleType> variants;
+    List<VehicleWeapon> vehicleWeapons;
+    List<String> vehicleWeaponsImageName;
+    List<VehicleChassis> vehicleChassus;
     Battle currentBattle = null;
 
     public GameData() {
@@ -52,6 +52,9 @@ public class GameData implements Serializable {
         armours = new ArrayList<>();
         armoursImageName = new ArrayList<>();
         variants = new ArrayList<>();
+        vehicleWeapons = new ArrayList<>();
+        vehicleWeaponsImageName = new ArrayList<>();
+        vehicleChassus = new ArrayList<>();
         colorScheme = scheme_quad;
         loadDefaultData();
         loadTestData();
@@ -88,6 +91,19 @@ public class GameData implements Serializable {
             for(int i=0;i<vehicle_type.size();i++) {
                 variants.add(new VehicleType(vehicle_type.getJsonObject(i), i));
             }
+
+            JsonArray vehicle_weapon = itemData.getJsonArray("vehicle_weapon");
+            vehicleWeapons.clear();
+            vehicleWeaponsImageName.clear();
+            for(int i=0;i<vehicle_weapon.size();i++) {
+                vehicleWeapons.add(new VehicleWeapon(vehicle_weapon.getJsonObject(i), i));
+                vehicleWeaponsImageName.add(vehicle_weapon.getJsonObject(i).getString("imgName"));
+            }
+
+            JsonArray vehicle_chassis = itemData.getJsonArray("chassis");
+            for(int i=0;i<vehicle_chassis.size();i++) {
+                vehicleChassus.add(new VehicleChassis(vehicle_chassis.getJsonObject(i), i));
+            }
         } catch (FileNotFoundException e) {
             System.out.print("File not found @" + filePath + "\n");
         }
@@ -103,7 +119,9 @@ public class GameData implements Serializable {
         roster.add(sqd);
         sqd.members.add(new Astartes("Catharge",new int[]{40,50,50,6,0,8,10,0,2}));
 
-        roster.add(new Vehicle(2,0));
+        roster.add(new Vehicle(2,1));
+
+        roster.add(new Vehicle(1,2,true));
 
         currentBattle = new Battle(0,roster,new ArrayList<>());
 
@@ -118,11 +136,15 @@ public class GameData implements Serializable {
         return GameData.getCurrentData().armoursImageName;
     }
 
-    public static ArrayList<Unit> getRoster() {
+    public static List<String> getVehicleWeaponsImageName() { return GameData.getCurrentData().vehicleWeaponsImageName; }
+
+    public static List<Unit> getRoster() {
         return GameData.getCurrentData().roster;
     }
 
     public static List<VehicleType> getVehiclesVariant() { return GameData.getCurrentData().variants; }
+
+    public static List<VehicleChassis> getVehiclesChassus() { return GameData.getCurrentData().vehicleChassus; }
 
     public Item[] getAllItem() {
         Item[] listItem = new Item[armours.size() + weapons.size()];
@@ -145,6 +167,13 @@ public class GameData implements Serializable {
         return currentData.weapons.get(id);
     }
 
+    public static VehicleType getVehiclesVariantById(int id) {
+        return GameData.getCurrentData().variants.get(id);
+    }
+
+    public static VehicleWeapon getVehiclesWeaponById(int id) {
+        return GameData.getCurrentData().vehicleWeapons.get(id);
+    }
 
     public static int scheme_monotone = 0;
     public static int scheme_center = 1;

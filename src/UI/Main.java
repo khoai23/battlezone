@@ -18,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -37,31 +38,40 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         ImageHelper.init();
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("mainScene.fxml")
-        );
-        Parent root = loader.load();
-        gameController = loader.<Controller>getController();
-        Scene mainScene = new Scene(root, 800, 600);
+//        FXMLLoader loader = new FXMLLoader(
+//                getClass().getResource("mainScene.fxml")
+//        );
+//        Parent root = loader.load();
+//        gameController = loader.<Controller>getController();
+//        Scene mainScene = new MainScene(loader, 800, 600);
+        Scene mainScene = MainScene.createMainScene();
         primaryStage.setTitle("Fan Game");
         primaryStage.setScene(mainScene);
         mainListener = new MainListener(mainScene);
         primaryStage.setResizable(false);
         primaryStage.show();
-        initStatusTab();
-        initManageUnitTab();
-        initManageInventoryTab();
-        initStarMap();
-        initBattlefield();
-
-        // init completed, showing tab
-        checkAndUpdateTab(gameController.StatusTab);
-        gameController.StatusTab.setOnSelectionChanged(new TabChangeListener(gameController.StatusTab,this));
-        gameController.UnitTab.setOnSelectionChanged(new TabChangeListener(gameController.UnitTab,this));
+//        initStatusTab();
+//        initManageUnitTab();
+//        initManageInventoryTab();
+//        initStarMap();
+//        initBattlefield();
+//
+//        // init completed, showing tab
+//        checkAndUpdateTab(gameController.StatusTab);
+//        gameController.StatusTab.setOnSelectionChanged(new TabChangeListener(gameController.StatusTab,this));
+//        gameController.UnitTab.setOnSelectionChanged(new TabChangeListener(gameController.UnitTab,this));
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    Popup switchDialog = null;
+    public Popup getSwitchDialog() {
+        if(switchDialog != null) return switchDialog;
+        switchDialog = new Popup();
+        switchDialog.setAutoHide(true);
+        return switchDialog;
     }
 
     public void initStatusTab() {
@@ -125,8 +135,6 @@ public class Main extends Application {
 
         canvas = gameController.Avatar_Vehicle;
         canvas.setId("canvas");
-        ImageView[] listVehicle = ImageHelper.getVehicleById(ImageHelper.predator, ImageHelper.Predator_Destructor);
-        canvas.getChildren().addAll(listVehicle);
 //            System.out.println("Armour WH:" + listArmour[chosen[i]].getViewport().getWidth() + ";" +  listArmour[chosen[i]].getViewport().getHeight());
 
 //        Squad cothea = new Squad();
@@ -231,7 +239,6 @@ public class Main extends Application {
             gameController.Master_Avatar.getChildren().clear();
             gameController.Master_Avatar.getChildren().addAll(you.getUnitDisplay());
         } else if(check == gameController.UnitTab) {
-            setUnitByRoster(GameData.getRoster());
         }
     }
 

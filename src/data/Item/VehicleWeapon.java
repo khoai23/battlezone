@@ -8,8 +8,8 @@ import javax.json.JsonObject;
 public class VehicleWeapon implements Item {
     int id;
     String name;
-    int damage;
-    int speed;
+    public int str;
+    public int spd;
     int stock;
     String type;
     String description;
@@ -17,8 +17,8 @@ public class VehicleWeapon implements Item {
     public VehicleWeapon(JsonObject obj, int id) {
         this.id = id;
         name = obj.getString("name");
-        damage = obj.getInt("str");
-        speed = obj.getInt("spd");
+        str = obj.getInt("str");
+        spd = obj.getInt("spd");
         type = obj.getString("type");
         description = obj.getString("desc");
         stock = 0;
