@@ -46,8 +46,8 @@ public class ImageHelper {
         armorImage = new Image[armorNum][];
 
         for(int i=0;i<armorNum;i++) {
-            // armor default with 9 parts
-            armorImage[i] = loadPrefixedImage("view_unit/" + getArmourNameById(i) + "_",9);
+            // armor default with 12 parts
+            armorImage[i] = loadPrefixedImage("view_unit/" + getArmourNameById(i) + "_",12);
         }
 
         int weaponNum = GameData.getWeaponsImageName().size();
@@ -55,6 +55,13 @@ public class ImageHelper {
         for(int i=0;i<weaponNum;i++) {
             // armor default with 8 parts
             weaponImage[i] = loadPrefixedImage("view_weapon/weapon_" + getWeaponNameById(i) + "_",5);
+        }
+
+        int accNum = GameData.getAccessories().size();
+        accessoryImage = new Image[accNum][];
+        for(int i=0;i<accNum;i++) {
+            // accessory with 4 parts
+            accessoryImage[i] = loadPrefixedImage("view_unit/acc_" + GameData.getAccessoryById(i).imgName + "_",4);
         }
 
 //        vehicleWeaponImage = new Image[5][];
@@ -73,14 +80,12 @@ public class ImageHelper {
 //        vehicleWeaponImage[3] = loadPrefixedImage("raz_top_",9);
 
         int vehicleWeaponNum = GameData.getVehicleWeaponsImageName().size();
-
         vehicleWeaponImage = new Image[vehicleWeaponNum][];
         for(int i=0;i<vehicleWeaponNum;i++) {
             vehicleWeaponImage[i] = loadPrefixedImage("view_vehicle/" + getVWeaponNameById(i) + "_",4);
         }
 
         int chassisNum = GameData.getVehiclesChassus().size();
-
         vehicleChassisImage = new Image[chassisNum][];
         for(int i=0;i<chassisNum;i++) {
             vehicleChassisImage[i] = loadPrefixedImage("view_vehicle/" + getChassisById(i) + "_",6);
@@ -197,6 +202,11 @@ public class ImageHelper {
             list = rightWeaponImageList;
         }
 
+        if(id<0) {
+            for (ImageView aList : list) aList.setImage(null);
+            return list;
+        }
+
         int colorscheme = GameData.getCurrentData().colorScheme;
         for (int i=0;i<5;i++) {
             list[i].setImage(weaponImage[id][i]);
@@ -234,34 +244,40 @@ public class ImageHelper {
     public static ImageView[] getArmourImageById(int id) {
         ImageView[] list;
         if(unitImageList == null) {
-            list = new ImageView[9];
-            for(int i=0;i<9;i++)
+            list = new ImageView[12];
+            for(int i=0;i<12;i++)
                 list[i] = new ImageView();
             unitImageList = list;
         } else {
             list = unitImageList;
         }
-        for(int i=0;i<9;i++) {
+
+        if(id<0) {
+            for (ImageView aList : list) aList.setImage(null);
+            return list;
+        }
+
+        for(int i=0;i<12;i++) {
             list[i].setImage(armorImage[id][i]);
             list[i].setFitWidth(150);
             list[i].setFitHeight(200);
 
             // color using scheme, with 4-7 as secondary distribution
-            if(i==0 || i==1 || (i==2 && (GameData.getCurrentData().colorScheme == GameData.scheme_monotone ||
+            if(i==0 || i==1 || i==9 || ((i==2 || i==10) && (GameData.getCurrentData().colorScheme == GameData.scheme_monotone ||
                             GameData.getCurrentData().colorScheme == GameData.scheme_center))
                     ) {
                 list[i].setEffect(primaryColor);
-            } else if(i==2) { // && colorscheme = half/quad
+            } else if(i==2 || i==10) { // && colorscheme = half/quad
                 list[i].setEffect(secondaryColor);
             } else if(i==3) {
                 list[i].setEffect(ornamentColor);
             } else if(i==4) {
                 list[i].setEffect(pauldronColor);
             } else {
-                if(i - 5 == GameData.getCurrentData().colorScheme) {
+                if(i == GameData.getCurrentData().colorScheme + 5) {
                     list[i].setVisible(true);
                     list[i].setEffect(secondaryColor);
-                } else {
+                } else if(i != 11) {
                     list[i].setVisible(false);
                 }
             }
@@ -280,78 +296,48 @@ public class ImageHelper {
         return getArmourImageById(idx);
     }
 
+    private static ImageView[] accessoryImageList = null;
+    /**
+     * Get the accessory's images
+     * @param id accessory id
+     * @return array of ImageView
+     * */
+    public static ImageView[] getAccessoryImageById(int id) {
+        ImageView[] list;
+        if(accessoryImageList == null) {
+            list = new ImageView[4];
+            for(int i=0;i<4;i++)
+                list[i] = new ImageView();
+            accessoryImageList = list;
+        } else {
+            list = accessoryImageList;
+        }
+
+        if(id<0) {
+            for (ImageView aList : list) aList.setImage(null);
+            return list;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            list[i].setImage(accessoryImage[id][i]);
+            list[i].setFitWidth(150);
+            list[i].setFitHeight(200);
+
+            if(i==1) list[i].setEffect(primaryColor);
+            else if(i==2) list[i].setEffect(secondaryColor);
+            else if(i==3) list[i].setEffect(ornamentColor);
+        }
+        return list;
+    }
+
     private static ImageView[] vehiclesImageList = null;
     /**
      * Get the vehicle's images
      * @param id vehicle id
-     * @param type vehicle type
+     * @param loadout vehicle loadout dictated by variant
+     * @param pintle is vehicle with pintle mounting
      * @return array of ImageView
      * */
-    public static ImageView[] getVehicleByIdOld(int id, int type) {
-        ImageView[] list;
-        if (vehiclesImageList == null) {
-            list = new ImageView[9];
-            for (int i = 0; i < 9; i++)
-                list[i] = new ImageView();
-            vehiclesImageList = list;
-        } else {
-            list = vehiclesImageList;
-        }
-
-        if(id == rhino || id == razorback || id == predator) {
-            int counter = 0;
-            // top hatches/turret mount
-            if(id == razorback) {
-                list[counter++].setImage(vehicleWeaponImage[4][type*3]);
-
-                list[counter].setImage(vehicleWeaponImage[4][type*3+1]);
-                list[counter++].setEffect(primaryColor);
-
-                list[counter].setImage(vehicleWeaponImage[4][type*3+2]);
-                list[counter++].setEffect(weaponColor);
-            } else if(id == predator) {
-                // turret
-                list[counter++].setImage(vehicleWeaponImage[1][type*3]);
-
-                list[counter].setImage(vehicleWeaponImage[1][type*3+1]);
-                list[counter++].setEffect(primaryColor);
-
-                list[counter].setImage(vehicleWeaponImage[1][type*3+2]);
-                list[counter++].setEffect(secondaryColor);
-            } else /*if(id == rhino)*/ {
-                list[counter++].setImage(vehicleWeaponImage[0][3]);
-                list[counter].setImage(vehicleWeaponImage[0][4]);
-                list[counter++].setEffect(secondaryColor);
-            }
-
-            // chassis with coloring
-            list[counter++].setImage(vehicleWeaponImage[0][0]);
-            list[counter].setImage(vehicleWeaponImage[0][1]);
-            list[counter++].setEffect(primaryColor);
-            list[counter].setImage(vehicleWeaponImage[0][2]);
-            list[counter++].setEffect(secondaryColor);
-
-            if(id == predator) {
-                // sponson
-                list[counter++].setImage(vehicleWeaponImage[2][type*3]);
-
-                list[counter].setImage(vehicleWeaponImage[2][type*3+1]);
-                list[counter++].setEffect(primaryColor);
-
-                list[counter].setImage(vehicleWeaponImage[2][type*3+2]);
-                list[counter++].setEffect(weaponColor);
-            }
-
-            for(int i=0;i<list.length;i++) {
-                list[i].setFitHeight(150);
-                list[i].setFitWidth(250);
-                list[i].setOpacity((i>counter) ? 0.0 : 1.0);
-            }
-        }
-
-        return list;
-    }
-
     public static ImageView[] getVehicleById(int id, int loadout, boolean pintle) {
         ImageView[] list;
         if (vehiclesImageList == null) {
@@ -423,17 +409,6 @@ public class ImageHelper {
 
         return list;
     }
-
-    public static ImageView[] getWeaponById(int id) {
-        ImageView[] list = new ImageView[5];
-
-        for (int i = 0; i < 5; i++) {
-            list[i] = new ImageView();
-            list[i].setImage(weaponImage[id][i]);
-        }
-        return list;
-    }
-
 
     public static ImageView getSquareById(int id) {
         ImageView result = new ImageView();
@@ -533,6 +508,8 @@ public class ImageHelper {
     private static Image[][] armorImage = null;
 
     private static Image[][] weaponImage = null;
+
+    private static Image[][] accessoryImage = null;
 
     private static Image[][] vehicleWeaponImage = null;
 

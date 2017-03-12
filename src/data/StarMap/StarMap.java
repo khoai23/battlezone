@@ -1,5 +1,6 @@
 package data.StarMap;
 
+import data.Utility;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -8,6 +9,7 @@ import javafx.scene.shape.Line;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Quan on 2/22/2017.
@@ -17,7 +19,7 @@ public class StarMap implements Serializable {
     public ArrayList<Route> routes;
 
     public StarMap() {
-        this((int)(Math.random() * 10 + 10));
+        this(Utility.rollBetween(10,20));
     }
 
     public StarMap(int numOfSys) {
@@ -46,15 +48,25 @@ public class StarMap implements Serializable {
     }
 
     void createMap(int numOfSys) {
-        // TODO Systems need to span across map instead of pure random
         systems = new System[numOfSys];
+        int mapSize = 1280/squareSize * (720-squareSize)/squareSize, rowMaxSize = 1280/squareSize, temp;
+        List<Integer> systemPosition = new ArrayList<>();
         for(int i=0;i<numOfSys;i++) {
-            systems[i] = new System("System no." + i);
+            systems[i] = new System("IS no." + i);
+            do {
+                temp = Utility.rollBetween(0,mapSize);
+            } while (systemPosition.contains(temp));
+            systemPosition.add(temp);
+            systems[i].posX = (float)(Math.random() * (squareSize-76) + temp % rowMaxSize * squareSize);
+            systems[i].posY = (float)(Math.random() * (squareSize-73) + temp / rowMaxSize * squareSize);
         }
         for(int i=0;i<numOfSys-1;i++) {
-            routes.add(new Route(systems[i],systems[(int)(Math.random() * (numOfSys-i-2)) + i + 1]));
+            routes.add(new Route(systems[i],systems[Utility.rollBetween(i+1,numOfSys-1)]));
+            //(int)(Math.random() * (numOfSys-i-2)) + i + 1
         }
     }
+
+    public static final int squareSize = 100;
 }
 
 class Route implements Serializable {

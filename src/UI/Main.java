@@ -253,6 +253,10 @@ public class Main extends Application {
                 for(Astartes bth : ((Squad) unit).members) {
                     unitItem.getChildren().add(new TreeItem<>(bth,ImageHelper.getIconById(bth.getIconId())));
                 }
+            } else if(unit instanceof Vehicle) {
+                for(Astartes bth : ((Vehicle) unit).getCrew()) {
+                    unitItem.getChildren().add(new TreeItem<>(bth,ImageHelper.getIconById(bth.getIconId())));
+                }
             }
         }
     }

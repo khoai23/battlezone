@@ -9,8 +9,8 @@ import javax.json.JsonObject;
  */
 public class Armour implements Item {
     final int id;
-    final int def;
-    final int spd;
+    public final int def;
+    public final int spd;
     final boolean isTerminator;
     int stock;
     final String name;
@@ -60,4 +60,6 @@ public class Armour implements Item {
     public int getStock() {
         return stock;
     }
+
+    public static Armour None = new Armour(-1,0,0,false,0,"None","");
 }

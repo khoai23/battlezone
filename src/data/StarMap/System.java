@@ -3,6 +3,7 @@ package data.StarMap;
 import UI.ImageHelper;
 import UI.Main;
 import data.GameData;
+import data.Utility;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -56,7 +57,8 @@ class Planet implements Serializable {
     public Planet(int number) {
         designation = number;
         // planet type forge/fortress/daemon are not randomized
-        habitat = (int)Math.floor(Math.random() * 5) * 3 + (int)(Math.floor(Math.random() * 3));
+//        habitat = (int)Math.floor(Math.random() * 5) * 3 + (int)(Math.floor(Math.random() * 3));
+        habitat = Utility.rollBetween(0,5) * 3 + Utility.rollBetween(0,3);
         // habitat type*3+specific
         if(habitat < 3 * habitat_type_death) {
             // dead, no population

@@ -1,5 +1,7 @@
 package data.Battle;
 
+import data.Utility;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -32,23 +34,30 @@ class Field implements Serializable {
         if(randomize != randomize_none) {
             int obs,imps,size = default_height * default_width, choice;
             if(randomize == randomize_little) {
-                obs = default_height + (int)(Math.random() * default_height - Math.random() * default_height);
-                imps = (int)(Math.random() * default_height / 2);
+//                obs = default_height + (int)(Math.random() * default_height - Math.random() * default_height);
+                obs = Utility.rollBetween(0, default_height * 2);
+//                imps = (int)(Math.random() * default_height / 2);
+                imps = Utility.rollBetween(0, default_height / 2);
             } else if(randomize == randomize_medium) {
-                obs = default_height * 2 + (int)(Math.random() * default_height - Math.random() * default_height);
-                imps = (int)(Math.random() * default_height / 2) + default_height / 2;
+//                obs = default_height * 2 + (int)(Math.random() * default_height - Math.random() * default_height);
+                obs = Utility.rollBetween(default_height, default_height * 3);
+//                imps = (int)(Math.random() * default_height / 2) + default_height / 2;
+                imps = Utility.rollBetween(default_height / 2, default_height);
             } else {
-                obs = default_height * 4 + (int)(Math.random() * default_height - Math.random() * default_height);
-                imps = (int)(Math.random() * default_height) + default_height;
+//                obs = default_height * 4 + (int)(Math.random() * default_height - Math.random() * default_height);
+                obs = Utility.rollBetween(default_height * 3, default_height * 5);
+//                imps = (int)(Math.random() * default_height) + default_height;
+                imps = Utility.rollBetween(default_height, default_height * 2);
             }
             for(;obs>0;obs--) {
-                choice = (int)(Math.random() * size);
+//                choice = (int)(Math.random() * size);
+                choice = Utility.rollBetween(0,size);
                 if((choice / default_height)%2 == 0 && choice%default_height==default_height-1)
                     choice -= 1;
                 fieldTerrain[choice/default_height][choice%default_height] = obstacles;
             }
             for(;imps>0;imps--) {
-                choice = (int)(Math.random() * size);
+                choice = Utility.rollBetween(0,size);
                 if((choice / default_height)%2 == 0 && choice%default_height==default_height-1)
                     choice -= 1;
                 fieldTerrain[choice/default_height][choice%default_height] = impassable;

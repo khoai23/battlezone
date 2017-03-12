@@ -59,4 +59,30 @@ public class Squad implements Unit {
     public int getIconId() {
         return ImageHelper.squadIcon;
     }
+
+    public int getEstimatedArmor() {
+        int total = 0;
+        for (Astartes bth:members) total+=bth.getArmourValue();
+        return total/members.size();
+    }
+
+    public int getEstimatedHp() {
+        int total = 0;
+        for (Astartes bth:members) total+=bth.hp;
+        return total/members.size();
+    }
+
+    public List<Trait> getSquadOffensiveTraits() {
+        // Squad trait is only taken from the squad leader
+        List<Trait> traitList = new ArrayList<>(members.get(0).traits);
+        traitList.removeIf(Trait::isNotOffensiveSquadTrait);
+        return traitList;
+    }
+
+    public List<Trait> getSquadDefensiveTraits() {
+        // Squad trait is only taken from the squad leader
+        List<Trait> traitList = new ArrayList<>(members.get(0).traits);
+        traitList.removeIf(Trait::isNotDefensiveSquadTrait);
+        return traitList;
+    }
 }

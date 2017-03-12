@@ -4,6 +4,7 @@ import data.GameData;
 import data.Item.Item;
 import data.TreeViewable;
 import data.Unit.*;
+import data.Utility;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -14,13 +15,10 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import sun.reflect.generics.tree.Tree;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +41,7 @@ public class MainScene extends Scene {
         checkAndUpdateTab(controller.StatusTab);
         controller.StatusTab.setOnSelectionChanged(new TabListener(controller.StatusTab,this));
         controller.UnitTab.setOnSelectionChanged(new TabListener(controller.UnitTab,this));
+        controller.InventoryTab.setOnSelectionChanged(new TabListener(controller.InventoryTab,this));
         needReloadingRoster = true;
     }
 
@@ -142,7 +141,6 @@ public class MainScene extends Scene {
     
     public void initInventoryTab() {
         ObservableList<Item> data = FXCollections.observableArrayList();
-        GameData.getCurrentData().loadDefaultData();
         data.addAll(GameData.getCurrentData().getAllItem());
 
         controller.Type.setCellValueFactory(new PropertyValueFactory<Item,String>("type"));
@@ -170,7 +168,7 @@ public class MainScene extends Scene {
     public void checkAndUpdateTab(Tab check) {
         if(check == controller.StatusTab) {
             Astartes you = GameData.getCurrentData().you;
-            listLabel[0].setText("Role: " + "Brother-Captain");
+            listLabel[0].setText("Role: " + you.getRole());
             listLabel[1].setText("Stat: " + you.statToString());
             listLabel[2].setText("Wargears: " + you.equipmentToString());
             listLabel[3].setText("");
@@ -181,7 +179,7 @@ public class MainScene extends Scene {
             controller.Master_Avatar.getChildren().clear();
             controller.Master_Avatar.getChildren().addAll(you.getUnitDisplay());
         } else if(check == controller.UnitTab) {
-            if(!needReloadingAll && !needReloadingRoster) {
+            if(!needReloadingRoster) {
                 controller.Avatar_Unit.getChildren().clear();
                 controller.Avatar_Vehicle.getChildren().clear();
                 TreeItem selectedItem = tree.getSelectionModel().getSelectedItem();
@@ -206,13 +204,18 @@ public class MainScene extends Scene {
                     for(Astartes bth : ((Squad) unit).members) {
                         unitItem.getChildren().add(new TreeItem<>(bth,ImageHelper.getIconById(bth.getIconId())));
                     }
+                } else if(unit instanceof Vehicle) {
+                    for(Astartes bth : ((Vehicle) unit).getCrew()) {
+                        unitItem.getChildren().add(new TreeItem<>(bth,ImageHelper.getIconById(bth.getIconId())));
+                    }
                 }
             }
             needReloadingRoster = false;
+        } else if(check == controller.InventoryTab) {
+//            Utility.handleSquadAttackSquad((Squad) GameData.getRoster().get(0), (Squad) GameData.getRoster().get(1), 1, false);
         }
     }
-    
-    public static boolean needReloadingAll = false;
+
     public static boolean needReloadingRoster = false;
 }
 

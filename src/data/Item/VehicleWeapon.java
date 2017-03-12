@@ -11,6 +11,7 @@ public class VehicleWeapon implements Item {
     public int str;
     public int spd;
     int stock;
+    int range;
     String type;
     String description;
 
@@ -22,7 +23,27 @@ public class VehicleWeapon implements Item {
         type = obj.getString("type");
         description = obj.getString("desc");
         stock = 0;
+        checkRange();
     }
+
+    void checkRange() {
+        if(type.contains("extreme")) {
+            range = 4;
+        } else if(type.contains("long")) {
+            range = 3;
+        } else if(type.contains("medium")) {
+            range = 2;
+        } else if(type.contains("short")) {
+            range = 1;
+        } else if(type.contains("melee")) {
+            range = 0;
+        } else {
+            System.out.println("Error getting correct range for weapon name " + name);
+            range = 0;
+        }
+    }
+
+    public int getRange() { return range; }
 
     @Override
     public int getId() {

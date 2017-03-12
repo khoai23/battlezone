@@ -2,9 +2,12 @@ package data.Item;
 
 import data.Item.Item;
 import data.StarMap.*;
+import data.Unit.Trait;
 
 import javax.json.JsonObject;
 import java.lang.System;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Quan on 12/23/2016.
@@ -17,7 +20,8 @@ public class Weapon implements Item {
     int stock;
     final String name;
     final String description;
-    final String type;
+    public final String type;
+    public List<Trait> traitList = new ArrayList<>();
     int range;
 
     public Weapon(int id, int str,int spd, int hd, int stk, String n, String desc, String tp) {
@@ -65,7 +69,7 @@ public class Weapon implements Item {
         } else if(type.contains("melee")) {
             range = 0;
         } else {
-            System.out.print("Error getting correct range for weapon name " + name);
+            System.out.println("Error getting correct range for weapon name " + name);
             range = 0;
         }
     }
@@ -94,4 +98,6 @@ public class Weapon implements Item {
     public int getStock() {
         return stock;
     }
+
+    public static final Weapon None = new Weapon(-1,0,0,0,0,"Empty","","");
 }

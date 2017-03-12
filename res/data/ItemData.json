@@ -79,6 +79,38 @@
     "imgName":"paxe",
     "desc":"The axe sacrifices finesse and speed for even more striking power."
   },{
+    "name":"Crozius",
+    "str":22,
+    "spd":7,
+    "hand":1,
+    "type":"melee,power",
+    "imgName":"crozius",
+    "desc":"The Crozius Arcanum is both a potent weapon and a symbol of a chaplain's faith."
+  },{
+    "name":"Power Fist",
+    "str":55,
+    "spd":1,
+    "hand":1,
+    "type":"melee,power,pair",
+    "imgName":"pfist",
+    "desc":"When you want to punch tanks out of existence, accept no substitute."
+  },{
+    "name":"Power Claw",
+    "str":45,
+    "spd":1,
+    "hand":1,
+    "type":"melee,power,shred,pair",
+    "imgName":"claw",
+    "desc":"The Power Claw's purpose is to gut heavy infantry."
+  },{
+    "name":"Eviscerator",
+    "str":30,
+    "spd":8,
+    "hand":2,
+    "type":"melee,chain",
+    "imgName":"eviscerator",
+    "desc":"A heavier, two handed version of the chainsword that offer a little more power and strength."
+  },{
     "name":"Bolter",
     "str":20,
     "spd":5,
@@ -104,7 +136,7 @@
     "desc":"This weapon traded its safety in exchange for excellent destructive power."
   },{
     "name":"Melta Gun",
-    "str":85,
+    "str":80,
     "spd":1,
     "hand":2,
     "imgName":"melta",
@@ -145,9 +177,9 @@
   },{
     "name":"Heavy Bolter",
     "str":30,
-    "spd":9,
+    "spd":10,
     "hand":3,
-    "type":"long,heavy,bolt",
+    "type":"long,heavy,bolt,req_pack",
     "imgName":"hbolt",
     "desc":"Upscaled and with dedicated feeding mechanism, it can cut through infantry with horrifying ease."
   },{
@@ -155,7 +187,7 @@
     "str":70,
     "spd":1,
     "hand":3,
-    "type":"long,heavy,missile",
+    "type":"long,heavy,missile,no_acc",
     "imgName":"missile",
     "desc":"With two different warheads, it excels at nothing yet terrible at neither."
   },{
@@ -163,7 +195,7 @@
     "str":63,
     "spd":3,
     "hand":3,
-    "type":"long,heavy,hot,splash",
+    "type":"long,heavy,hot,splash,req_pack",
     "imgName":"pcannon",
     "desc":"Rare. Powerful, especially against light vehicles and/or heavy infantry."
   },{
@@ -171,7 +203,7 @@
     "str":90,
     "spd":1,
     "hand":3,
-    "type":"medium,heavy,melta",
+    "type":"medium,heavy,melta,req_pack",
     "imgName":"mmelta",
     "desc":"This monstrous weapon can annihilate tanks easily, should any foolish enough to come to its range."
   },{
@@ -179,9 +211,64 @@
     "str":88,
     "spd":1,
     "hand":3,
-    "type":"extreme,heavy",
+    "type":"extreme,heavy,req_pack",
     "imgName":"lascannon",
     "desc":"Deadly against single target and heavily armoured vehicles, complemented with excellent range."
+  },{
+    "name":"Battle Standard",
+    "str":0,
+    "spd":0,
+    "hand":1,
+    "type":"melee,rally",
+    "imgName":"standard",
+    "desc":"A ceremonial standard that influence all soldiers in battle."
+  }],
+
+
+
+  "accessory":[{
+    "name":"Ammunition Feeder",
+    "trait":"stable",
+    "imgName":"devpack",
+    "desc":"Certain heavy weapons utilized by the Astartes require this feeding mechanism."
+  },{
+    "name":"Jump Pack",
+    "trait":"jump",
+    "imgName":"jumppack",
+    "desc":"A Jump Pack allow the Assault Marine to easily pass obstacle and grant extra movement speed."
+  },{
+    "name": "Iron Halo",
+    "trait": "r_field",
+    "imgName": "halo",
+    "useBeforeBackpack": true,
+    "desc": "Emit a reductor field that disperse enemy attacks upon impact."
+  },{
+    "name": "Rosarius",
+    "trait": "c_field",
+    "imgName": "",
+    "desc": "Emit a conversion field that convert approaching kinetic energy into light."
+  },{
+    "name": "Psychic Hood (Amplify)",
+    "trait": "psy_amp",
+    "imgName": "psyhood",
+    "useBeforeBackpack": false,
+    "desc": "This device allow the psyker wearing it greater control over the Warp's energy flow."
+  },{
+    "name": "Psychic Hood (Protective)",
+    "trait": "psy_pro",
+    "imgName": "psyhood2",
+    "useBeforeBackpack": false,
+    "desc": "This device reduce the Peril of the Warp to a much safer level."
+  },{
+    "name": "Cyclone Missile Launcher",
+    "trait": "cml,req_term",
+    "imgName": "cml",
+    "desc": "Essentially two giant racks that can launch a deadly barrage of missile."
+  },{
+    "name": "Teleport Homer",
+    "trait": "teleport",
+    "imgName": "",
+    "desc": "Allowing Astartes to travel through the Warp and immediately arrive at the necessary position."
   }],
 
 
@@ -193,6 +280,11 @@
     "desc":"The Rhino chassis is the most common and likewise the most versatile base."
   },{
     "id":1,
+    "name":"Land Speeder",
+    "imgName":"lspeeder",
+    "desc":"The Land Speeder is a nimble skimmer vehicle that saw extensive use in the hand of the Astartes."
+  },{
+    "id":2,
     "name":"Land Raider",
     "imgName":"lraider",
     "desc":"The Land Raider performs as Superheavy troops carrier, with the firepower of a heavy tank and ability to carry Terminators into battle."
@@ -284,6 +376,41 @@
     "type": "medium,ordnance,concussive",
     "imgName":"demo_cannon",
     "desc":"The powerful Demolisher cannon can easily obliterate a squad of infantry with a single shot."
+  },{
+    "name": "Whirlwind Hellfire Battery",
+    "str": 40,
+    "spd": 2,
+    "type": "extreme,heavy,barrage,aoe",
+    "imgName":"whirl_ml",
+    "desc":"The whirlwind echo the Adeptus Astartes' modus operandi - overwhelming force."
+  },{
+    "name": "Pintle-mounted Heavy Bolter",
+    "str": 30,
+    "spd": 10,
+    "type": "long,bolt",
+    "imgName":"lspeed_hb",
+    "desc":"The default main armament for a Land Speeder."
+  },{
+    "name": "Pintle-mounted Multi Melta",
+    "str": 90,
+    "spd": 1,
+    "type": "medium,melta",
+    "imgName":"lspeed_mm",
+    "desc":"A dedicated tank hunting weapon which capitalize on the Land Speeder's overwhelming speed."
+  },{
+    "name": "Typhoon Missile Launcher",
+    "str": 75,
+    "spd": 2,
+    "type": "long,missile",
+    "imgName":"lspeed_ml",
+    "desc":"The heaviest among Missile Launchers, it also have different warhead suited for different purposes."
+  },{
+    "name": "Underslung Assault Cannon",
+    "str": 40,
+    "spd": 6,
+    "type": "medium,rotary",
+    "imgName":"lspeed_as",
+    "desc":"The assault cannon can fire thousands of shells per minute, and is truly a versatile weapon."
   }],
 
 
@@ -294,7 +421,8 @@
     "spd":4,
     "weapons":[],
     "pintle":1,
-    "armor": 20,
+    "crew":1,
+    "armor": 25,
     "hp":50,
     "carry":10,
     "desc":"The Rhino APC had been the Astartes' main transport since its rediscovery."
@@ -304,7 +432,8 @@
     "spd":4,
     "weapons":[[3,4,5,6]],
     "pintle":1,
-    "armor": 25,
+    "crew":1,
+    "armor": 29,
     "hp":65,
     "carry":5,
     "desc":"A variant of the Rhino, the Razorback sacrifice some troops carrying capacity in exchange for a deadly primary weapon."
@@ -314,7 +443,8 @@
     "spd":4,
     "weapons":[[7,9],[8,10]],
     "pintle":0,
-    "armor": 35,
+    "crew":2,
+    "armor": 40,
     "hp":85,
     "carry":0,
     "desc":"A full-pledged tank in its own right, the mighty Predator driven by an Astartes is a foe to be reckoned with."
@@ -324,9 +454,21 @@
     "spd":4,
     "weapons":[[11]],
     "pintle":1,
-    "armor":40,
+    "crew":2,
+    "armor":45,
     "hp":60,
     "carry":0,
     "desc":"A siege vehicle armed with the devastating Demolisher Cannon and a Siege Shield, it excels at fighting in close quarters."
+  },{
+    "name":"Land Speeder",
+    "chassis": 1,
+    "spd":6,
+    "weapons":[[13,14],[15,16]],
+    "pintle":-1,
+    "crew":2,
+    "armor":15,
+    "hp":60,
+    "carry":0,
+    "desc":"The Land Speeder's excellent speed and armament allow it to be the spearhead of every Chapter's armored assault."
   }]
 }
