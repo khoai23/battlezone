@@ -4,6 +4,9 @@ import javax.json.JsonObject;
 
 /**
  * Created by Quan on 2/22/2017.
+ *
+ * A VehicleWeapon is exclusive to a Vehicle
+ * TODO add components for the weapon
  */
 public class VehicleWeapon implements Item {
     int id;

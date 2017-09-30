@@ -41,6 +41,13 @@
     "isTermi":false,
     "imgName":"artificer",
     "desc":"Customized armors made by the Chapter's Techmarines, these boast extreme protective power and capability."
+  },{
+    "name":"Terminator Armor",
+    "def":26,
+    "spd":2,
+    "isTermi":true,
+    "imgName":"indomitus",
+    "desc":"Terminator."
   }],
 
 
@@ -101,7 +108,7 @@
     "hand":1,
     "type":"melee,power,shred,pair",
     "imgName":"claw",
-    "desc":"The Power Claw's purpose is to gut heavy infantry."
+    "desc":"The Power Claw's purpose is to gut heavy infantry. Repeatedly."
   },{
     "name":"Eviscerator",
     "str":30,
@@ -116,7 +123,7 @@
     "spd":5,
     "hand":2,
     "imgName":"bolter",
-    "type":"medium,bolt",
+    "type":"medium,bolt,spread",
     "desc":"This trusty weapon is the default choice for an Astartes."
   },{
     "name":"Flamer",
@@ -148,7 +155,7 @@
     "spd":8,
     "hand":2,
     "imgName":"sbolter",
-    "type":"assault,medium,bolt",
+    "type":"assault,medium,bolt,spread",
     "desc":"Essentially two bolters in one package, this weapon can lay down a curtain of fire by itself."
   },{
     "name":"Sniper Gun",
@@ -164,7 +171,7 @@
     "spd":2,
     "hand":1,
     "imgName":"bpistol",
-    "type":"short,bolt",
+    "type":"short,assault,bolt",
     "desc":"Handheld version of the ubiquitous bolter, similarly versatile and powerful."
   },{
     "name":"Plasma Pistol",
@@ -179,7 +186,7 @@
     "str":30,
     "spd":10,
     "hand":3,
-    "type":"long,heavy,bolt,req_pack",
+    "type":"long,heavy,bolt,req_pack,cumbersome,two_handed,primary,spread",
     "imgName":"hbolt",
     "desc":"Upscaled and with dedicated feeding mechanism, it can cut through infantry with horrifying ease."
   },{
@@ -195,7 +202,7 @@
     "str":63,
     "spd":3,
     "hand":3,
-    "type":"long,heavy,hot,splash,req_pack",
+    "type":"long,heavy,hot,splash,req_pack,cumbersome,two_handed,primary",
     "imgName":"pcannon",
     "desc":"Rare. Powerful, especially against light vehicles and/or heavy infantry."
   },{
@@ -203,7 +210,7 @@
     "str":90,
     "spd":1,
     "hand":3,
-    "type":"medium,heavy,melta,req_pack",
+    "type":"medium,heavy,melta,req_pack,cumbersome,two_handed,primary",
     "imgName":"mmelta",
     "desc":"This monstrous weapon can annihilate tanks easily, should any foolish enough to come to its range."
   },{
@@ -211,7 +218,7 @@
     "str":88,
     "spd":1,
     "hand":3,
-    "type":"extreme,heavy,req_pack",
+    "type":"extreme,heavy,req_pack,cumbersome,two_handed,primary",
     "imgName":"lascannon",
     "desc":"Deadly against single target and heavily armoured vehicles, complemented with excellent range."
   },{
@@ -246,6 +253,7 @@
     "name": "Rosarius",
     "trait": "c_field",
     "imgName": "",
+    "useBeforeBackpack": false,
     "desc": "Emit a conversion field that convert approaching kinetic energy into light."
   },{
     "name": "Psychic Hood (Amplify)",
@@ -312,7 +320,7 @@
     "spd": 1,
     "type": "medium,melta,pintle",
     "imgName":"raider_mm",
-    "desc": "Sometimes, the Land Raider aren't armed enough. This multi melta is the answer to that predicament."
+    "desc": "Sometimes, the Land Raider meet something similarly armoured. This multi melta is the answer to that predicament."
   },{
     "name":"Twin-linked Heavy Bolters",
     "str": 28,
@@ -381,8 +389,8 @@
     "str": 40,
     "spd": 2,
     "type": "extreme,heavy,barrage,aoe",
-    "imgName":"whirl_ml",
-    "desc":"The whirlwind echo the Adeptus Astartes' modus operandi - overwhelming force."
+    "imgName":"whirlwind_cannon",
+    "desc":"The whirlwind echo the Adeptus Astartes' modus operandi - overwhelming force in a compact package."
   },{
     "name": "Pintle-mounted Heavy Bolter",
     "str": 30,
@@ -398,6 +406,13 @@
     "imgName":"lspeed_mm",
     "desc":"A dedicated tank hunting weapon which capitalize on the Land Speeder's overwhelming speed."
   },{
+    "name": "Pintle-mounted Heavy Flamer",
+    "str": 24,
+    "spd": 1,
+    "type": "short,flame,aoe",
+    "imgName":"lspeed_hf",
+    "desc":"Coupling with the Land Speeder's swiftness, this weapon can easily burn out enemies cowering inside fortified position."
+  },{
     "name": "Typhoon Missile Launcher",
     "str": 75,
     "spd": 2,
@@ -411,16 +426,24 @@
     "type": "medium,rotary",
     "imgName":"lspeed_as",
     "desc":"The assault cannon can fire thousands of shells per minute, and is truly a versatile weapon."
+  },{
+    "name": "Underslung Heavy Flamer",
+    "str": 24,
+    "spd": 1,
+    "type": "short,flame,aoe",
+    "imgName":"lspeed_uhf",
+    "desc":"Because nothing can beat the feeling of surfing atop a wave of flame."
   }],
 
 
 
   "vehicle_type":[{
     "name":"Rhino",
-    "chassis": 0,
+    "chassis": 0, "chassisName": "rhino",
     "spd":4,
     "weapons":[],
-    "pintle":1,
+    "weaponsName": [],
+    "pintle":1, "pintleName": "rhino_pintle",
     "crew":1,
     "armor": 25,
     "hp":50,
@@ -428,10 +451,11 @@
     "desc":"The Rhino APC had been the Astartes' main transport since its rediscovery."
   },{
     "name":"Razorback",
-    "chassis": 0,
+    "chassis": 0, "chassisName": "rhino",
     "spd":4,
     "weapons":[[3,4,5,6]],
-    "pintle":1,
+    "weaponsName": ["raz_hb", "raz_hf", "raz_las", "raz_mm"],
+    "pintle":1, "pintleName": "rhino_pintle",
     "crew":1,
     "armor": 29,
     "hp":65,
@@ -439,10 +463,11 @@
     "desc":"A variant of the Rhino, the Razorback sacrifice some troops carrying capacity in exchange for a deadly primary weapon."
   },{
     "name":"Predator",
-    "chassis": 0,
+    "chassis": 0, "chassisName": "rhino",
     "spd":4,
     "weapons":[[7,9],[8,10]],
-    "pintle":0,
+    "weaponsName": [["pred_sponson_hb", "pred_turret_auto"],["pred_sponson_las", "pred_turret_lasc"]],
+    "pintle":0, "pintleName": "pred_pintle",
     "crew":2,
     "armor": 40,
     "hp":85,
@@ -450,10 +475,11 @@
     "desc":"A full-pledged tank in its own right, the mighty Predator driven by an Astartes is a foe to be reckoned with."
   },{
     "name":"Vindicator",
-    "chassis": 0,
+    "chassis": 0, "chassisName": "rhino",
     "spd":4,
     "weapons":[[11]],
-    "pintle":1,
+    "weaponsName": [["demo_cannon"]],
+    "pintle":1, "pintleName": "rhino_pintle",
     "crew":2,
     "armor":45,
     "hp":60,
@@ -461,10 +487,11 @@
     "desc":"A siege vehicle armed with the devastating Demolisher Cannon and a Siege Shield, it excels at fighting in close quarters."
   },{
     "name":"Land Speeder",
-    "chassis": 1,
+    "chassis": 1, "chassisName": "lspeeder",
     "spd":6,
     "weapons":[[13,14],[15,16]],
-    "pintle":-1,
+    "weaponsName": [["lspeed_as","lspeed_hb"],["lspeed_ml","lspeed_mm"],["lspeed_uhf", "lspeed_hf"]],
+    "pintle":-1, "pintleName": null,
     "crew":2,
     "armor":15,
     "hp":60,

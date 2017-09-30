@@ -51,6 +51,8 @@ public class Armour implements Item {
         return name;
     }
 
+    public String toString() { return name; }
+
     @Override
     public String getDescription() {
         return description;
@@ -60,6 +62,8 @@ public class Armour implements Item {
     public int getStock() {
         return stock;
     }
+
+    public boolean isTerminator() { return isTerminator; }
 
     public static Armour None = new Armour(-1,0,0,false,0,"None","");
 }

@@ -4,6 +4,7 @@ import UI.ImageHelper;
 import data.Battle.AttackFormat;
 import data.GameData;
 import data.Item.Accessory;
+import data.Item.Armour;
 import data.Item.Weapon;
 import data.TreeViewable;
 import data.Utility;
@@ -19,9 +20,9 @@ import java.util.List;
 /**
  * Created by Quan on 12/28/2016.
  */
-public class Astartes implements TreeViewable, Serializable {
+public class Astartes implements TreeViewable, Serializable, Individual {
     public String status = "";
-    protected String name;
+    public String name;
     protected int[] equipment;
     // armour,hand1,hand2,accessory
     protected int[] baseStat;
@@ -73,7 +74,7 @@ public class Astartes implements TreeViewable, Serializable {
 
     @Override
     public int getIconId() {
-        switch (this.role) {
+        switch (role) {
             case role_recruit:
             case role_neophyte:
                 return ImageHelper.normalIcon;
@@ -137,7 +138,7 @@ public class Astartes implements TreeViewable, Serializable {
         int backImagesNum = all.size();
         all.addAll(Arrays.asList(Arrays.copyOfRange(armourImage,0,9)));
         if(hp <= 0) {
-            // no weapon and show damage
+            // no weapon and show setHp
             all.add(armourImage[11]);
             return all;
         }
@@ -175,8 +176,16 @@ public class Astartes implements TreeViewable, Serializable {
         Weapon mainhand = GameData.getWeaponById(equipment[weapon1]);
         Weapon offhand = GameData.getWeaponById(equipment[weapon2]);
         if(range==0) {
-            attacksMade.add(AttackFormat.createAttack(mainhand, this, 0));
-            attacksMade.add(AttackFormat.createAttack(offhand, this, 0));
+
+            if(mainhand.getRange()==range) {
+                attacksMade.add(AttackFormat.createAttack(mainhand, this, range));
+            }
+            if(offhand.getRange()==range) {
+                attacksMade.add(AttackFormat.createAttack(offhand, this, range));
+            }
+
+//            attacksMade.add(AttackFormat.createAttack(mainhand, this, 0));
+//            attacksMade.add(AttackFormat.createAttack(offhand, this, 0));
         } else {
             if(mainhand.getRange()>=range) {
                 attacksMade.add(AttackFormat.createAttack(mainhand, this, range));
@@ -203,9 +212,9 @@ public class Astartes implements TreeViewable, Serializable {
         if(GameData.getWeaponById(equipment[weapon1]).hand + GameData.getWeaponById(equipment[weapon2]).hand >=3 &&
                 (level < 7 && GameData.getWeaponById(equipment[weapon1]).hand != 3))
             val -= 15;
-        if(getAccessoryTrait().equals("stable")) {
-            val += 5;
-        }
+//        if(getAccessoryTrait().equals("stable")) {
+//            val += 5;
+//        }
         switch (status) {
             case "": break;
             case "concussive": val -= 30; break;
@@ -226,30 +235,6 @@ public class Astartes implements TreeViewable, Serializable {
 
     public String getAccessoryTrait() {
         return GameData.getAccessoryById(equipment[accessory]).getTrait();
-    }
-
-    public List<Trait> getTraitsOnAttack() {
-        List<Trait> listTraits = new ArrayList<>(traits);
-
-        Accessory acc = GameData.getAccessoryById(equipment[accessory]);
-        if(acc != Accessory.None) {
-            listTraits.addAll(acc.traitList);
-        }
-
-        listTraits.removeIf(Trait::isNotOffensiveTrait);
-        return listTraits;
-    }
-
-    public List<Trait> getTraitsOnDefend() {
-        List<Trait> listTraits = new ArrayList<>(traits);
-
-        Accessory acc = GameData.getAccessoryById(equipment[accessory]);
-        if(acc != Accessory.None) {
-            listTraits.addAll(acc.traitList);
-        }
-
-        listTraits.removeIf(Trait::isNotDefensiveTrait);
-        return listTraits;
     }
 
     // role decide hp/+acc bonus.
@@ -277,6 +262,83 @@ public class Astartes implements TreeViewable, Serializable {
     public static final int rangeAcc=1;
     public static final int meleeAcc=2;
     public static final int initiative=3;
+
+    @Override
+    public int getHp() {
+        return hp;
+    }
+
+    @Override
+    public boolean setHp(int value) {
+        hp = value;
+        return hp < 0;
+    }
+
+    @Override
+    public boolean isInfantry() {
+        return true;
+    }
+
+    @Override
+    public float getInitiative() {
+        return baseStat[initiative] + GameData.getArmourById(baseStat[armour]).spd;
+    }
+
+    @Override
+    public int getMaxRange() {
+        return Math.max(GameData.getWeaponById(equipment[weapon1]).getRange(),GameData.getWeaponById(equipment[weapon2]).getRange());
+    }
+
+    @Override
+    public List<Trait> getIndividualOffensiveTrait() {
+        List<Trait> listTraits = new ArrayList<>(traits);
+
+        Accessory acc = GameData.getAccessoryById(equipment[accessory]);
+        if(acc != Accessory.None) {
+            listTraits.addAll(acc.traitList);
+        }
+
+        listTraits.removeIf(Trait::isNotOffensiveTrait);
+        return listTraits;
+    }
+
+    @Override
+    public List<Trait> getIndividualDefensiveTrait() {
+        List<Trait> listTraits = new ArrayList<>(traits);
+
+        Accessory acc = GameData.getAccessoryById(equipment[accessory]);
+        if(acc != Accessory.None) {
+            listTraits.addAll(acc.traitList);
+        }
+
+        listTraits.removeIf(Trait::isNotDefensiveTrait);
+        return listTraits;
+    }
+
+    public void changeEquipment(int type, int eq) {
+        equipment[type] = eq;
+//        System.out.println("Equipment change called, new eq " + equipmentToString());
+    }
+
+    public int getEquipment(int type) { return equipment[type]; }
+
+    public void changeEquipment(int[] newEquipment) {
+        if(newEquipment.length == 4)
+            equipment = newEquipment;
+        else if(newEquipment.length == 9) {
+            equipment = new int[4];
+            System.arraycopy(newEquipment,4,equipment,0,4);
+        } else
+            System.err.printf("\nWrong input @%s, array len %d", toString(), newEquipment.length);
+    }
+
+    public int[] getCloneArray() {
+        int[] clone = new int[9];
+        System.arraycopy(baseStat,0,clone,0,4);
+        System.arraycopy(equipment,0,clone,4,4);
+        clone[8] = role;
+        return clone;
+    }
 }
 
 class AscensionPath {
@@ -326,15 +388,15 @@ class AscensionPath {
     // recruit 0 -> brother 20 -> veteran 50 -> respected 100 -> ancient 200 -> venerable 300 -> legend 500
 
     static String getRandomTrait(String existingTrait, String prefix) {
-        // TODO add the traitlist JSON file
-        List<String> traitList = new ArrayList<>();
+        List<Trait> traitList = GameData.getTraitList();
+        traitList.removeIf(t -> !t.name.contains(prefix));
         int traitNum;
         do {
 //            traitNum = (int)Math.floor(Math.random() * traitList.size());
             traitNum = Utility.rollBetween(0,traitList.size());
-        } while (!traitList.get(traitNum).contains(prefix) || existingTrait.contains(traitList.get(traitNum)));
+        } while (!existingTrait.contains(traitList.get(traitNum).name));
 
-        if(existingTrait.equals("")) return traitList.get(traitNum);
+        if(existingTrait.equals("")) return traitList.get(traitNum).name;
         return existingTrait + "|" + traitList.get(traitNum);
     }
 

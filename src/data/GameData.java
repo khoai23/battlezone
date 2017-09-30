@@ -1,9 +1,11 @@
 package data;
 
+import UI.MainScene;
 import data.Battle.Battle;
 import data.Item.*;
 import data.StarMap.StarMap;
 import data.Unit.*;
+import javafx.application.Platform;
 
 import javax.json.*;
 import java.io.*;
@@ -37,6 +39,8 @@ public class GameData implements Serializable {
     List<VehicleWeapon> vehicleWeapons;
     List<String> vehicleWeaponsImageName;
     List<VehicleChassis> vehicleChassus;
+    List<EnemyIndividual> enemyBaseIndividual;
+    List<EnemySquadConfig> enemyBaseSquad;
     List<Trait> traitList;
     Battle currentBattle = null;
 
@@ -57,13 +61,19 @@ public class GameData implements Serializable {
         vehicleWeaponsImageName = new ArrayList<>();
         vehicleChassus = new ArrayList<>();
         traitList = new ArrayList<>();
+        enemyBaseIndividual = new ArrayList<>();
+        enemyBaseSquad = new ArrayList<>();
         colorScheme = scheme_quad;
         loadDefaultData();
-        loadTestData();
+        Platform.runLater(() -> {
+            System.out.println("loadTestData waiter initialized");
+            loadTestData();
+        });
     }
 
     public static String itemPath = "res/data/ItemData.json";
     public static String traitPath = "res/data/TraitData.json";
+    public static String enemyPath = "res/data/EnemyData.json";
 
     public void loadDefaultData() {
         map = new StarMap();
@@ -115,23 +125,43 @@ public class GameData implements Serializable {
 
             reader = Json.createReader(new FileInputStream(traitPath));
             JsonArray traits = reader.readArray();
+            Trait.initialization = new ArrayList<>();
             for(int i=0;i<traits.size();i++) {
-                traitList.add(new Trait(traits.getJsonObject(i), i));
+                Trait.initialization.add(new Trait(traits.getJsonObject(i), i));
             }
+            traitList = Trait.initialization;
+            Trait.initialization = null;
 
             reloadTraitOnWeapons();
+            reloadTraitOnAccessory();
+
+            reader = Json.createReader(new FileInputStream(enemyPath));
+            JsonObject enemyData = reader.readObject();
+            JsonArray enemyIndv = enemyData.getJsonArray("individual");
+            EnemyIndividual.initialization = new ArrayList<>();
+            for(int i=0;i<enemyIndv.size();i++) {
+                EnemyIndividual.initialization.add(new EnemyIndividual(enemyIndv.getJsonObject(i), i));
+            }
+            enemyBaseIndividual = EnemyIndividual.initialization;
+
+            JsonArray enemySqdConf = enemyData.getJsonArray("unit");
+            for(int i=0;i<enemySqdConf.size();i++) {
+                enemyBaseSquad.add(new EnemySquadConfig(enemySqdConf.getJsonObject(i), i));
+            }
+            EnemyIndividual.initialization = null;
+
         } catch (FileNotFoundException e) {
-            System.out.print("File not found @" + itemPath + "\n");
+            System.out.print("\nFile not found @" + itemPath);
         }
     }
 
     public void loadTestData() {
-        Squad sqd = new Squad("Sqd 1");
+        AstartesSquad sqd = new AstartesSquad("Sqd 1");
         roster.add(sqd);
         sqd.members.add(new Astartes("Alande",new int[]{90,75,15,4,5,8,2,-1,Astartes.role_tactical}));
         sqd.members.add(new Astartes("Borien",new int[]{45,85,80,3,2,16,0,0,Astartes.role_sternguard}));
 
-        Squad sqd2 = new Squad("Sqd 2");
+        AstartesSquad sqd2 = new AstartesSquad("Sqd 2");
         roster.add(sqd2);
         sqd2.members.add(new Astartes("Catharge",new int[]{40,50,50,6,0,14,3,1,Astartes.role_assault}));
         sqd2.members.add(new Astartes("Daniel",  new int[]{40,80,34,2,1,5,15,4,Astartes.role_librarian}));
@@ -145,9 +175,19 @@ public class GameData implements Serializable {
 
         roster.add(new Vehicle(3,0));
 
-        currentBattle = new Battle(0,roster,new ArrayList<>());
+        List<Unit> enSqd = new ArrayList<>();
+        enSqd.add(new EnemySquad(0));
+        List<Unit> frSqd = new ArrayList<>();
+        frSqd.add(sqd);
+        frSqd.add(sqd2);
+
+        currentBattle = new Battle(0,frSqd,enSqd);
 
         currentBattle.move(sqd,3,4);
+        currentBattle.move(sqd2,5,5);
+        currentBattle.move(enSqd.get(0),9,1);
+        MainScene.runningScene.showField();
+        currentBattle.runActionLoop();
 
         Trait twinlinked = new Trait(new int[] {Trait.phase_nextAttack,Trait.traitType_single_enemy,Trait.predicate_attack_miss, -1,
                 Trait.accuracy_offset, 10, -1}, 0);
@@ -158,7 +198,7 @@ public class GameData implements Serializable {
         Trait bolt = new Trait(new int[] {Trait.phase_afterAttack, Trait.traitType_single_enemy,Trait.predicate_damage_inflicted_more,
                 10, Trait.aadamage_multiplier, 100, -1}, 3);
 //        sqd.members.get(1).traits.add(twinlinked);
-        sqd.members.get(1).traits.add(spread);
+//        sqd.members.get(1).traits.add(spread);
     }
 
     public static List<String> getWeaponsImageName() {
@@ -180,6 +220,12 @@ public class GameData implements Serializable {
     public static List<VehicleChassis> getVehiclesChassus() { return GameData.getCurrentData().vehicleChassus; }
 
     public static List<Accessory> getAccessories() { return GameData.getCurrentData().accessories; }
+
+    public static List<Trait> getTraitList() { return GameData.getCurrentData().traitList; }
+
+    public static List<Armour> getArmourList() { return currentData.armours; }
+
+    public static List<Weapon> getWeaponList() { return currentData.weapons; }
 
     public List<Item> getAllItem() {
         ArrayList<Item> listItem = new ArrayList<>();
@@ -231,6 +277,14 @@ public class GameData implements Serializable {
         return Trait.None;
     }
 
+    public static EnemyIndividual getBaseIndividual(int id) {
+        return GameData.getCurrentData().enemyBaseIndividual.get(id);
+    }
+
+    public static EnemySquadConfig getBaseSquad(int id) {
+        return GameData.getCurrentData().enemyBaseSquad.get(id);
+    }
+
     void reloadTraitOnWeapons() {
         Trait temp;
         for(Weapon wpn: weapons){
@@ -241,6 +295,20 @@ public class GameData implements Serializable {
                     System.err.printf("\nCannot find trait %s for weapon %s on traitList",t,wpn.getName());
                 } else {
                     wpn.traitList.add(temp);
+                }
+            }
+        }
+    }
+
+    void reloadTraitOnAccessory() {
+        Trait temp;
+        for(Accessory acc: accessories) {
+            for(String t:acc.getTrait().split(",")) {
+                temp = getTraitByName(t);
+                if(temp == Trait.None) {
+                    System.err.printf("\nCannot find trait %s for accessory %s on traitList",t,acc.getName());
+                } else {
+                    acc.traitList.add(temp);
                 }
             }
         }

@@ -2,8 +2,11 @@ package data.Unit;
 
 import data.Battle.AttackFormat;
 import data.GameData;
+import data.Item.Accessory;
 import data.Item.VehicleType;
+import data.Item.VehicleWeapon;
 import data.TreeViewable;
+import data.Utility;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -12,7 +15,7 @@ import java.util.List;
 /**
  * Created by Quan on 2/22/2017.
  */
-public class Vehicle implements TreeViewable,Unit {
+public class Vehicle implements TreeViewable, Unit, Individual {
     final int type;
     int loadout;
     public int hp;
@@ -25,10 +28,17 @@ public class Vehicle implements TreeViewable,Unit {
         this.loadout = loadout;
         this.pintle = pintle;
         this.crew = new ArrayList<>();
+        this.hp = GameData.getVehiclesVariant().get(type).getDefaultHp();
     }
 
     public Vehicle(int type, int loadout) {
         this(type,loadout,false);
+    }
+
+    public Vehicle(Vehicle target) {
+        this(target.type,target.loadout, target.pintle);
+        this.crew = target.crew;
+        this.hp = target.hp;
     }
 
     @Override
@@ -45,7 +55,7 @@ public class Vehicle implements TreeViewable,Unit {
     public List<AttackFormat> getAttack(int range) {
         if(crew.isEmpty()) return new ArrayList<>();
 
-        VehicleType currentType = GameData.getVehiclesVariantById(type);
+        VehicleType currentType = vehicleType();
         int primary = currentType.getLoadoutPrimary(loadout);
         int secondary = currentType.getLoadoutSecondary(loadout);
         int pintle = !this.pintle ? -1 : currentType.getPintle();
@@ -64,8 +74,20 @@ public class Vehicle implements TreeViewable,Unit {
     }
 
     @Override
-    public boolean handleAttack(List<AttackFormat> attacks) {
-        return false;
+    public int getMaxRange() {
+        int maxRange;
+
+        VehicleType currentType = vehicleType();
+        int primary = currentType.getLoadoutPrimary(loadout);
+        maxRange = GameData.getVehiclesWeaponById(primary).getRange();
+        int secondary = currentType.getLoadoutSecondary(loadout);
+        maxRange = Math.max(GameData.getVehiclesWeaponById(secondary).getRange(),maxRange);
+        int pintle = !this.pintle ? -1 : currentType.getPintle();
+        if(pintle > -1) {
+            maxRange = Math.max(GameData.getVehiclesWeaponById(pintle).getRange(),maxRange);
+        }
+
+        return maxRange;
     }
 
     @Override
@@ -75,15 +97,57 @@ public class Vehicle implements TreeViewable,Unit {
 
     @Override
     public int getType() {
+        return Utility.speaker_friendly;
+    }
+
+    public int getVehicleType() {
         return type;
+    }
+    
+    public VehicleType vehicleType() { return GameData.getVehiclesVariantById(type); }
+
+    @Override
+    public float getInitiative() {
+        if(crew.isEmpty()) return 0;
+        return crew.get(crew.size() - 1).getInitiative();
+    }
+
+    @Override
+    public String getDebugString() {
+        return toString() + '(' + this.getHp() + '/' + GameData.getVehiclesVariant().get(type).getDefaultHp() + ")\n";
     }
 
     public int getLoadout() { return loadout; }
 
-    public Astartes[] getCrew() { return this.crew.toArray(new Astartes[this.crew.size()]); }
+    public void setLoadout(int loadout) { if(vehicleType().checkLoadoutViable(loadout)) this.loadout = loadout; }
+    
+    public String getLoadoutString() {
+        VehicleType vehicleType = vehicleType();
+
+        int vehId = vehicleType.getLoadoutPrimary(loadout);
+        String data = "Primary: " + GameData.getVehiclesWeaponById(vehId).getName();
+        vehId = vehicleType.getLoadoutSecondary(loadout);
+        if(vehId >= 0) {
+            data += ", Secondary: " + GameData.getVehiclesWeaponById(vehId).getName();
+        }
+        vehId = vehicleType.getPintle();
+        if(vehId >= 0 && pintle) {
+            data += ", Pintle: " + getPintle().getName();
+        }
+
+        return data;
+    }
+
+    public List<Astartes> getCrew() { return this.crew; }
+
+    public String getCrewString() {
+        final String[] crewString = {""};
+        crew.forEach(cm -> crewString[0] += (crewString[0].equals("")) ? cm.toString() : ", " + cm.toString());
+        return crewString[0];
+    }
 
     public boolean addCrewMember(Astartes mbn, boolean check) {
-        if(check && crew.size() >= GameData.getVehiclesVariantById(type).getCrew()) return false;
+        if(check && crew.size() >= vehicleType().getCrew()) return false;
 
         crew.add(mbn);
         return true;
@@ -93,22 +157,62 @@ public class Vehicle implements TreeViewable,Unit {
         return this.addCrewMember(mbn,true);
     }
 
-    public Astartes[] removeAllCrewMember() {
-        Astartes[] listDepositedCrew = crew.toArray(new Astartes[crew.size()]);
+    public List<Astartes> removeAllCrewMember() {
+        ArrayList<Astartes> result = new ArrayList<>(crew);
         crew.clear();
-        return listDepositedCrew;
+        return result;
     }
 
     public int getArmourValue() {
-        return GameData.getVehiclesVariantById(type).getArmor();
+        return vehicleType().getArmor();
     }
 
-    public int getPintleId () {
-        return GameData.getVehiclesVariantById(type).getPintle();
+    public int getPintleId() {
+        return vehicleType().getPintle();
     }
+    
+    public VehicleWeapon getPintle() { return GameData.getVehiclesWeaponById(getPintleId()); }
 
     @Override
     public int getIconId() {
         return 0;
     }
+
+    @Override
+    public int getHp() {
+        return hp;
+    }
+
+    @Override
+    public boolean setHp(int value) {
+        hp = value;
+        return hp < 0;
+    }
+
+    @Override
+    public boolean isInfantry() {
+        return false;
+    }
+
+    @Override
+    public List<Trait> getIndividualOffensiveTrait() {
+        List<Trait> listTraits = new ArrayList<>();
+        if(crew.isEmpty()) return listTraits;
+        listTraits.addAll(crew.get(crew.size()-1).traits);
+
+        listTraits.removeIf(Trait::isNotOffensiveVehicleTrait);
+        return listTraits;
+    }
+
+    @Override
+    public List<Trait> getIndividualDefensiveTrait() {
+        List<Trait> listTraits = new ArrayList<>();
+        if(crew.isEmpty()) return listTraits;
+        listTraits.addAll(crew.get(0).traits);
+
+        listTraits.removeIf(Trait::isNotOffensiveVehicleTrait);
+        return listTraits;
+    }
+
+    // Crew will list driver->gunner
 }

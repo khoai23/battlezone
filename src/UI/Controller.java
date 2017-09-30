@@ -4,34 +4,30 @@ import data.Item.Item;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.Button;
-import java.awt.ScrollPane;
+import javafx.scene.layout.*;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 
 public class Controller {
-
-    @FXML
-    public Pane Master_Avatar;
-
-    @FXML
-    public Pane Avatar_Unit;
-
-    @FXML
-    public Pane Avatar_Vehicle;
 
     @FXML
     public TabPane MainScene;
 
     @FXML
     public AnchorPane StatusPane;
+    public Pane Master_Avatar;
     public Label Line_11;
     public Label Line_31;
 
     public Pane UnitScrollPane;
+
+    @FXML
+    public Pane Avatar_Unit;
+    public Pane Avatar_Vehicle;
+    public GridPane DetailPane;
+    public javafx.scene.control.Button ModifyButton;
+    public javafx.scene.control.Button DeployButton;
+    public javafx.scene.control.Button ArrangeButton;
 
     @FXML
     public javafx.scene.control.TableView<Item> Manage;
@@ -49,15 +45,9 @@ public class Controller {
     public Pane Battlefield;
 
     @FXML
-    public Tab StatusTab;
-    public Tab UnitTab;
-    public Tab InventoryTab;
-    public Tab StarTab;
-    public Tab BattleTab;
-
-    @FXML
     public AnchorPane BattleArena;
-    public AnchorPane VoxLog;
+    public VBox VoxLog;
+    public VBox ExtraSettingPane;
     public Pane Minimap;
     public javafx.scene.control.ScrollPane VoxLogScrollPane;
     public javafx.scene.control.ScrollPane BattleScrollPane;
@@ -65,6 +55,23 @@ public class Controller {
     public javafx.scene.control.Button VoxLogBtn;
     public javafx.scene.control.Button ExtraBtn;
     public javafx.scene.control.Button EndTurnBtn;
+    public CheckBox DebugMsg;
+    public CheckBox DamageMsg;
+    public CheckBox ConvMsg;
+    public CheckBox TooltipDistance;
+    public CheckBox TooltipDeepShow;
+
+    @FXML
+    public Tab StatusTab;
+    public Tab UnitTab;
+    public Tab InventoryTab;
+    public Tab StarTab;
+    public Tab BattleTab;
+
+    public Line lineToDestination = null;
+    public Text etaText = null;
+
+    public Tooltip battleTooltip = new Tooltip();
 
     @FXML
     public void initialize() {

@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 /**
  * Created by Quan on 2/28/2017.
+ * A field is a randomly generated terrain for a specific battle
  */
 public
 class Field implements Serializable {
@@ -51,13 +52,13 @@ class Field implements Serializable {
             }
             for(;obs>0;obs--) {
 //                choice = (int)(Math.random() * size);
-                choice = Utility.rollBetween(0,size);
+                choice = Utility.rollBetween(0,size-1);
                 if((choice / default_height)%2 == 0 && choice%default_height==default_height-1)
                     choice -= 1;
                 fieldTerrain[choice/default_height][choice%default_height] = obstacles;
             }
             for(;imps>0;imps--) {
-                choice = Utility.rollBetween(0,size);
+                choice = Utility.rollBetween(0,size-1);
                 if((choice / default_height)%2 == 0 && choice%default_height==default_height-1)
                     choice -= 1;
                 fieldTerrain[choice/default_height][choice%default_height] = impassable;
@@ -67,19 +68,16 @@ class Field implements Serializable {
 
     public static int lengthToPos(int xFrom, int yFrom, int xTo, int yTo) {
         // length not counting obstacles/impassable, for shooting
-        int mov = Math.abs(xFrom - xTo) / 2;
-        if(xFrom % 2 == 0) {
-            if(xTo >= xFrom) {
-                return Math.max(Math.abs(xFrom-(xTo+mov)),Math.abs(yFrom-yTo));
-            } else {
-                return Math.abs(xFrom-(xTo+mov)) + Math.abs(yFrom-yTo);
-            }
+        int mov = (Math.abs(xFrom - xTo)+1) / 2;
+
+        if(xTo % 2 == 0) {
+            yFrom -= mov;
+            if(yFrom > yTo) return Math.abs(xFrom-xTo) + Math.abs(yFrom-yTo);
+            else            return Math.max(Math.abs(xFrom-xTo), Math.abs(yFrom-yTo));
         } else {
-            if(xTo >= xFrom) {
-                return Math.abs(xFrom-(xTo-mov)) + Math.abs(yFrom-yTo);
-            } else {
-                return Math.max(Math.abs(xFrom-(xTo-mov)),Math.abs(yFrom-yTo));
-            }
+            yFrom += mov;
+            if(yFrom < yTo) return Math.abs(xFrom-xTo) + Math.abs(yFrom-yTo);
+            else            return Math.max(Math.abs(xFrom-xTo), Math.abs(yFrom-yTo));
         }
     }
 
@@ -119,6 +117,21 @@ class Field implements Serializable {
                 }
         }
 
+        return  mapPosition;
+    }
+
+    public int[][] getPossibleDeployPosition(boolean steelRain, int speed) {
+        // Deployment map for different mode
+        int[][] mapPosition;
+
+        mapPosition = new int[fieldTerrain.length][];
+        for(int i=0;i<fieldTerrain.length;i++) {
+            mapPosition[i] = new int[fieldTerrain[i].length];
+//            Arrays.fill(mapPosition[i], i < speed || steelRain ? 0 : 99);
+            for(int f=0;f < fieldTerrain[i].length; f++)
+                if(fieldTerrain[i][f] == Field.impassable) mapPosition[i][f] = 99;
+                else mapPosition[i][f] = i < speed/2 || steelRain ? 0 : 99;
+        }
         return  mapPosition;
     }
 

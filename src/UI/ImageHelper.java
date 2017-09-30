@@ -1,14 +1,19 @@
 package UI;
 
+import data.Battle.Battle;
+import data.Battle.Field;
 import data.GameData;
 import data.Item.VehicleChassis;
 import data.Item.VehicleType;
+import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import sun.reflect.generics.tree.BaseType;
 
 import java.lang.System;
 import java.util.ArrayList;
@@ -27,7 +32,6 @@ public class ImageHelper {
 
         planetImage = loadPrefixedImage("starmap/star_",24);
 
-        // TODO add contested (purple)
         Image[] mapImage = new Image[10];
         mapImage[0] = new Image("file:res/texture/battlemap/sqr_empty.png");
         mapImage[1] = new Image("file:res/texture/battlemap/sqr_empty_selected.png");
@@ -140,7 +144,7 @@ public class ImageHelper {
     public static String getWeaponNameById(int id) {
         List<String> weaponlist = GameData.getWeaponsImageName();
 
-        if(id<weaponlist.size() && !weaponlist.get(id).equals("")) {
+        if(id>=0 && id<weaponlist.size() && !weaponlist.get(id).equals("")) {
             return weaponlist.get(id);
         }
 
@@ -336,16 +340,17 @@ public class ImageHelper {
      * @param id vehicle id
      * @param loadout vehicle loadout dictated by variant
      * @param pintle is vehicle with pintle mounting
+     * @param isLarge if vehicle is shown with large or small size
      * @return array of ImageView
      * */
-    public static ImageView[] getVehicleById(int id, int loadout, boolean pintle) {
+    public static ImageView[] getVehicleById(int id, int loadout, boolean pintle, boolean isLarge) {
         ImageView[] list;
         if (vehiclesImageList == null) {
             list = new ImageView[3 + 4 + 4 + 4]; // pintle 3, loadout top(4), chassis 4/6, loadout bottom(4)
             for (int i = 0; i < 15; i++) {
                 list[i] = new ImageView();
-                list[i].setFitHeight(150);
-                list[i].setFitWidth(250);
+                list[i].setFitHeight(isLarge ? 300 : 150);
+                list[i].setFitWidth(isLarge ? 500 : 250);
             }
             vehiclesImageList = list;
         } else {
@@ -419,12 +424,12 @@ public class ImageHelper {
     public static void setSquareWithId(ImageView img, int id) {
         String cssStyle;
         switch (id) {
-            case 0: cssStyle = "land-empty"; break;
-            case 1: cssStyle = "land-obstacle"; break;
-            case 2: cssStyle = "land-impassable"; break;
-            case 3: cssStyle = "land-friendly"; break;
-            case 4: cssStyle = "land-hostile"; break;
-            case 5: cssStyle = "land-contested"; break;
+            case Field.normal: cssStyle = "land-empty"; break;
+            case Field.obstacles: cssStyle = "land-obstacle"; break;
+            case Field.impassable: cssStyle = "land-impassable"; break;
+            case Field.occupied_friendly: cssStyle = "land-friendly"; break;
+            case Field.occupied_hostile: cssStyle = "land-hostile"; break;
+            case Field.occupied_both: cssStyle = "land-contested"; break;
             default: cssStyle = "land-impassable"; break;
         }
         img.getStyleClass().clear();
@@ -438,6 +443,7 @@ public class ImageHelper {
         ImageView temp;
         float x,y;
         for(int i=0;i<map.length;i++) {
+            final int itemX = i;
             for(int j=0;j<map[i].length;j++) {
                 temp = new ImageView();
                 setSquareWithId(temp,map[i][j]);
@@ -448,12 +454,16 @@ public class ImageHelper {
                 temp.setX(x);
                 temp.setY(y);
                 // TODO move this function out of the ImageView group
-                final int itemX = i; final int itemY = j;
+                final int itemY = j;
                 temp.setOnMouseClicked(event -> {
-                    System.out.println("Position clicked " + itemX + " " + itemY);
+                    System.out.printf("\nPosition clicked %d %d",itemX,itemY);
                     int[][] newMap = GameData.getCurrentData().getCurrentBattle().handleClick(itemX,itemY);
                     if(newMap!=null) updateFromIntMap(newMap);
                 });
+                temp.setOnMouseEntered(event -> {
+                    Battle.handleTooltipDisplay(itemX,itemY);
+                });
+                Tooltip.install(temp,MainScene.getSceneController().battleTooltip);
                 data.add(temp);
             }
         }

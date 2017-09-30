@@ -5,10 +5,23 @@ import data.Utility;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Quan on 3/8/2017.
+ *
+ * Clarifications:
+ * + All phase vs before phase is difference between modifying numbers of attacks and not.
+ * Before phase should not be allowed to change numbers of attacks unless you are an ass
+ * and want your game to fail
+ * + Normal trait will activate at correct phase(0), correct target(1), check for a
+ * set up predicate (2+3), modify the data if the predicate is satisfied (4+5), then can
+ * link to another AUX trait (6) that only contain data modification if target modifiers
+ * or to another normal trait if in any other phase
+ * + Noncom trait will be hardcoded into the file using correct phase (0), ignore target(1)
+ * and with type(2) plus variable (3-4). Variable(3) can be strings or number in some case.
  */
 public class Trait {
     public int id;
@@ -73,7 +86,7 @@ public class Trait {
         this.data[traitData2] = getNumberFromString(traitData[3]);
         this.data[traitData3] = getModifierFromString(traitData[4]);
         this.data[traitData4] = getNumberFromString(traitData[5]);
-        this.data[bindToOther] = getNumberFromString(traitData[6]);
+        this.data[bindToOther] = getTraitNumberFromString(traitData[6]);
     }
 
     int getTraitPhaseFromString(String input) {
@@ -181,6 +194,16 @@ public class Trait {
         }
     }
 
+    int getTraitNumberFromString(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.printf("\nFinding trait by name %s",input);
+            // Assume None is found, it is never taken in the list and thus is safe
+            return initialization.indexOf(getReadTraitWithName(input));
+        }
+    }
+
     public static final int traitPhase = 0;
     public static final int traitType =  1;
     public static final int traitData1 = 2;
@@ -191,9 +214,9 @@ public class Trait {
 
     /**
      * Change attack data on launching attack
-     * example: bolt have x2 damage if damage inflicted >10 per shot
-     * -> phase afterAttack, single, pred damage inflicted more, 10, aadamage multiplier, 100, -1
-     * rotary automatically switch between normal and -50% shot& +10 damage, use an aux rotaryAlt trait
+     * example: bolt have x2 setHp if setHp inflicted >10 per shot
+     * -> phase afterAttack, single, pred setHp inflicted more, 10, aadamage multiplier, 100, -1
+     * rotary automatically switch between normal and -50% shot& +10 setHp, use an aux rotaryAlt trait
      * -> phase beforeAttack, single, pred chooseBetterDamage, rotaryAlt id
      * -> rotaryAtt ?
      * */
@@ -266,6 +289,15 @@ public class Trait {
     public static final int noncom_paired = 4;
     public static final int noncom_split = 4;
     public static final int noncom_ = 1;
+
+    public static final int noncom_require_armor_Termi = 0;
+    public static final int noncom_require_armor_normal = 1;
+    public static final int noncom_require_armor_scout = 2;
+    public static final int noncom_require_armor_specific = 3;
+    public static final int noncom_require_weapon_primary = 4;
+    public static final int noncom_require_weapon_specific = 5;
+    public static final int noncom_require_accessory_specific = 6;
+
     public boolean ofTargetDecisionPhase() {
         return data[traitPhase] == phase_targetDecision;
         //return (data[traitType] == traitType_offensive_data_self && data[traitData1] == trait_special && data[traitData2]<=special_multi);
@@ -394,7 +426,7 @@ public class Trait {
             System.err.println("\nStrange traits mixed in.");
             Utility.printCurrentData();
         }
-        int externalValue = data[traitData4] == -1 ? dataSet[Utility.atk_tar] : dataSet[data[traitData4]];
+        int externalValue = data[traitData4] < 0 ? dataSet[Utility.atk_tar] : dataSet[data[traitData4]];
         switch (data[traitData1]) {
             case trait_targetChange_attack_offset: dataSet[Utility.atk_tar] += Utility.rollBetween(data[traitData2],data[traitData3]); break;
             case trait_targetChange_defend_offset: dataSet[Utility.atk_tar] -= Utility.rollBetween(data[traitData2],data[traitData3]); break;
@@ -447,7 +479,9 @@ public class Trait {
         return description;
     }
 
-    // Since I am using removeIf en mass, this is useful
+    public int getTraitDataRaw(int pos) { return data[pos]; }
+
+    // Since I am using lots of removeIf, this is useful
     public boolean isNotOffensiveTrait() {
         return data[traitPhase] == phase_nonCombat || !(data[traitType] == traitType_single_self);
     }
@@ -472,6 +506,24 @@ public class Trait {
         return data[traitPhase] == phase_nonCombat || !(data[traitType] == traitType_vehicle_enemy);
     }
 
+    public boolean isNotRequirementTrait() {
+        return data[traitPhase] != phase_nonCombat || data[traitData1] != noncom_required;
+    }
+
+    public static boolean haveRequirementTrait(List<Trait> traitList) {
+        for (Trait t:traitList) if(!t.isNotRequirementTrait())
+            return true;
+        return false;
+    }
+
     public static final Trait None = new Trait(new int[]{0,0,0,0,0,0,0},-1);
     public static final int throwaway = 99;
+
+    public static ArrayList<Trait> initialization = null;
+    public static Trait getReadTraitWithName(String name) {
+        for(Trait trait:initialization) {
+            if(trait.name.equals(name)) return trait;
+        }
+        return None;
+    }
 }

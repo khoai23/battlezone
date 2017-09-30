@@ -1,0 +1,82 @@
+{
+  "individual":[{
+    "name":"Ork Boy (Slugga)",
+    "hp": 30,
+    "armor": 10,
+    "init": 6,
+    "melee": [20, 3, 50],
+    "ranged": [17, 2, 33, 1],
+    "refname": "choppaboy"
+  },{
+    "name":"Ork Boy (Shoota)",
+    "hp": 25,
+    "armor": 10,
+    "init": 6,
+    "melee": [15, 3, 33],
+    "ranged": [22, 2, 45, 2],
+    "refname": "shootaboy"
+  },{
+    "name":"'Ard Boy",
+    "hp": 25,
+    "armor": 12,
+    "init": 3,
+    "melee": [19, 2, 40],
+    "ranged": [15, 3, 25, 1],
+    "refname": "hardboy"
+  },{
+    "name":"Burna Boy",
+    "hp": 20,
+    "armor": 8,
+    "init": 8,
+    "melee": [18, 1, 66],
+    "ranged": [15, 5, 80, 1],
+    "refname": "burnaboy"
+  },{
+    "name":"Nob",
+    "hp": 35,
+    "armor": 17,
+    "init": 8,
+    "melee": [27, 2, 75],
+    "ranged": [22, 2, 50, 2],
+    "refname": "nob"
+  }],
+  "unit":[{
+    "name": "Ork Boyz Squad (Normal)",
+    "composition": [[0,10]],
+    "refComposition":[["choppaboy",10]],
+    "description": "Ten slugga boyz made into a squad. ",
+    "speed": 4,
+    "refname": "choppa_squad_n"
+  },{
+    "name": "Ork Boyz Squad (Large)",
+    "refComposition":[["choppaboy", 20]],
+    "description": "Twenty slugga boyz made into a squad. ",
+    "speed": 4,
+    "refname": "choppa_squad_l"
+  },{
+    "name": "Ork Boyz Squad (Normal)",
+    "refComposition":[["shootaboy",10]],
+    "description": "Ten shoota boyz made into a squad. ",
+    "speed": 4,
+    "refname": "shoota_squad_n"
+  },{
+    "name": "Ork Boyz Squad (Large)",
+    "refComposition":[["shootaboy", 20]],
+    "description": "Twenty shoota boyz made into a squad. ",
+    "speed": 4,
+    "refname": "shoota_squad_l"
+  },{
+    "name": "'Ard Boyz Squad",
+    "refComposition":[["hardboy",10]],
+    "description": "A squad of slighly armored 'ard boy. ",
+    "speed": 3,
+    "refname": "hardboy_squad"
+  }],
+  "mission":[{
+    "name": "Clean out feral orks",
+    "refname": "m_ork_feral_0",
+    "composition":[["choppa_squad_n", 1, 2],["shoota_squad_n", 1, 2]],
+    "missionType": 0,
+    "weight": 1
+  }]
+}

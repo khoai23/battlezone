@@ -59,6 +59,10 @@ public class Accessory implements Item {
         return name;
     }
 
+    public String toString() {
+        return name;
+    }
+
     @Override
     public String getDescription() {
         return description;

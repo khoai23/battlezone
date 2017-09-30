@@ -1,15 +1,25 @@
 package data;
 
+import UI.Main;
+import UI.MainScene;
 import data.Battle.AttackFormat;
 import data.Unit.*;
+import javafx.scene.control.Label;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.SynchronousQueue;
 
 /**
  * Created by Quan on 3/6/2017.
+ * Utility handle codes that are too problematic to be left in where they should be
  */
 public class Utility {
     public static int rollBetween(int from, int to) {
+        if(from == to) return from;
         return from + (int)Math.floor(Math.random() * (to-from+1));
     }
 
@@ -115,7 +125,7 @@ public class Utility {
     }
 
 
-    public static boolean handleAttackOnSquad(AttackFormat att, Squad sqd) {
+    public static boolean handleAttackOnSquad(AttackFormat att, AstartesSquad sqd) {
         int[] data = {att.strength,att.accuracy,att.time};
         int estimatedArmor = sqd.getEstimatedArmor();
         int estimateHp = sqd.getEstimatedHp();
@@ -230,7 +240,7 @@ public class Utility {
         return String.join(",",traitList);
     }
 
-    public static boolean handleSquadAttackSquad(Squad attacker, Squad defender, int range, boolean attackerMoved) {
+    public static boolean handleSquadAttackSquad(AstartesSquad attacker, AstartesSquad defender, int range, boolean attackerMoved) {
         for(Astartes a:attacker.members) {
             List<AttackFormat> atkList = a.getAttack(range);
             tempData[atk_hp] = a.hp; tempData[atk_size] = attacker.members.size();
@@ -289,7 +299,7 @@ public class Utility {
                         tempData[def_hp] -= Math.max(tempData[atk_str],0);
                         hit = true;
 
-                        System.out.print("\nAttack fired, damage " + tempData[atk_str]);
+                        System.out.print("\nAttack fired, setHp " + tempData[atk_str]);
                     } else {
                         for (Trait t : applied) t.handleChangeAfterHit(tempData, false, true);
 
@@ -308,7 +318,7 @@ public class Utility {
                     printCurrentData();
                 }
                 if(a.hp < 0) {
-                    System.out.println("Attacker " + a.toString() + " suffered fatal damage during attacking phase.");
+                    System.out.println("\nAttacker " + a.toString() + " suffered fatal setHp during attacking phase.");
                     break;
                 }
             }
@@ -320,11 +330,154 @@ public class Utility {
         return true;
     }
 
+    public static boolean handleUnitOnUnitCombat(Unit attacker, Unit defender, int range, boolean attackerMoved) {
+        List<Individual> attackers = new ArrayList<>();
+        List<Individual> defenders = new ArrayList<>();
+        List<Trait> squadTraits = new ArrayList<>();
+        if(attacker instanceof Squad) {
+            attackers.addAll(((Squad)attacker).getMembers());
+            attackers.removeIf(individual -> individual.getHp()<0);
+            squadTraits.addAll(((Squad)attacker).getSquadOffensiveTraits());
+        } else if(attacker instanceof Individual) {
+            attackers.add((Individual)attacker);
+        } else {
+            System.err.println("Error parsing attacker");
+            return false;
+        }
+
+        if(defender instanceof Squad) {
+            defenders.addAll(((Squad)defender).getMembers());
+            squadTraits.addAll(((Squad)defender).getSquadDefensiveTraits());
+        } else if(defender instanceof Individual) {
+            defenders.add((Individual)defender);
+        } else {
+            System.err.println("Error parsing defender");
+            return false;
+        }
+        int damageCounter = 0;
+
+        for(Individual a:attackers) {
+            List<AttackFormat> atkList = a.getAttack(range);
+            tempData[atk_hp] = a.getHp(); tempData[atk_size] = attackers.size();
+            for (AttackFormat atk : atkList) {
+                attackToData(atk, tempData);
+                tempData[atk_tar] = 1;
+                moved = attackerMoved;
+                // Apply for firing decision - targets of the attack
+                List<Trait> applied = new ArrayList<>(atk.traitList);
+//                applied.forEach(p -> System.out.print(p.getName()));
+                applied.addAll(squadTraits);
+                applied.removeIf(p -> !p.ofTargetDecisionPhase());
+                for (Trait t : applied) t.handleChangeTargetNumber(tempData);
+                printCurrentData();
+
+                // Apply for firing data - stats of the attack
+                applied = new ArrayList<>(atk.traitList);
+                applied.removeIf(p -> !p.ofBeforeAllAttackPhase());
+                for (Trait t : applied) t.handleChangeBeforeHit(tempData, attackerMoved, false, true);
+                // firing data returned to atk
+                atk.time = tempData[atk_spd];
+                dataToAttack(atk, tempData);
+                a.setHp(tempData[atk_hp]);
+                if(a.getHp() < 0) { continue; }
+                printCurrentData();
+
+                // choose targets from list
+                List<Individual> targets;
+                defenders.removeIf(p -> (p.getHp() < 0));
+                if (randomTargeting) {
+                    Collections.shuffle(defenders);
+                }
+                targets = defenders.subList(0, Math.min(tempData[atk_tar], defenders.size()));
+                if (targets.isEmpty()) {
+                    System.err.println("No target found. Most likely squad annihilated.");
+                    return true;
+                }
+
+                // begin firing
+                for (int i = 0; i < tempData[atk_spd] && !targets.isEmpty(); i++) {
+                    Individual target = targets.get(i % targets.size());
+                    tempData[def_arm] = target.getArmourValue();
+                    tempData[def_hp] = target.getHp();
+                    tempData[def_size] = defenders.size();
+                    // accuracy penalty due to movement
+                    if(attackerMoved) tempData[atk_acc] -= 25;
+                    // Apply for firing data - stats of the one attack
+                    applied = new ArrayList<>(atk.traitList);
+                    applied.addAll(squadTraits);
+                    applied.addAll(target.getIndividualDefensiveTrait());
+                    applied.removeIf(p -> !p.ofBeforeEachAttackPhase());
+                    for (Trait t : applied) t.handleChangeBeforeHit(tempData, attackerMoved, i == 0, target.isInfantry());
+                    printCurrentData();
+                    // Doing the attack
+
+                    applied = new ArrayList<>(atk.traitList);
+                    applied.addAll(squadTraits);
+                    applied.addAll(target.getIndividualDefensiveTrait());
+                    applied.removeIf(p -> !p.ofAfterEachAttackPhase());
+                    boolean hit = false;
+                    if (rollForPercent(tempData[atk_acc])) {
+                        tempData[atk_str] += rollBetween(-tempData[atk_str]/10,tempData[atk_str]/10);
+                        tempData[atk_str] = Math.max(tempData[atk_str] - tempData[def_arm],0);
+                        for (Trait t : applied) t.handleChangeAfterHit(tempData, true, target.isInfantry());
+                        tempData[def_hp] -= tempData[atk_str];
+                        hit = true;
+
+                        System.out.print("\nAttack fired, setHp " + tempData[atk_str]);
+                        if(show_damage) {
+                            MainScene.addToVoxLog(damageDealt(attacker.getType(), defender.getType(),
+                                    a.toString(), target.toString(), tempData[atk_str]));
+                        }
+                            damageCounter += tempData[atk_str];
+                    } else {
+                        for (Trait t : applied) t.handleChangeAfterHit(tempData, false, target.isInfantry());
+
+                        if(show_damage) {
+                            MainScene.addToVoxLog(attackMissed(attacker.getType(), defender.getType(),
+                                    a.toString(), target.toString()));
+                        }
+                        System.out.print("\nAttack missed.");
+                    }
+                    printCurrentData();
+                    target.setHp(tempData[def_hp]);
+                    a.setHp(tempData[atk_hp]);
+                    if (target.getHp() < 0) targets.remove(target);
+
+                    // Reload the attackData from the original AttackFormat, and apply the next
+                    attackToData(atk, tempData);
+                    applied = new ArrayList<>(atk.traitList);
+                    applied.addAll(squadTraits);
+                    applied.addAll(target.getIndividualDefensiveTrait());
+                    applied.removeIf(p -> !p.ofBeforeNextAttackPhase());
+                    for (Trait t : applied) t.handleChangeAfterHit(tempData, hit, target.isInfantry());
+                    printCurrentData();
+                }
+                if(a.getHp() < 0) {
+                    System.out.println("Attacker " + a.toString() + " suffered fatal damage during attacking phase.");
+                    break;
+                }
+            }
+        }
+
+        if(defender instanceof Individual || defender instanceof Squad) {
+            if(defender.getStrength() <= 0) {
+                MainScene.addToVoxLog(unitDestroyedMessage(attacker.getType(),defender.getType(),attacker.toString(),defender.toString()));
+                return false;
+            } else {
+                MainScene.addToVoxLog(unitDamagedMessage(attacker.getType(),defender.getType(),attacker.toString(),defender.toString(),damageCounter));
+                return defender.getStrength() > 0;
+            }
+        } else {
+            System.err.println("Error parsing defender.");
+            return false;
+        }
+    }
+
     public static void attackToData(AttackFormat atk, int[] dataSet) {
         dataSet[atk_str] = atk.strength;
         dataSet[atk_acc] = atk.accuracy;
         dataSet[atk_spd] = atk.time;
-        dataSet[atk_tar] = 1;
+//        dataSet[atk_tar] = 1;
     }
 
     public static void dataToAttack(AttackFormat atk, int[] dataSet) {
@@ -336,6 +489,155 @@ public class Utility {
     public static void printCurrentData() {
         System.out.printf("\nSTR %d - ACC %d - SPD %d - TAR %d - HP %d - EARM %d - ESZ %d - EHP %d - " + moved,tempData[atk_str],tempData[atk_acc],
                 tempData[atk_spd],tempData[atk_tar],tempData[atk_hp],tempData[def_arm],tempData[def_size],tempData[def_hp]);
+    }
+
+    public static FlowPane createLine(String speakerName, int speaker, String line) {
+        if(!show_message) return null;
+        FlowPane pane = new FlowPane();
+        Text spk = new Text(speakerName + ": ");
+        colorize(spk,speaker);
+        pane.getChildren().add(spk);
+        pane.getChildren().add(new Text(line));
+        return pane;
+    }
+
+    public static FlowPane damageDealt(int atkType, int defType, String atkStr, String defStr, int damage) {
+        FlowPane pane = new FlowPane();
+        Text other = new Text("Attack: ");
+        colorize(other,speaker_other);
+        Text atk = new Text(atkStr);
+        colorize(atk,atkType);
+        Text def = new Text(defStr);
+        colorize(def,defType);
+        Text middle = new Text(" dealt " + damage + " damage to ");
+        pane.getChildren().addAll(other,atk,middle,def);
+        return pane;
+    }
+
+    public static FlowPane attackMissed(int atkType, int defType, String atkStr, String defStr) {
+        FlowPane pane = new FlowPane();
+        Text other = new Text("Attack: ");
+        colorize(other,speaker_other);
+        Text atk = new Text(atkStr);
+        colorize(atk,atkType);
+        Text def = new Text(defStr);
+        colorize(def,defType);
+        Text middle = new Text(" missed an attack on ");
+        pane.getChildren().addAll(other,atk,middle,def);
+        return pane;
+    }
+
+    public static FlowPane unitDestroyedMessage(int atkType, int defType, String atkStr, String defStr) {
+        FlowPane pane = new FlowPane();
+        Text other = new Text("Destroyed: ");
+        colorize(other,speaker_other);
+        Text atk = new Text(atkStr);
+        colorize(atk,atkType);
+        Text def = new Text(defStr);
+        colorize(def,defType);
+//        Text end = new Text(".");
+        Text middle = new Text(" destroyed by ");
+        pane.getChildren().addAll(other,def,middle,atk);
+        return pane;
+    }
+
+    public static FlowPane unitDamagedMessage(int atkType, int defType, String atkStr, String defStr, int damage) {
+        FlowPane pane = new FlowPane();
+        Text other = new Text("Damaged: ");
+        colorize(other,speaker_other);
+        Text atk = new Text(atkStr);
+        colorize(atk,atkType);
+        Text def = new Text(defStr);
+        colorize(def,defType);
+//        Text end = new Text(".");
+        Text middle = new Text(" dealt a total of " + damage + " damage to ");
+        pane.getChildren().addAll(other,atk,middle,def);
+        return pane;
+    }
+
+    public static FlowPane debugMessage(String string) {
+        if(!show_debug) return null;
+        FlowPane pane = new FlowPane();
+        Text other = new Text("Debug:");
+        colorize(other,speaker_other);
+        Text middle = new Text(string);
+        pane.getChildren().addAll(other,middle);
+        return pane;
+    }
+
+    static Text colorize(Text text, int type) {
+        switch (type) {
+            case speaker_narrator: text.setFill(Paint.valueOf("black")); break;
+            case speaker_friendly: text.setFill(Paint.valueOf("green")); break;
+            case speaker_hostile: text.setFill(Paint.valueOf("red")); break;
+            case speaker_neutral: text.setFill(Paint.valueOf("yellow")); break;
+            default: text.setFill(Paint.valueOf("olive")); break;
+        }
+        return text;
+    }
+
+    public static Label[] dataToLabel(Individual unit, Label[] listLabel) {
+        if(listLabel.length < 10) {
+            System.err.println("Insufficient label input, exiting.");
+            return listLabel;
+        }
+
+        if(unit instanceof Astartes) {
+            Astartes bth = (Astartes) unit;
+
+            listLabel[0].setText("Role: " + bth.getRole());
+            listLabel[1].setText("Stat: " + bth.statToString());
+            listLabel[2].setText("Wargears: " + bth.equipmentToString());
+            listLabel[3].setText("");
+            listLabel[4].setText("Level: " + bth.expToString());
+            listLabel[6].setText("Chapter Traits: N/A");
+            listLabel[7].setText("Personal Traits: " + convertTraitListToString(bth.traits));
+        } else if(unit instanceof Vehicle) {
+            Vehicle veh = (Vehicle) unit;
+
+            listLabel[0].setText("Type: " + veh.getDebugString());
+            listLabel[1].setText("Chassis: " + veh.vehicleType().chassis().getName());
+            listLabel[2].setText("Loadout: " + veh.getLoadoutString());
+            listLabel[3].setText("");
+            listLabel[4].setText("Crew: " + veh.getCrewString());
+            listLabel[6].setText("Chapter Traits: N/A");
+            listLabel[7].setText("Unit Traits: ");
+        } else {
+            System.err.println("Individual type not implemented @dataToLabel.");
+            return listLabel;
+        }
+
+        return listLabel;
+    }
+
+    static String convertTraitListToString(List<Trait> traitList) {
+        if(traitList.size() == 0) return "None";
+        else {
+            final String[] all = {""};
+            traitList.forEach(t -> all[0] += t.getName());
+            return all[0];
+        }
+    }
+
+    public static final int speaker_narrator = 0;
+    public static final int speaker_friendly = 1;
+    public static final int speaker_hostile = 2;
+    public static final int speaker_neutral = 3;
+    public static final int speaker_other = 4;
+
+    public static boolean show_debug = false;
+    public static boolean show_damage = false;
+    public static boolean show_message = true;
+    public static boolean tooltip_distance = false;
+    public static boolean tooltip_show_compo = false;
+
+    public static void waitForEnemy(double second) {
+        // TODO implement
+        try {
+            Thread.sleep((long)(second * 1000));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static int[] tempData = new int[10];

@@ -1,11 +1,16 @@
 package data.StarMap;
 
+import UI.MainScene;
 import data.Utility;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,10 +18,16 @@ import java.util.List;
 
 /**
  * Created by Quan on 2/22/2017.
+ * A star map detailing the map of the sector in which you are fighting.
  */
 public class StarMap implements Serializable {
     public System[] systems;
     public ArrayList<Route> routes;
+    public System currentPlanet = null;
+    public float playerPosX;
+    public float playerPosY;
+    public System destination = null;
+    public int eta;
 
     public StarMap() {
         this(Utility.rollBetween(10,20));
@@ -26,16 +37,37 @@ public class StarMap implements Serializable {
         routes = new ArrayList<>();
 //        loadTestData();
         createMap(numOfSys);
+        playerPosX = systems[0].posX;
+        playerPosY = systems[0].posY;
+        currentPlanet = systems[0];
     }
 
-    public Node[] reloadAllElements() {
-        Node[] data = new Node[systems.length + routes.size()];
+    public boolean checkRouteExist(System destination) {
+        if(currentPlanet ==  null) return false;
+        for(Route r:routes) if(r.isRouteBetween(currentPlanet,destination)) return true;
+        return false;
+    }
+
+    public int getEtaToSystem(System destination) {
+        if(currentPlanet != null)
+            for(Route r:routes) if(r.isRouteBetween(currentPlanet,destination)) return r.travelTime;
+
+        return Route.getNormalLength(playerPosX,playerPosY, destination.posX, destination.posY);
+    }
+
+    public List<Node> reloadAllElements() {
+        ArrayList<Node> data = new ArrayList<>();//Node[systems.length + routes.size()];
         // routes are added before systems
-        for(int i=0;i<routes.size();i++) {
-            data[i] = routes.get(i).getRouteImage();
+        for (Route route : routes) {
+            data.add(route.getRouteImage());
         }
-        for(int i=0;i<systems.length;i++) {
-            data[i+routes.size()] = systems[i].getSystemImage();
+        for (System system1 : systems) {
+            Node system = system1.getSystemImage();
+//            system.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> MainScene.viewRouteToSystem(system1));
+//            system.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> MainScene.hideRouteToSystem());
+            system.setOnMouseEntered(event -> MainScene.viewRouteToSystem(system1));
+            system.setOnMouseExited(event -> MainScene.hideRouteToSystem());
+            data.add(system);
         }
         return data;
     }
@@ -72,16 +104,30 @@ public class StarMap implements Serializable {
 class Route implements Serializable {
     final public System front;
     final public System end;
+    final public int travelTime;
 
     Route(System end1, System end2) {
         front = end1;
         end = end2;
+        int tvt = getNormalLength(end1.posX,end1.posY,end2.posX,end2.posY);
+        tvt -= Utility.rollBetween(1, 5);
+        if(tvt > 0) travelTime = tvt;
+        else travelTime = getNormalLength(end1.posX,end1.posY,end2.posX,end2.posY);
     }
 
     public Node getRouteImage() {
         // systems are 76x73 -> aim for the middle
         Line route = new Line(front.posX+38,front.posY+36,end.posX+38,end.posY+36);
         route.setStroke(Color.WHITE);
+        route.getStrokeDashArray().addAll(25d, 10d);
         return route;
+    }
+
+    public boolean isRouteBetween(System one, System two) {
+        return (one == front && two == end) || (one == end && two == front);
+    }
+
+    public static int getNormalLength(float x1, float y1, float x2, float y2) {
+        return (int)Math.round(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))) / 50;
     }
 }

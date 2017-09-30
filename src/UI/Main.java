@@ -8,24 +8,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.EventListener;
 
 public class Main extends Application {
     javafx.scene.control.Label[] listLabel;
@@ -137,7 +132,7 @@ public class Main extends Application {
         canvas.setId("canvas");
 //            System.out.println("Armour WH:" + listArmour[chosen[i]].getViewport().getWidth() + ";" +  listArmour[chosen[i]].getViewport().getHeight());
 
-//        Squad cothea = new Squad();
+//        AstartesSquad cothea = new AstartesSquad();
 //        TreeItem<TreeViewable> rootItem = new TreeItem<TreeViewable> (cothea, ImageHelper.getIconById(ImageHelper.normalIcon));
 //
 //        rootItem.setExpanded(true);
@@ -153,7 +148,7 @@ public class Main extends Application {
 //        trueRoot.getChildren().add(rootItem);
         root = trueRoot;
 
-//        cothea = new Squad("Lucatiel");
+//        cothea = new AstartesSquad("Lucatiel");
 //        rootItem = new TreeItem<>(cothea, ImageHelper.getIconById(ImageHelper.normalIcon));
 //        Astartes unit = new Astartes("Aginhart", new int[] {90,80,15,4,5,2,3,0,2});
 //        cothea.members.add(unit);
@@ -248,9 +243,9 @@ public class Main extends Application {
         for(Unit unit:roster) {
             TreeItem<TreeViewable> unitItem = new TreeItem<>(unit,ImageHelper.getIconById(unit.getIconId()));
             root.getChildren().add(unitItem);
-            if(unit instanceof Squad) {
+            if(unit instanceof AstartesSquad) {
                 // add the Astartes inside
-                for(Astartes bth : ((Squad) unit).members) {
+                for(Astartes bth : ((AstartesSquad) unit).members) {
                     unitItem.getChildren().add(new TreeItem<>(bth,ImageHelper.getIconById(bth.getIconId())));
                 }
             } else if(unit instanceof Vehicle) {

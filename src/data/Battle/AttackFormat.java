@@ -1,18 +1,21 @@
 package data.Battle;
 
+import UI.MainScene;
 import data.Item.VehicleWeapon;
 import data.Item.Weapon;
 import data.Unit.Astartes;
 import data.Unit.Trait;
-import data.Unit.Vehicle;
+import data.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Quan on 2/28/2017.
+ * An attack is made in this AttackFormat, detailing its many characteristics
  */
 public class AttackFormat {
+    public String weaponName = "None";
     public int strength;
     public int accuracy;
     public int time;
@@ -48,12 +51,14 @@ public class AttackFormat {
     }
 
     public static AttackFormat createAttack(Weapon wpn, Astartes ast, int range) {
+        MainScene.addToVoxLog(Utility.debugMessage(String.format("\nCreate attack with weapon %s on btr %s",wpn.getName(),ast.name)));
+        System.out.printf("\nCreate attack with weapon %s on btr %s", wpn.getName(), ast.name);
         AttackFormat att = new AttackFormat();
         att.strength = wpn.str;
         att.accuracy = (range==0) ? ast.getMeleeAccuracy() : ast.getRangeAccuracy();
         att.time = wpn.spd;
         att.range = wpn.getRange();
-        att.traitList.addAll(ast.traits);
+        att.traitList.addAll(ast.getIndividualOffensiveTrait());
         att.traitList.addAll(wpn.traitList);
         return att;
     }

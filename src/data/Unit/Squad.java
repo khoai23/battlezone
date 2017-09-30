@@ -1,88 +1,14 @@
 package data.Unit;
 
-import UI.ImageHelper;
-import data.Battle.AttackFormat;
-import data.TreeViewable;
-import data.Unit.Unit;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Quan on 12/27/2016.
+ * Created by Quan on 3/14/2017.
+ *
+ * A Squad is a number of Individuals codified into one single Unit
  */
-public class Squad implements Unit {
-    private String squadName;
-    public ArrayList<Astartes> members;
-
-    public Squad(String name) {
-        squadName = name;
-        members = new ArrayList<>();
-    }
-
-    public Squad() {
-        this("Zatheas");
-    }
-
-    @Override
-    public int getStrength() {
-        return 0;
-    }
-
-    @Override
-    public int getMovement() {
-        return 2;
-    }
-
-    @Override
-    public List<AttackFormat> getAttack(int range) {
-        List<AttackFormat> list = new ArrayList<>();
-        for(Astartes a:members) list.addAll(a.getAttack(range));
-        return list;
-    }
-
-    @Override
-    public boolean handleAttack(List<AttackFormat> attacks) {
-        return false;
-    }
-
-    @Override
-    public int getType() {
-        return 0;
-    }
-
-    @Override
-    public String toString() {
-        return "Squad " + this.squadName;
-    }
-
-    public int getIconId() {
-        return ImageHelper.squadIcon;
-    }
-
-    public int getEstimatedArmor() {
-        int total = 0;
-        for (Astartes bth:members) total+=bth.getArmourValue();
-        return total/members.size();
-    }
-
-    public int getEstimatedHp() {
-        int total = 0;
-        for (Astartes bth:members) total+=bth.hp;
-        return total/members.size();
-    }
-
-    public List<Trait> getSquadOffensiveTraits() {
-        // Squad trait is only taken from the squad leader
-        List<Trait> traitList = new ArrayList<>(members.get(0).traits);
-        traitList.removeIf(Trait::isNotOffensiveSquadTrait);
-        return traitList;
-    }
-
-    public List<Trait> getSquadDefensiveTraits() {
-        // Squad trait is only taken from the squad leader
-        List<Trait> traitList = new ArrayList<>(members.get(0).traits);
-        traitList.removeIf(Trait::isNotDefensiveSquadTrait);
-        return traitList;
-    }
+public interface Squad extends Unit {
+    List<Individual> getMembers();
+    List<Trait> getSquadOffensiveTraits();
+    List<Trait> getSquadDefensiveTraits();
 }

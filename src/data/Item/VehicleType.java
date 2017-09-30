@@ -1,5 +1,7 @@
 package data.Item;
 
+import data.GameData;
+
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.io.Serializable;
@@ -65,6 +67,10 @@ public class VehicleType implements Serializable {
         return chassis;
     }
 
+    public VehicleChassis chassis() {
+        return GameData.getVehiclesChassus().get(chassis);
+    }
+
     public int getLoadoutPrimary(int loadout) {
         if(loadOutData.length <= loadout || loadout <= -1) return -1;
         return loadOutData[loadout][0];
@@ -75,6 +81,8 @@ public class VehicleType implements Serializable {
         return loadOutData[loadout][1];
     }
 
+    public List<int[]> getLoadOutData() { return Arrays.asList(loadOutData) ; }
+
     public int getCrew() {
         return crew;
     }
@@ -83,7 +91,18 @@ public class VehicleType implements Serializable {
         return armor;
     }
 
+    public int getDefaultHp() { return defaultHp; }
+
     public String getDescription() {
         return description;
+    }
+
+    public boolean checkLoadoutViable(int loadout) {
+        return loadout == -1 || (loadOutData.length > loadout && loadout >= 0);
+    }
+
+    public int numOfWeapons() {
+        if(loadOutData.length == 0) return 0;
+        else return loadOutData[0].length;
     }
 }
