@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_battlezone" default="compile.module.battlezone">
+  <dirname property="module.battlezone.basedir" file="${ant.file.module_battlezone}"/>
+  
+  <property name="module.jdk.home.battlezone" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.battlezone" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.battlezone" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.battlezone" value="-encoding UTF-8 -source 8 ${compiler.args}"/>
+  
+  <property name="battlezone.output.dir" value="${module.battlezone.basedir}/out/production/Battlezone"/>
+  <property name="battlezone.testoutput.dir" value="${module.battlezone.basedir}/out/test/Battlezone"/>
+  
+  <path id="battlezone.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="battlezone.module.production.classpath">
+    <path refid="${module.jdk.classpath.battlezone}"/>
+    <path refid="library.javax.json:javax.json-api:1.0.classpath"/>
+    <path refid="library.org.glassfish:javax.json:1.0.4.classpath"/>
+  </path>
+  
+  <path id="battlezone.runtime.production.module.classpath">
+    <pathelement location="${battlezone.output.dir}"/>
+    <path refid="library.javax.json:javax.json-api:1.0.classpath"/>
+    <path refid="library.org.glassfish:javax.json:1.0.4.classpath"/>
+  </path>
+  
+  <path id="battlezone.module.classpath">
+    <path refid="${module.jdk.classpath.battlezone}"/>
+    <pathelement location="${battlezone.output.dir}"/>
+    <path refid="library.javax.json:javax.json-api:1.0.classpath"/>
+    <path refid="library.org.glassfish:javax.json:1.0.4.classpath"/>
+  </path>
+  
+  <path id="battlezone.runtime.module.classpath">
+    <pathelement location="${battlezone.testoutput.dir}"/>
+    <pathelement location="${battlezone.output.dir}"/>
+    <path refid="library.javax.json:javax.json-api:1.0.classpath"/>
+    <path refid="library.org.glassfish:javax.json:1.0.4.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.battlezone">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.battlezone">
+    <patternset refid="excluded.from.module.battlezone"/>
+  </patternset>
+  
+  <path id="battlezone.module.sourcepath">
+    <dirset dir="${module.battlezone.basedir}">
+      <include name="src"/>
+      <include name="res"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.battlezone" depends="compile.module.battlezone.production,compile.module.battlezone.tests" description="Compile module Battlezone"/>
+  
+  <target name="compile.module.battlezone.production" depends="register.custom.compilers" description="Compile module Battlezone; production classes">
+    <mkdir dir="${battlezone.output.dir}"/>
+    <javac2 destdir="${battlezone.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.battlezone}/javac">
+      <compilerarg line="${compiler.args.battlezone}"/>
+      <bootclasspath refid="battlezone.module.bootclasspath"/>
+      <classpath refid="battlezone.module.production.classpath"/>
+      <src refid="battlezone.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.battlezone"/>
+    </javac2>
+    
+    <copy todir="${battlezone.output.dir}">
+      <fileset dir="${module.battlezone.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.battlezone.basedir}/res">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.battlezone.tests" depends="register.custom.compilers,compile.module.battlezone.production" description="compile module Battlezone; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.battlezone" description="cleanup module">
+    <delete dir="${battlezone.output.dir}"/>
+    <delete dir="${battlezone.testoutput.dir}"/>
+  </target>
+</project>
