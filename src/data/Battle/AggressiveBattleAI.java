@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class AggressiveBattleAI implements BattleAI {
     @Override
-    public boolean controlUnit(Battle battle, Deployment unit, List<Deployment> opposition) {
+    public boolean controlUnit(Battle battle, Deployment unit, List<Deployment> opposition, List<Deployment> friendly) {
         // If can assault, do assault
         Deployment closestEnemy = opposition.get(0);
         for(Deployment enemy: opposition) {
@@ -27,26 +27,24 @@ public class AggressiveBattleAI implements BattleAI {
 
         // If cannot assault, move as close as possible to the nearest enemy and try shooting
 
-
         int[][] moveMap = battle.displayTerrainWithPath(unit);
-        List<Coordinate> listPlace = new ArrayList<>();
-        for(int i=0;i<moveMap.length;i++)
-            for (int j=0;j<moveMap[i].length;j++) {
-                if(moveMap[i][j] == Field.occupied_friendly || moveMap[i][j] == Field.occupied_hostile) {
-                    listPlace.add(new Coordinate(i, j));
-                }
-            }
+        int largerX = unit.posX > closestEnemy.posX ? unit.posX : closestEnemy.posX;
+        int smallerX = unit.posX < closestEnemy.posX ? unit.posX : closestEnemy.posX;
+        if(largerX == smallerX) { largerX += 2; smallerX -= 2; }
+        int largerY = unit.posY > closestEnemy.posY ? unit.posY : closestEnemy.posY;
+        int smallerY = unit.posY < closestEnemy.posY ? unit.posY : closestEnemy.posY;
+        if(largerY == smallerY) { largerY += 2; smallerY -= 2; }
 
-        Coordinate cord;
-        battle.movedDuringMovement = true;
-        do {
-            // Random move to a square
-            cord = listPlace.get(Utility.rollBetween(0, listPlace.size()-1));
-            if(unit.posX == cord.x && unit.posY == cord.y) {
-                battle.movedDuringMovement = false;
-                break;
+        boolean finished = false;
+        for(int i = largerX; i > smallerX && !finished; i--)
+            for (int j = smallerY; j < largerY; j++) {
+                if(Field.isMovableSquare(moveMap[i][j]))
+                    if(battle.move(unit,i,j,true,unit.unit.getMovement())) {
+                        battle.movedDuringMovement = true;
+                        finished = true;
+                        break;
+                    }
             }
-        } while (!battle.move(unit,cord.x,cord.y,true,unit.unit.getMovement()));
 
         for(Deployment d: opposition) {
             if(battle.attack(unit, d, true, unit.unit.getMaxRange(), battle.movedDuringMovement)) {
@@ -58,4 +56,3 @@ public class AggressiveBattleAI implements BattleAI {
         return true;
     }
 }
-

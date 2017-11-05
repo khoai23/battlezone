@@ -402,7 +402,7 @@ public class Trait {
             case hp_enemy_offset: dataSet[Utility.def_hp] -= value; break;
 
             default: {
-                System.err.printf("ModifyStatFunction failed, data %d %d",target,value);
+                System.err.printf("\nModifyStatFunction failed, data %d %d",target,value);
             }
         }
     }

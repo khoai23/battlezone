@@ -3,6 +3,7 @@ package data.Unit;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Quan on 3/24/2017.
@@ -14,6 +15,7 @@ public class EnemySquadConfig implements Serializable {
     public String name;
     public int [][] composition;
     public String desc;
+    public String refname;
 
     public EnemySquadConfig(JsonObject obj, int id) {
         this.id = id;
@@ -36,8 +38,17 @@ public class EnemySquadConfig implements Serializable {
             }
         }
         desc = obj.getString("description");
+        refname = obj.getString("refname");
     }
 
-    public static int indId = 0;
-    public static int indNum = 1;
+    static final int indId = 0;
+    static final int indNum = 1;
+
+    public static List<EnemySquadConfig> initialization = null;
+    public static int getSquadIdByName(String refname) {
+        for(EnemySquadConfig esc: initialization)
+            if(esc.refname.equals(refname)) return esc.id;
+
+        return -1;
+    }
 }

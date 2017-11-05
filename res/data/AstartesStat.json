@@ -1,0 +1,127 @@
+{
+  "stat":[{
+    "name": "Initiate",
+    "baseHP": 10,
+    "baseWS": 25,
+    "baseBS": 20,
+    "baseI" : 1,
+    "startPoint" : -1,
+    "endPoint": 0
+  },{
+    "name": "Neophyte",
+    "baseHP": 4,
+    "baseWS": 5,
+    "baseBS": 5,
+    "baseI": 0.5,
+    "startPoint": 0,
+    "endPoint": 5
+  },{
+    "name": "Tactical",
+    "baseHP": 2,
+    "baseWS": 1,
+    "baseBS": 1,
+    "baseI": 0.2,
+    "startPoint": 5,
+    "endPoint": 40
+  },{
+    "name": "Assault",
+    "baseHP": 2.2,
+    "baseWS": 2,
+    "baseBS": 0,
+    "baseI": 0.1,
+    "startPoint": 5,
+    "endPoint": 40
+  },{
+    "name": "Devastator",
+    "baseHP": 1.8,
+    "baseWS": 0,
+    "baseBS": 2,
+    "baseI": 0.3,
+    "startPoint": 5,
+    "endPoint": 40
+  },{
+    "name": "Veteran",
+    "baseHP": 1,
+    "baseWS": 1,
+    "baseBS": 1,
+    "baseI": 0.1,
+    "startPoint": 40,
+    "endPoint": 70
+  },{
+    "name": "Ancient",
+    "baseHP": 2,
+    "baseWS": 0.1,
+    "baseBS": 0.1,
+    "baseI": 0.2,
+    "startPoint": 70,
+    "endPoint": 100
+  },{
+    "name": "Apothecary",
+    "baseHP": 3.2,
+    "baseWS": 0.5,
+    "baseBS": 0.5,
+    "baseI": 0.1,
+    "startPoint": 5,
+    "endPoint": 20,
+    "special": "heal"
+  },{
+    "name": "Psyker",
+    "baseHP": 1,
+    "baseWS": 1,
+    "baseBS": 1,
+    "baseI": 0.2,
+    "startPoint": 5,
+    "endPoint": 20,
+    "special": "psychic"
+  },{
+    "name": "Chaplain",
+    "baseHP": 2.4,
+    "baseWS": 1,
+    "baseBS": 1,
+    "baseI": 0.4,
+    "startPoint": 5,
+    "endPoint": 20,
+    "special": "morale"
+  },{
+    "name": "Techmarine",
+    "baseHP": 3.2,
+    "baseWS": 1,
+    "baseBS": 1,
+    "baseI": 0,
+    "startPoint": 5,
+    "endPoint": 20,
+    "special": "fix"
+  }],
+  "special_progression": {
+    "heal": [{
+      "trait":"heal_small", "getAt": 13
+    },{
+      "trait":"heal_medium", "getAt": 16
+    },{
+      "trait":"heal_large|heal_strong", "getAt": 19
+    }],
+    "fix": [{
+      "trait":"fix_small", "getAt": 13
+    },{
+      "trait":"fix_medium", "getAt": 16
+    },{
+      "trait":"fix_large|fix_fast", "getAt": 19
+    }],
+    "psychic": [{
+      "trait":"psy_bio_1|psy_div_1|psy_pyr_1|psy_tel_1|psy_dae_1", "getAt": 11
+    },{
+      "trait":"psy_bio_2|psy_div_2|psy_pyr_2|psy_tel_2|psy_dae_2", "getAt": 14
+    },{
+      "trait":"psy_bio_3|psy_div_3|psy_pyr_3|psy_tel_3|psy_dae_3", "getAt": 17
+    },{
+      "trait":"psy_bio_4|psy_div_4|psy_pyr_4|psy_tel_4|psy_dae_4", "getAt": 19
+    }],
+    "morale": [{
+      "trait":"morale_atk|morale_armor", "getAt": 11
+    },{
+      "trait":"morale_atkspd|morale_init", "getAt": 15
+    },{
+      "trait":"morale_spd", "getAt": 19
+    }]
+  }
+}

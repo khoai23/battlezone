@@ -13,12 +13,12 @@ import java.util.List;
  */
 public class BasicBattleAI implements BattleAI {
     @Override
-    public boolean controlUnit(Battle battle, Deployment unit, List<Deployment> opposition) {
+    public boolean controlUnit(Battle battle, Deployment unit, List<Deployment> opposition, List<Deployment> friendly) {
         int[][] moveMap = battle.displayTerrainWithPath(unit);
         List<Coordinate> listPlace = new ArrayList<>();
         for(int i=0;i<moveMap.length;i++)
             for (int j=0;j<moveMap[i].length;j++) {
-                if(moveMap[i][j] == Field.occupied_friendly || moveMap[i][j] == Field.occupied_hostile) {
+                if(Field.isMovableSquare(moveMap[i][j])) {
                     listPlace.add(new Coordinate(i, j));
                 }
         }
@@ -26,8 +26,9 @@ public class BasicBattleAI implements BattleAI {
         Coordinate cord;
         battle.movedDuringMovement = true;
         do {
-            // Random move to a square
-            cord = listPlace.get(Utility.rollBetween(0, listPlace.size()-1));
+            // Random move to a square if available
+            cord = Utility.getRandomItem(listPlace);
+            if(cord == null)  break;
             if(unit.posX == cord.x && unit.posY == cord.y) {
                 battle.movedDuringMovement = false;
                 break;

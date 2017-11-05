@@ -10,6 +10,8 @@ import data.TreeViewable;
 import data.Utility;
 import javafx.scene.image.ImageView;
 
+import javax.json.JsonArray;
+import javax.json.JsonObject;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -339,75 +341,4 @@ public class Astartes implements TreeViewable, Serializable, Individual {
         clone[8] = role;
         return clone;
     }
-}
-
-class AscensionPath {
-    public static void ascend(Astartes target) {
-        // The idea is that the warrior will have a path from which he can increase his relative skill.
-        while(target.level < expRequired.length && target.exp >= expRequired[target.level]) {
-            handleChangeData(target.level+1,target);
-            target.exp -= expRequired[target.level];
-            target.level++;
-        }
-    }
-
-    static void handleChangeData(int levelUp, Astartes target) {
-        //HP increase is independent on path.
-        target.baseStat[Astartes.basehp] += (levelUp > 1) ? (levelUp > 6) ? 10 : 15 : 30;
-        switch (target.path) {
-            case path_omni: {
-                // This path will increase both melee and ranged accuracy
-                target.baseStat[Astartes.meleeAcc] += (levelUp > 1) ? (levelUp > 4) ? 5 : 10 : 15;
-                target.baseStat[Astartes.rangeAcc] += (levelUp > 3) ?  5 : 10;
-                break;
-            }
-            case path_ranged: {
-                // This path will increase mostly ranged accuracy
-                target.baseStat[Astartes.meleeAcc] += (levelUp > 1) ? (levelUp > 5) ? 3 : 0 : 12;
-                target.baseStat[Astartes.rangeAcc] += (levelUp > 3) ?  8 : 16;
-                break;
-            }
-            case path_melee: {
-                // This path will increase mostly melee accuracy
-                target.baseStat[Astartes.meleeAcc] += (levelUp > 2) ? (levelUp > 4) ? 4 : 12 : 13;
-                target.baseStat[Astartes.rangeAcc] += (levelUp > 4) ?  5 : 3;
-                break;
-            }
-            case path_command: {
-                // This path will increase commanding capacity
-                target.personalTrait = getRandomTrait(target.personalTrait,"com_");
-                break;
-            }
-            default: {
-                System.err.println("Wrong path detected, path " + target.path);
-            }
-        }
-    }
-
-    public static final int[] expRequired = {20,30,50,100,100,200};
-    // recruit 0 -> brother 20 -> veteran 50 -> respected 100 -> ancient 200 -> venerable 300 -> legend 500
-
-    static String getRandomTrait(String existingTrait, String prefix) {
-        List<Trait> traitList = GameData.getTraitList();
-        traitList.removeIf(t -> !t.name.contains(prefix));
-        int traitNum;
-        do {
-//            traitNum = (int)Math.floor(Math.random() * traitList.size());
-            traitNum = Utility.rollBetween(0,traitList.size());
-        } while (!existingTrait.contains(traitList.get(traitNum).name));
-
-        if(existingTrait.equals("")) return traitList.get(traitNum).name;
-        return existingTrait + "|" + traitList.get(traitNum);
-    }
-
-    // these are randomized on creation
-    public static final int path_omni = 0;
-    public static final int path_ranged = 1;
-    public static final int path_melee = 2;
-    public static final int path_command = 3;
-    // these are decided randomly due to need
-    public static final int path_mech = 4;
-    public static final int path_tech = 5;
-    public static final int path_medi = 6;
-    public static final int path_preach = 7;
 }

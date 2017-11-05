@@ -273,11 +273,14 @@ public class DialogManager {
         Item chosenItem = (Item)listChoiceBox[choice].getSelectionModel().getSelectedItem();
 
         if(chosenItem instanceof Armour && choice == 0) {
-            // Armor is force cleared, TODO only force clear with different types
-            target.changeEquipment(new int[]{listChoiceBox[choice].getSelectionModel().getSelectedIndex(), -1, -1, -1});
-            for(ChoiceBox box: listChoiceBox)
-                if(box != listChoiceBox[choice])
-                    box.getSelectionModel().clearSelection();
+            if(GameData.getArmourById(target.getEquipment(Astartes.armour)).isTerminator()
+                    != ((Armour) chosenItem).isTerminator()) {
+                // Armor is force cleared if types are different
+                target.changeEquipment(new int[]{listChoiceBox[choice].getSelectionModel().getSelectedIndex(), -1, -1, -1});
+                for(ChoiceBox box: listChoiceBox)
+                    if(box != listChoiceBox[choice])
+                        box.getSelectionModel().clearSelection();
+            }
         } else if(chosenItem instanceof Weapon && choice < 3 && choice > 0) {
             Weapon wpn = (Weapon)chosenItem;
 //            System.out.println("Weapon selected " + wpn.getName());

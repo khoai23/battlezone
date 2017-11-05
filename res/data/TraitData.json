@@ -9,7 +9,7 @@
 },{
   "name":"spread",
   "numberData":[0, 0, 0, 10, 10, -1, 1],
-  "desc":"3. -40% shots in exchange for multiple targets hit."
+  "desc":"3. -40% shots in exchange for multiple targets hit. Referencing spread_aux"
 },{
   "name":"bolt",
   "stringData":"after|single|aad_more|9|dmg_mult|100|-1",
@@ -133,5 +133,5 @@
 },{
   "name":"req_term",
   "stringData":"noncom|none|required|6|-1|-1|-1",
-  "desc":"33. Must be in primary slot."
+  "desc":"33. Must be used alongside Terminator armor."
 }]

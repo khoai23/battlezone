@@ -1,6 +1,6 @@
 {
   "individual":[{
-    "name":"Ork Boy (Slugga)",
+    "name":"Ork Boyz (Slugga)",
     "hp": 30,
     "armor": 10,
     "init": 6,
@@ -8,7 +8,7 @@
     "ranged": [17, 2, 33, 1],
     "refname": "choppaboy"
   },{
-    "name":"Ork Boy (Shoota)",
+    "name":"Ork Boyz (Shoota)",
     "hp": 25,
     "armor": 10,
     "init": 6,
@@ -16,7 +16,7 @@
     "ranged": [22, 2, 45, 2],
     "refname": "shootaboy"
   },{
-    "name":"'Ard Boy",
+    "name":"'Ard Boyz",
     "hp": 25,
     "armor": 12,
     "init": 3,
@@ -24,7 +24,7 @@
     "ranged": [15, 3, 25, 1],
     "refname": "hardboy"
   },{
-    "name":"Burna Boy",
+    "name":"Burna Boyz",
     "hp": 20,
     "armor": 8,
     "init": 8,
@@ -39,7 +39,56 @@
     "melee": [27, 2, 75],
     "ranged": [22, 2, 50, 2],
     "refname": "nob"
+  },{
+    "name":"Mega Nob",
+    "hp": 50,
+    "armor": 22,
+    "init": 2,
+    "melee": [35, 2, 75],
+    "ranged": [27, 4, 33, 2],
+    "refname": "meganob"
+  },{
+    "name":"Loota",
+    "hp": 45,
+    "armor": 11,
+    "init": 2,
+    "melee": [35, 1, 33],
+    "ranged": [45, 3, 80, 3],
+    "refname": "loota"
+  },{
+    "name":"Flash Gitz",
+    "hp": 45,
+    "armor": 17,
+    "init": 6,
+    "melee": [22, 1, 33],
+    "ranged": [31, 4, 75, 3],
+    "refname": "flashgit"
+  },{
+    "name":"Big Mek",
+    "hp": 75,
+    "armor": 30,
+    "init": 4,
+    "melee": [38, 3, 66],
+    "ranged": [45, 2, 80, 2],
+    "refname": "bigmek"
+  },{
+    "name":"Warboss",
+    "hp": 125,
+    "armor": 28,
+    "init": 7,
+    "melee": [42, 5, 80],
+    "ranged": [24, 4, 60, 2],
+    "refname": "warboss"
+  },{
+    "name":"Warlord",
+    "hp": 200,
+    "armor": 40,
+    "init": 8,
+    "melee": [44, 6, 90],
+    "ranged": [31, 3, 75, 2],
+    "refname": "warlord"
   }],
+
   "unit":[{
     "name": "Ork Boyz Squad (Normal)",
     "composition": [[0,10]],
@@ -68,15 +117,76 @@
   },{
     "name": "'Ard Boyz Squad",
     "refComposition":[["hardboy",10]],
-    "description": "A squad of slighly armored 'ard boy. ",
+    "description": "A squad of slightly armored 'ard boyz. ",
     "speed": 3,
     "refname": "hardboy_squad"
+  },{
+    "name": "Burna Boyz Squad",
+    "refComposition":[["burnaboy",10]],
+    "description": "A squad of burna boyz specialized in using flamer.",
+    "speed": 4,
+    "refname": "burnaboy_squad"
+  },{
+    "name": "Loota Half Squad",
+    "refComposition":[["shootaboy",5],["loota", 5]],
+    "description": "A fireteam of loota accompanied by meatshields.",
+    "speed": 3,
+    "refname": "loota_squad_s"
+  },{
+    "name": "Loota Full Squad",
+    "refComposition":[["loota",10]],
+    "description": "A full squad of loota and their corresponding dakka.",
+    "speed": 3,
+    "refname": "loota_squad_n"
+  },{
+    "name": "Nob Squad",
+    "refComposition":[["nob",10]],
+    "description": "Ten Nobz grouped into an elite melee squad.",
+    "speed": 3,
+    "refname": "nob_squad"
+  },{
+    "name": "Meganobz Squad",
+    "refComposition":[["meganob",10]],
+    "description": "Ten Mega Nobz grouped into an elite melee squad.",
+    "speed": 3,
+    "refname": "nob_squad"
   }],
+
   "mission":[{
     "name": "Clean out feral orks",
     "refname": "m_ork_feral_0",
     "composition":[["choppa_squad_n", 1, 2],["shoota_squad_n", 1, 2]],
     "missionType": 0,
     "weight": 1
+  },{
+    "name": "Clean out feral orks",
+    "refname": "m_ork_feral_1",
+    "composition":[["choppa_squad_n", 2, 4]],
+    "missionType": 0,
+    "weight": 1
+  },{
+    "name": "Clean out feral orks",
+    "refname": "m_ork_feral_2",
+    "composition":[["shoota_squad_n", 2, 4]],
+    "missionType": 0,
+    "weight": 1
+  },{
+    "name": "Take out forward base",
+    "refname": "m_ork_base_0",
+    "composition":[["choppa_squad_l", 2, 3],["shoota_squad_n", 2, 3], ["hardboy_squad", 1], ["nob_squad", 1]],
+    "missionType": 0,
+    "weight": 2
+  },{
+    "name": "Take out forward base",
+    "refname": "m_ork_base_1",
+    "composition":[["choppa_squad_n", 2, 3],["shoota_squad_l", 2, 3], ["loota_squad_s", 1], ["nob_squad", 1]],
+    "missionType": 0,
+    "weight": 2
+  },{
+    "name": "Take out forward base",
+    "refname": "m_ork_base_2",
+    "composition":[["choppa_squad_n", 2, 3],["shoota_squad_n", 2, 3], ["hardboy_squad", 1], ["loota_squad_s", 1], ["nob_squad", 1]],
+    "missionType": 0,
+    "weight": 2
   }]
 }

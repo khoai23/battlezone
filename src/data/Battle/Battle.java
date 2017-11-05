@@ -4,6 +4,7 @@ import UI.Controller;
 import UI.ImageHelper;
 import UI.Main;
 import UI.MainScene;
+import com.sun.xml.internal.bind.v2.schemagen.Util;
 import data.GameData;
 import data.StarMap.*;
 import data.Unit.Unit;
@@ -32,8 +33,13 @@ public class Battle implements Serializable {
     int gameMode;
     Deployment target = null;
 
-    public Battle(int type, List<Unit> friendly, List<Unit> hostile) {
-        terrain = new Field(Field.type_rectangular, Field.randomize_high);
+    // TerrainType decide randomization in first digit and terrainType in second
+    public Battle(int terrainType, List<Unit> friendly, List<Unit> hostile) {
+        if(terrainType < 0) {
+            // negative input, use random map
+            terrainType = Field.type_rectangular + 10 * Utility.rollBetween(Field.randomize_none, Field.randomize_high);
+        }
+        terrain = new Field(terrainType % 10, terrainType / 10);
         this.friendly = new ArrayList<>();
         this.friendly.addAll(friendly.stream().map(Deployment::new).collect(Collectors.toList()));
         this.hostile = new ArrayList<>();
@@ -47,9 +53,10 @@ public class Battle implements Serializable {
 //        MainScene.runningScene.showField();
     }
 
-    public Battle(int type, List<Unit> friendly, List<Unit> hostile, int mode) {
-        this(type, friendly, hostile);
-        gameMode = mode;
+    // Mode decide game type in its last digit, followed by 1/2 var
+    public Battle(int terrainType, List<Unit> friendly, List<Unit> hostile, int mode) {
+        this(terrainType, friendly, hostile);
+        gameMode = mode % 10;
         deployByGameMode(mode % 10, (mode / 10) % 10, mode / 100);
     }
 
@@ -71,6 +78,10 @@ public class Battle implements Serializable {
             case mode_attackPosition:
             case mode_defendPosition:
                 target = new Deployment(null);
+                if(var1 <= 0 || var2 <= 0) {
+                    // no value, randomize
+                    var1 = Utility.rollBetween(0, terrain.fieldTerrain.length-1);
+                }
                 target.setPos(var1, var2);
                 break;
 
@@ -118,6 +129,7 @@ public class Battle implements Serializable {
 
     }
 
+    // Units killed/added during the duration of the game require a reshuffle of orders
     void recalculateOrder() {
         // remove killed and calculate the ordering speed
         carousel.removeIf(d -> d.unit.getStrength()<=0);
@@ -152,10 +164,12 @@ public class Battle implements Serializable {
         return res;
     }
 
+    // Display the pure terrain
     public int[][] displayPureTerrain() {
         return terrain.fieldTerrain;
     }
 
+    // Display the terrain with units on them
     public int[][] displayTerrain() {
         // clone the map
         int[][] data;
@@ -170,11 +184,17 @@ public class Battle implements Serializable {
                 data[d.posX][d.posY] = Field.occupied_friendly;
             }
         }
+
         for(Deployment d:hostile) {
             if(d.posX>=0 && d.posY>=0 && d.posX < terrain.fieldTerrain.length && d.posY<terrain.fieldTerrain[d.posX].length && d.unit.getStrength()>0) {
                 if(data[d.posX][d.posY] == Field.occupied_friendly) data[d.posX][d.posY] = Field.occupied_both;
                 else data[d.posX][d.posY] = Field.occupied_hostile;
             }
+        }
+
+        if(target != null) {
+            // Game Mode with an objective
+            data[target.posX][target.posY] = Field.occupied_objective;
         }
 
         return data;
@@ -189,12 +209,22 @@ public class Battle implements Serializable {
             terrain.getPossibleDeployPosition(gameMode == mode_steelRain, spd);
         for(int i=0;i<data.length;i++)
             for(int j=0;j<data[i].length;j++) {
-                if(moveMap[i][j] <= spd && data[i][j] != Field.occupied_hostile && data[i][j] != Field.occupied_both)
-                    data[i][j] = Field.occupied_friendly;
+                if(moveMap[i][j] <= spd) {
+                    if(data[i][j] == Field.occupied_hostile) {
+                        data[i][j] = Field.movable_hostile;
+                    } else if(data[i][j] == Field.occupied_both) {
+                        data[i][j] = Field.movable_both;
+                    } else if(data[i][j] == Field.occupied_objective) {
+                        data[i][j] = Field.movable_objective;
+                    } else if(data[i][j] != Field.occupied_friendly) {
+                        data[i][j] = Field.movable_friendly;
+                    }
+                }
             }
         return data;
     }
 
+    // Try to move unit into position (newX,newY)
     public boolean move(Unit unit, int newX, int newY, boolean recheck, int remainingSpeed) {
         // Search for unit
         Deployment deployment = searchForUnit(unit);
@@ -234,24 +264,13 @@ public class Battle implements Serializable {
         return true;
     }
 
+
     public boolean attack(Unit attacker, Unit defender, int range, boolean moved) {
         return attack(attacker,defender,false,range,moved);
     }
 
-    Deployment searchForUnit(Unit unit) {
-        for(Deployment d:friendly)
-            if(d.unit == unit) {
-                return d;
-            }
-
-        for(Deployment d:hostile)
-            if(d.unit == unit) {
-                return d;
-            }
-
-        return null;
-    }
-
+    // The handleClick method try to parse what happen when you click a square and
+    // respond with a resulting map for that action (if valid)
     private boolean isSelected = false;
     private boolean isMovement = false;
     boolean movedDuringMovement = false;
@@ -263,7 +282,7 @@ public class Battle implements Serializable {
         if(clicked != null) {
             // Click on an enemy unit
             if(isMovement) {
-                // Try Assault: move & attack all at once
+                // Try assault: move & attack all at once
                 if(currentDeployment.posX != itemX || currentDeployment.posY != itemY) {
                     tryAction = move(currentDeployment, itemX, itemY, true, currentDeployment.unit.getMovement());
                     movedDuringMovement = tryAction;
@@ -283,7 +302,7 @@ public class Battle implements Serializable {
                 }
                 return tryAction ? displayTerrain() : null;
             } else {
-                // Try Ranged attacks
+                // Try attack that unit in attack phase
                 tryAction = attack(currentDeployment,clicked,true,currentDeployment.unit.getMaxRange(),movedDuringMovement);
                 if(tryAction) {
                     getNextDeployment(currentDeployment);
@@ -309,13 +328,14 @@ public class Battle implements Serializable {
                     isMovement = false;
                     return displayTerrain();
                 } else {
-                    System.err.printf("\nCannot move to square %d %d",itemX,itemY);
+                    System.err.printf("\nUnit %s cannot move to square %d %d", currentDeployment.unit,itemX,itemY);
                     return null;
                 }
             } else {
+                // If select self, abandon firing phase
                 if(currentDeployment.posX == itemX && currentDeployment.posY == itemY) {
                     MainScene.addToVoxLog(Utility.debugMessage("Abandon firing phase."));
-                    System.err.println("Abandon firing phase.");
+                    System.err.printf("\nUnit %s abandon firing phase.",currentDeployment.unit);
                     getNextDeployment(currentDeployment);
                     Platform.runLater(this::runActionLoop);
                     return displayTerrain();
@@ -327,16 +347,17 @@ public class Battle implements Serializable {
         }
     }
 
+    // Tooltips will show data related to the square that is currently being hovered on
     public static void handleTooltipDisplay(int x, int y) {
         String result;
         Battle currentBattle = GameData.getCurrentData().getCurrentBattle();
         StringBuilder resultBuilder = new StringBuilder();
         for(Deployment d:currentBattle.carousel) {
-            if(d.posX == x && d.posY == y) resultBuilder.append(Utility.tooltip_show_compo ? d.unit.getDebugString() : d.unit.toString());
+            if(d.posX == x && d.posY == y) resultBuilder.append(GameData.getMiscSetting().tooltip_show_compo ? d.unit.getDebugString() : d.unit.toString());
         }
         result = resultBuilder.toString();
         if(result.equals("")) result = "Empty Square";
-        if(currentBattle.currentDeployment != null && Utility.tooltip_distance) {
+        if(currentBattle.currentDeployment != null && GameData.getMiscSetting().tooltip_distance) {
             result += "\nDistance: " + Field.lengthToPos(currentBattle.currentDeployment.posX,currentBattle.currentDeployment.posY,x,y);
         }
         MainScene.updateTooltip(result);
@@ -351,13 +372,14 @@ public class Battle implements Serializable {
         }
 
         if(friendly.contains(currentDeployment)) {
-            // Initialize movement and show path
+            // If controllable, initialize movement and show path
             ImageHelper.updateFromIntMap(displayTerrainWithPath(currentDeployment));
             isSelected = true;
         } else {
+            // IF not, let AI handle unit
             isSelected = false;
+            Utility.waitForEnemy(1.0);
             runningEnemyAction(currentDeployment);
-            Utility.waitForEnemy(1.5);
             getNextDeployment(currentDeployment);
             runActionLoop();
         }
@@ -420,10 +442,27 @@ public class Battle implements Serializable {
         return 0;
     }
 
+    // Running action made by a decided AI
     public boolean runningEnemyAction(Deployment en) {
-        return ai.controlUnit(this,en,friendly);
+        return ai.controlUnit(this,en,friendly, hostile);
     }
 
+    // Find an unit's deployment
+    Deployment searchForUnit(Unit unit) {
+        for(Deployment d:friendly)
+            if(d.unit == unit) {
+                return d;
+            }
+
+        for(Deployment d:hostile)
+            if(d.unit == unit) {
+                return d;
+            }
+
+        return null;
+    }
+
+    // Find if your click landed on a friendly unit
     public Deployment clickOnFriendly(int itemX, int itemY) {
         for(Deployment d:friendly) {
             if(d.posX == itemX && d.posY == itemY) return d;
@@ -431,6 +470,7 @@ public class Battle implements Serializable {
         return null;
     }
 
+    // Find if your click landed on a hostile unit
     public Deployment clickOnHostile(int itemX, int itemY) {
         for(Deployment d:hostile) {
             if(d.posX == itemX && d.posY == itemY) return d;

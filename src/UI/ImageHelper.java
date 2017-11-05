@@ -430,6 +430,11 @@ public class ImageHelper {
             case Field.occupied_friendly: cssStyle = "land-friendly"; break;
             case Field.occupied_hostile: cssStyle = "land-hostile"; break;
             case Field.occupied_both: cssStyle = "land-contested"; break;
+            case Field.occupied_objective: cssStyle = "land-objective"; break;
+            case Field.movable_friendly: cssStyle = "land-movable-friendly"; break;
+            case Field.movable_hostile: cssStyle = "land-movable-hostile"; break;
+            case Field.movable_both: cssStyle = "land-movable-contested"; break;
+            case Field.movable_objective: cssStyle = "land-movable-objective"; break;
             default: cssStyle = "land-impassable"; break;
         }
         img.getStyleClass().clear();

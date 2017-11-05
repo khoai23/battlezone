@@ -2,6 +2,8 @@ package data;
 
 import UI.MainScene;
 import data.Battle.Battle;
+import data.Battle.Field;
+import data.Battle.MissionConfig;
 import data.Item.*;
 import data.StarMap.StarMap;
 import data.Unit.*;
@@ -41,7 +43,10 @@ public class GameData implements Serializable {
     List<VehicleChassis> vehicleChassus;
     List<EnemyIndividual> enemyBaseIndividual;
     List<EnemySquadConfig> enemyBaseSquad;
+    List<MissionConfig> missionList;
     List<Trait> traitList;
+    List<AscensionPath> statList;
+    Setting setting = new Setting();
     Battle currentBattle = null;
 
     public GameData() {
@@ -63,6 +68,8 @@ public class GameData implements Serializable {
         traitList = new ArrayList<>();
         enemyBaseIndividual = new ArrayList<>();
         enemyBaseSquad = new ArrayList<>();
+        missionList = new ArrayList<>();
+        statList = new ArrayList<>();
         colorScheme = scheme_quad;
         loadDefaultData();
         Platform.runLater(() -> {
@@ -74,6 +81,7 @@ public class GameData implements Serializable {
     public static String itemPath = "res/data/ItemData.json";
     public static String traitPath = "res/data/TraitData.json";
     public static String enemyPath = "res/data/EnemyData.json";
+    public static String defaultDataPath = "res/data/AstartesStat.json";
 
     public void loadDefaultData() {
         map = new StarMap();
@@ -130,7 +138,6 @@ public class GameData implements Serializable {
                 Trait.initialization.add(new Trait(traits.getJsonObject(i), i));
             }
             traitList = Trait.initialization;
-            Trait.initialization = null;
 
             reloadTraitOnWeapons();
             reloadTraitOnAccessory();
@@ -145,11 +152,27 @@ public class GameData implements Serializable {
             enemyBaseIndividual = EnemyIndividual.initialization;
 
             JsonArray enemySqdConf = enemyData.getJsonArray("unit");
+            EnemySquadConfig.initialization = new ArrayList<>();
             for(int i=0;i<enemySqdConf.size();i++) {
-                enemyBaseSquad.add(new EnemySquadConfig(enemySqdConf.getJsonObject(i), i));
+                EnemySquadConfig.initialization.add(new EnemySquadConfig(enemySqdConf.getJsonObject(i), i));
             }
-            EnemyIndividual.initialization = null;
 
+            JsonArray missionConf = enemyData.getJsonArray("mission");
+            for(int i=0;i<missionConf.size();i++) {
+                missionList.add(new MissionConfig(missionConf.getJsonObject(i), i));
+            }
+            enemyBaseSquad = EnemySquadConfig.initialization;
+
+            reader = Json.createReader(new FileInputStream(defaultDataPath));
+            JsonObject defaultData = reader.readObject();
+            for(int i=0;i<defaultData.getJsonArray("stat").size();i++) {
+                statList.add(new AscensionPath(defaultData.getJsonArray("stat").getJsonObject(i),
+                        defaultData.getJsonObject("special_progression")));
+            }
+
+            EnemyIndividual.initialization = null;
+            Trait.initialization = null;
+            EnemySquadConfig.initialization = null;
         } catch (FileNotFoundException e) {
             System.out.print("\nFile not found @" + itemPath);
         }
@@ -175,30 +198,17 @@ public class GameData implements Serializable {
 
         roster.add(new Vehicle(3,0));
 
-        List<Unit> enSqd = new ArrayList<>();
-        enSqd.add(new EnemySquad(0));
+        MissionConfig currentMission = missionList.get(0);
         List<Unit> frSqd = new ArrayList<>();
         frSqd.add(sqd);
         frSqd.add(sqd2);
+        frSqd.add(predator);
 
-        currentBattle = new Battle(0,frSqd,enSqd);
+        currentBattle = new Battle(Field.type_rectangular + 10 * Field.randomize_medium,
+                frSqd, currentMission.getEnemySquadList(), Battle.mode_encounterBattle);
 
-        currentBattle.move(sqd,3,4);
-        currentBattle.move(sqd2,5,5);
-        currentBattle.move(enSqd.get(0),9,1);
         MainScene.runningScene.showField();
         currentBattle.runActionLoop();
-
-        Trait twinlinked = new Trait(new int[] {Trait.phase_nextAttack,Trait.traitType_single_enemy,Trait.predicate_attack_miss, -1,
-                Trait.accuracy_offset, 10, -1}, 0);
-        Trait spread_aux = new Trait(new int[] {Trait.phase_targetDecision,Trait.traitType_extra,Trait.attack_multiplier, -50,
-                Trait.throwaway, -1, -1}, 1);
-        Trait spread = new Trait(new int[] {Trait.phase_targetDecision, Trait.traitType_targetChange,Trait.trait_targetChange_attack_mult,
-                100, 100, -1, 1}, 2);
-        Trait bolt = new Trait(new int[] {Trait.phase_afterAttack, Trait.traitType_single_enemy,Trait.predicate_damage_inflicted_more,
-                10, Trait.aadamage_multiplier, 100, -1}, 3);
-//        sqd.members.get(1).traits.add(twinlinked);
-//        sqd.members.get(1).traits.add(spread);
     }
 
     public static List<String> getWeaponsImageName() {
@@ -283,6 +293,35 @@ public class GameData implements Serializable {
 
     public static EnemySquadConfig getBaseSquad(int id) {
         return GameData.getCurrentData().enemyBaseSquad.get(id);
+    }
+
+    public static EnemySquadConfig getSquadByRefName(String refname) {
+        for(EnemySquadConfig esc: GameData.getCurrentData().enemyBaseSquad)
+            if(esc.name.equals(refname)) return esc;
+        return null;
+    }
+
+    public static int getSquadIdByRefName(String refname) {
+        return GameData.getCurrentData().enemyBaseSquad.indexOf(getSquadByRefName(refname));
+    }
+
+    public static Setting getMiscSetting() {
+        return GameData.getCurrentData().setting;
+    }
+
+    public static AscensionPath getAscensionPathById(int id) {
+        return GameData.getCurrentData().statList.get(id);
+    }
+
+    public static AscensionPath getAscensionPathAtLvl(int lvl, boolean includeSpecial) {
+        List<AscensionPath> list = new ArrayList<>(GameData.getCurrentData().statList);
+        list.removeIf(path -> (path.endLvl < lvl || path.beginLvl >= lvl) || (!includeSpecial && path.isSpecialAscension));
+        if(list.size() == 0) {
+            System.err.printf("Cannot get list of path for %d, includeSpecial %s",lvl, includeSpecial);
+            return null;
+        } else {
+            return list.get(Utility.rollBetween(0, list.size()));
+        }
     }
 
     void reloadTraitOnWeapons() {

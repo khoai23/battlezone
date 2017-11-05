@@ -141,16 +141,24 @@ class Field implements Serializable {
     public static final int type_hexagon = 0;
     public static final int type_rectangular = 1;
 
-    public static final int normal=0;
-    public static final int obstacles=1;
-    public static final int impassable=2;
-    public static final int occupied_friendly=3;
-    public static final int occupied_hostile=4;
-    public static final int occupied_both=5;
+    public static final int normal = 0;
+    public static final int obstacles = 1;
+    public static final int impassable = 2;
+    public static final int occupied_friendly = 3;
+    public static final int occupied_hostile = 4;
+    public static final int occupied_both = 5;
+    public static final int occupied_objective = 6;
 
-    public static final int randomize_none=0;
-    public static final int randomize_little=1;
-    public static final int randomize_medium=2;
+    public static boolean isMovableSquare(int val) { return val > 10; }
+
+    public static final int movable_friendly = 13;
+    public static final int movable_hostile = 14;
+    public static final int movable_both = 15;
+    public static final int movable_objective = 16;
+
+    public static final int randomize_none = 0;
+    public static final int randomize_little = 1;
+    public static final int randomize_medium = 2;
     public static final int randomize_high=3;
 
     static final int default_width = 15;

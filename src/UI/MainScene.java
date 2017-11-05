@@ -5,6 +5,8 @@ import data.Item.Item;
 import data.TreeViewable;
 import data.Unit.*;
 import data.Utility;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -192,7 +194,7 @@ public class MainScene extends Scene {
         this.tree = tree;
     }
     
-    public void initInventoryTab() {
+    void initInventoryTab() {
         ObservableList<Item> data = FXCollections.observableArrayList();
         data.addAll(GameData.getCurrentData().getAllItem());
 
@@ -204,7 +206,7 @@ public class MainScene extends Scene {
         controller.Manage.setItems(data);
     }
     
-    public void initStarMap() {
+    void initStarMap() {
         controller.StarMap.getChildren().add(ImageHelper.getBackgroundImage());
         controller.StarMap.getChildren().addAll(GameData.getCurrentData().map.reloadAllElements());
         if(GameData.getCurrentData().map.destination != null) {
@@ -213,7 +215,7 @@ public class MainScene extends Scene {
         }
     }
 
-    public void initBattlefield() {
+    void initBattlefield() {
         controller.MinimapBtn.setOnAction(event -> controller.Minimap.setVisible(!controller.Minimap.isVisible()));
         controller.VoxLogBtn.setOnAction(event -> controller.VoxLogScrollPane.setVisible(!controller.VoxLogScrollPane.isVisible()));
         controller.ExtraBtn.setOnAction(event -> controller.ExtraSettingPane.setVisible(!controller.ExtraSettingPane.isVisible()));
@@ -223,12 +225,13 @@ public class MainScene extends Scene {
         controller.ExtraSettingPane.setPadding(new Insets(5));
         controller.ExtraSettingPane.setVisible(false);
 
-        controller.DebugMsg.setOnAction(event -> Utility.show_debug = controller.DebugMsg.isSelected());
-        controller.DamageMsg.setOnAction(event -> Utility.show_damage = controller.DamageMsg.isSelected());
-        controller.ConvMsg.setOnAction(event -> Utility.show_message = controller.ConvMsg.isSelected());
-        controller.TooltipDistance.setOnAction(event -> Utility.tooltip_distance = controller.TooltipDistance.isSelected());
-        controller.TooltipDeepShow.setOnAction(event -> Utility.tooltip_show_compo = controller.TooltipDeepShow.isSelected());
+        controller.DebugMsg.setOnAction(event -> GameData.getMiscSetting().show_debug = controller.DebugMsg.isSelected());
+        controller.DamageMsg.setOnAction(event -> GameData.getMiscSetting().show_damage = controller.DamageMsg.isSelected());
+        controller.ConvMsg.setOnAction(event -> GameData.getMiscSetting().show_message = controller.ConvMsg.isSelected());
+        controller.TooltipDistance.setOnAction(event -> GameData.getMiscSetting().tooltip_distance = controller.TooltipDistance.isSelected());
+        controller.TooltipDeepShow.setOnAction(event -> GameData.getMiscSetting().tooltip_show_compo = controller.TooltipDeepShow.isSelected());
 
+        controller.VoxLog.heightProperty().addListener((observable, oldValue, newValue) -> controller.VoxLogScrollPane.setVvalue((Double)newValue ));
 //        controller.VoxLog.getChildren().add(Utility.createLine("Friendly",Utility.speaker_friendly,"I have no idea what I am doing."));
 //        controller.VoxLog.getChildren().add(Utility.createLine("Hostile",Utility.speaker_hostile,"Neither do I."));
 //        controller.VoxLog.getChildren().add(Utility.createLine("Narrator",Utility.speaker_narrator,"Thus the two idiots played."));
@@ -305,6 +308,7 @@ public class MainScene extends Scene {
 
         runningScene.controller.VoxLog.getChildren().add(comp);
         runningScene.controller.VoxLogScrollPane.setVvalue(1.0);
+//        runningScene.controller.VoxLog.setHeight
     }
 
     public static void viewRouteToSystem(data.StarMap.System sys) {
@@ -353,10 +357,12 @@ public class MainScene extends Scene {
 
     public static void updateBattleResult(String result) {
         if(result != null) {
-            System.out.println("Result: " + result);
+            System.out.printf("\nResult: %s", result);
             // TODO add a dialog showing the result
         }
         runningScene.controller.BattleTab.setDisable(true);
+        runningScene.controller.MainScene.getSelectionModel().select(
+                runningScene.controller.StatusTab);
     }
 
     public static void openBattleTab() {
@@ -371,8 +377,8 @@ public class MainScene extends Scene {
 }
 
 class TabListener implements EventHandler<Event> {
-    Tab pane;
-    MainScene main;
+    private Tab pane;
+    private MainScene main;
 
     TabListener(Tab pane, MainScene main) {
         this.pane = pane;

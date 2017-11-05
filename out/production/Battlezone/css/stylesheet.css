@@ -49,11 +49,27 @@
     -fx-image: url("../texture/battlemap/sqr_friendly_selected.png");
 }
 
+.land-movable-friendly {
+    -fx-image: url("../texture/battlemap/sqr_friendly_dashed.png");
+}
+
+.land-movable-friendly:hover {
+    -fx-image: url("../texture/battlemap/sqr_friendly_selected.png");
+}
+
 .land-hostile {
     -fx-image: url("../texture/battlemap/sqr_hostile.png");
 }
 
 .land-hostile:hover {
+    -fx-image: url("../texture/battlemap/sqr_hostile_selected.png");
+}
+
+.land-movable-hostile {
+    -fx-image: url("../texture/battlemap/sqr_hostile_dashed.png");
+}
+
+.land-movable-hostile:hover {
     -fx-image: url("../texture/battlemap/sqr_hostile_selected.png");
 }
 
@@ -63,4 +79,28 @@
 
 .land-contested:hover {
     -fx-image: url("../texture/battlemap/sqr_contested_selected.png");
+}
+
+.land-movable-contested {
+    -fx-image: url("../texture/battlemap/sqr_contested_dashed.png");
+}
+
+.land-movable-contested:hover {
+    -fx-image: url("../texture/battlemap/sqr_contested_selected.png");
+}
+
+.land-objective {
+    -fx-image: url("../texture/battlemap/sqr_objective.png");
+}
+
+.land-objective:hover {
+    -fx-image: url("../texture/battlemap/sqr_objective_selected.png");
+}
+
+.land-movable-objective {
+    -fx-image: url("../texture/battlemap/sqr_objective_dashed.png");
+}
+
+.land-movable-objective:hover {
+    -fx-image: url("../texture/battlemap/sqr_objective_selected.png");
 }

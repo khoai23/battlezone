@@ -23,6 +23,11 @@ public class Utility {
         return from + (int)Math.floor(Math.random() * (to-from+1));
     }
 
+    public static <T> T getRandomItem(List<T> list) {
+        if(list.size() == 0) return null;
+        else return list.get(rollBetween(0,list.size()-1));
+    }
+
     public static boolean rollForPercent(int percentage) {
         return Math.random() < (float)(percentage) / 100;
     }
@@ -390,7 +395,7 @@ public class Utility {
                 }
                 targets = defenders.subList(0, Math.min(tempData[atk_tar], defenders.size()));
                 if (targets.isEmpty()) {
-                    System.err.println("No target found. Most likely squad annihilated.");
+                    System.err.print("\nNo target found. Most likely squad annihilated.");
                     return true;
                 }
 
@@ -423,8 +428,8 @@ public class Utility {
                         tempData[def_hp] -= tempData[atk_str];
                         hit = true;
 
-                        System.out.print("\nAttack fired, setHp " + tempData[atk_str]);
-                        if(show_damage) {
+                        System.out.printf("\nAttack fired, setHp %d",tempData[atk_str]);
+                        if(GameData.getMiscSetting().show_damage) {
                             MainScene.addToVoxLog(damageDealt(attacker.getType(), defender.getType(),
                                     a.toString(), target.toString(), tempData[atk_str]));
                         }
@@ -432,7 +437,7 @@ public class Utility {
                     } else {
                         for (Trait t : applied) t.handleChangeAfterHit(tempData, false, target.isInfantry());
 
-                        if(show_damage) {
+                        if(GameData.getMiscSetting().show_damage) {
                             MainScene.addToVoxLog(attackMissed(attacker.getType(), defender.getType(),
                                     a.toString(), target.toString()));
                         }
@@ -492,7 +497,7 @@ public class Utility {
     }
 
     public static FlowPane createLine(String speakerName, int speaker, String line) {
-        if(!show_message) return null;
+        if(!GameData.getMiscSetting().show_message) return null;
         FlowPane pane = new FlowPane();
         Text spk = new Text(speakerName + ": ");
         colorize(spk,speaker);
@@ -556,7 +561,7 @@ public class Utility {
     }
 
     public static FlowPane debugMessage(String string) {
-        if(!show_debug) return null;
+        if(!GameData.getMiscSetting().show_debug) return null;
         FlowPane pane = new FlowPane();
         Text other = new Text("Debug:");
         colorize(other,speaker_other);
@@ -625,11 +630,7 @@ public class Utility {
     public static final int speaker_neutral = 3;
     public static final int speaker_other = 4;
 
-    public static boolean show_debug = false;
-    public static boolean show_damage = false;
-    public static boolean show_message = true;
-    public static boolean tooltip_distance = false;
-    public static boolean tooltip_show_compo = false;
+
 
     public static void waitForEnemy(double second) {
         // TODO implement
