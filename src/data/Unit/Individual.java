@@ -12,6 +12,7 @@ public interface Individual {
     int getArmourValue();
     List<AttackFormat> getAttack(int range);
     boolean setHp(int value);
+    int getFullHp();
     boolean isInfantry();
     float getInitiative();
     int getMaxRange();

@@ -6,7 +6,8 @@
     "baseBS": 20,
     "baseI" : 1,
     "startPoint" : -1,
-    "endPoint": 0
+    "endPoint": 0,
+    "iconId": 0
   },{
     "name": "Neophyte",
     "baseHP": 4,
@@ -14,7 +15,8 @@
     "baseBS": 5,
     "baseI": 0.5,
     "startPoint": 0,
-    "endPoint": 5
+    "endPoint": 5,
+    "iconId": 0
   },{
     "name": "Tactical",
     "baseHP": 2,
@@ -22,7 +24,10 @@
     "baseBS": 1,
     "baseI": 0.2,
     "startPoint": 5,
-    "endPoint": 40
+    "endPoint": 40,
+    "refName": "Tactical Brother",
+    "iconId": 13,
+    "unitBadge":"own_tactical"
   },{
     "name": "Assault",
     "baseHP": 2.2,
@@ -30,7 +35,10 @@
     "baseBS": 0,
     "baseI": 0.1,
     "startPoint": 5,
-    "endPoint": 40
+    "endPoint": 40,
+    "refName": "Assault Brother",
+    "iconId": 12,
+    "unitBadge":"own_assault"
   },{
     "name": "Devastator",
     "baseHP": 1.8,
@@ -38,15 +46,44 @@
     "baseBS": 2,
     "baseI": 0.3,
     "startPoint": 5,
-    "endPoint": 40
+    "endPoint": 40,
+    "refName": "Devastator Brother",
+    "iconId": 11,
+    "unitBadge":"own_devastator"
   },{
-    "name": "Veteran",
+    "name": "Command",
+    "baseHP": 1.5,
+    "baseWS": 0.9,
+    "baseBS": 0.9,
+    "baseI": 0.2,
+    "startPoint": 40,
+    "endPoint": 70,
+    "refName": "Brother-Sergeant",
+    "leaderName": "Brother-Captain",
+    "iconId": 3,
+    "leaderIconId": 8
+  },{
+    "name": "Sternguard",
     "baseHP": 1,
-    "baseWS": 1,
-    "baseBS": 1,
+    "baseWS": 0.7,
+    "baseBS": 1.2,
+    "baseI": 0,
+    "startPoint": 40,
+    "endPoint": 70,
+    "refName": "Veteran Brother",
+    "iconId": 3,
+    "unitBadge":"own_sternguard"
+  },{
+    "name": "Vanguard",
+    "baseHP": 1,
+    "baseWS": 1.1,
+    "baseBS": 0.5,
     "baseI": 0.1,
     "startPoint": 40,
-    "endPoint": 70
+    "endPoint": 70,
+    "refName": "Veteran Brother",
+    "iconId": 3,
+    "unitBadge":"own_vanguard"
   },{
     "name": "Ancient",
     "baseHP": 2,
@@ -54,7 +91,9 @@
     "baseBS": 0.1,
     "baseI": 0.2,
     "startPoint": 70,
-    "endPoint": 100
+    "endPoint": 100,
+    "refName": "Venerable Brother",
+    "iconId": 4
   },{
     "name": "Apothecary",
     "baseHP": 3.2,
@@ -63,7 +102,9 @@
     "baseI": 0.1,
     "startPoint": 5,
     "endPoint": 20,
-    "special": "heal"
+    "special": "heal",
+    "leaderName": "Master of the Apothecarion",
+    "iconId": 7
   },{
     "name": "Psyker",
     "baseHP": 1,
@@ -72,7 +113,10 @@
     "baseI": 0.2,
     "startPoint": 5,
     "endPoint": 20,
-    "special": "psychic"
+    "special": "psychic",
+    "refName": "Librarian",
+    "leaderName": "Chief Librarian",
+    "iconId": 9
   },{
     "name": "Chaplain",
     "baseHP": 2.4,
@@ -81,7 +125,9 @@
     "baseI": 0.4,
     "startPoint": 5,
     "endPoint": 20,
-    "special": "morale"
+    "special": "morale",
+    "leaderName": "Reclusiach",
+    "iconId": 6
   },{
     "name": "Techmarine",
     "baseHP": 3.2,
@@ -90,7 +136,9 @@
     "baseI": 0,
     "startPoint": 5,
     "endPoint": 20,
-    "special": "fix"
+    "special": "fix",
+    "leaderName": "Forge Master",
+    "iconId": 15
   }],
   "special_progression": {
     "heal": [{
@@ -123,5 +171,27 @@
     },{
       "trait":"morale_spd", "getAt": 19
     }]
+  },
+
+  "names": ["Abdaziel","Abdiel","Abrariel","Adnachiel","Adonael","Adriel","Afriel","Akhazriel","Akriel","Ambriel","Amitiel","Amriel","Anael","Anaiel","Anaphiel","Anapiel","Anauel",
+    "Anpiel","Ansiel","Aphael","Aradiel","Arael","Araqiel","Araquiel","Arariel","Azrael","Azriel","Barachiel","Baradiel","Barakiel","Baraqiel","Barattiel","Barbiel","Barchiel",
+    "Bariel","Barquiel","Barrattiel","Baruchiel","Bethuel","Boamiel","Cadriel","Camael","Camiel","Caphriel","Cassiel","Castiel","Cerviel","Chamuel","Chayliel","Dabriel","Dagiel",
+    "Dalquiel","Daniel","Dardariel","Diniel","Domiel","Dubbiel","Emmanuel","Eremiel","Ezekiel","Ezequiel","Gabriel","Gadiel","Gadreel","Gadriel","Gagiel","Galgaliel","Gazardiel",
+    "Geburatiel","Germael","Habriel","Hadariel","Hadramiel","Hadraniel","Hadriel","Hakael","Hamael","Hamaliel","Hasdiel","Hayliel","Hermesiel","Hochmael","Hofniel","Humatiel","Humiel",
+    "Incarael","Ishmael","Israfel","Israfiel","Israfil","Ithuriel","Jehudiel","Jeremiel","Kabshiel","Kadmiel","Kafziel","Kalaziel","Karael","Kasbiel","Kemuel","Kerubiel","Khamael",
+    "Labbiel","Lahabiel","Machidiel","Malchediel","Mazrael","Michael","Mihael","Morael","Mordigael","Mydaiel","Naaririel","Nahaliel","Nanael","Narcariel","Nasargiel","Nathanael",
+    "Nathaniel","Nelchael","Omael","Omniel","Onafiel","Ophaniel","Ophiel","Orphamiel","Osmadiel","Pathiel","Peliel","Peniel","Perpetiel","Phanuel","Pyriel","Qaphsiel","Qaspiel",
+    "Quabriel","Rachmiel","Radfael","Radueriel","Raduriel","Rahatiel","Rahmiel","Ramiel","Raphael","Rasiel","Rathanael","Razael","Raziel","Rehael","Remiel","Remliel","Rhamiel",
+    "Rikbiel","Rogziel","Rufeal","Ruhiel","Sabathiel","Sabrael","Sachael","Sachiel","Salathiel","Samael","Samandiriel","Samandriel","Samkiel","Sammael","Saniel","Sarandiel","Sariel",
+    "Satqiel","Sealtiel","Seraphiel","Shamsiel","Simiel","Stadiel","Suriel","Tadhiel","Tamiel","Tatrasiel","Theliel","Turiel","Turmiel","Uriel","Usiel","Uzziel","Vretiel","Yerachmiel",
+    "Yeshamiel","Zacharael","Zachariel","Zachriel","Zadkiel","Zahariel","Zaphiel","Zazriel","Zophiel","Zuriel"],
+
+  "numbering": {
+    "roman_num":["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX"],
+    "roman_word":["Primus","Secundus","Tertius","Quārtus","Quīntus","Sextus","Septimus","Octāvus","Nōnus","Decimus","Undecimus","Duodecimus","Tertiusdecimus", "Quārtusdecimus",
+      "Sextusdecimus", "Septidecimus","Duodēvīcēsimus","Ūndēvīcēsimus","Vīcēsimus"],
+    "greek_short_lower":["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","o","π","ρ","σ","τ","υ"],
+    "greek_short_upper":["A","B","Γ","Δ","Ε","Z","H","Θ","I","K","Λ","M","N","Ξ","O","","Π","P","Σ","T","Y"],
+    "greek_long":["Alpha","Beta","Gamma","Delta","Εpsilon","Zeta","Eta","Theta","Iota","Kappa","Lambda","Mu","Nu","Xi","Omicron","Pi","Rho","Sigma","Tau","Upsilon"]
   }
 }

@@ -1,7 +1,10 @@
 package data.Item;
 
+import data.Unit.Trait;
+
 import javax.json.JsonObject;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Quan on 3/5/2017.
@@ -42,4 +45,9 @@ public class VehicleChassis implements Item {
     }
 
     public int getStock() { return stock; }
+
+    @Override
+    public List<Trait> getItemTraits() {
+        return null;
+    }
 }

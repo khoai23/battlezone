@@ -5,8 +5,7 @@ import data.Item.Item;
 import data.TreeViewable;
 import data.Unit.*;
 import data.Utility;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -20,9 +19,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.lang.System;
@@ -34,7 +30,7 @@ import java.util.Optional;
  * The main scene for the game
  */
 public class MainScene extends Scene {
-    Controller controller;
+    public Controller controller;
     Label[] listLabel;
     Label[] unitTabLabel;
     ProgressBar[] listProgress;
@@ -51,6 +47,7 @@ public class MainScene extends Scene {
         initBattlefield();
         runningScene = this;
 
+        controller.MainScene.setId("MainScene");
         checkAndUpdateTab(controller.StatusTab);
         controller.StatusTab.setOnSelectionChanged(new TabListener(controller.StatusTab,this));
         controller.UnitTab.setOnSelectionChanged(new TabListener(controller.UnitTab,this));
@@ -61,9 +58,11 @@ public class MainScene extends Scene {
     public void showField() {
 //        System.out.println("ShowField successfully called");
         controller.BattleArena.getChildren().clear();
-        controller.BattleArena.getChildren().addAll(ImageHelper.getMapFromIntMap(
-                GameData.getCurrentData().getCurrentBattle().displayTerrain(), 64
-        ));
+//        controller.BattleArena.getChildren().addAll(ImageHelper.getMapFromIntMap(
+//                GameData.getCurrentData().getCurrentBattle().displayTerrain(), 64
+//        ));
+        controller.BattleArena.getChildren().addAll(GameData.getCurrentData().getCurrentBattle().getDisplay(
+                GameData.getCurrentData().setting.battleHexSize));
     }
 
     public static MainScene createMainScene() throws IOException {
@@ -207,10 +206,10 @@ public class MainScene extends Scene {
     }
     
     void initStarMap() {
-        controller.StarMap.getChildren().add(ImageHelper.getBackgroundImage());
+        controller.StarMap.getChildren().add(ImageHelper.getStarMapImage());
         controller.StarMap.getChildren().addAll(GameData.getCurrentData().map.reloadAllElements());
         if(GameData.getCurrentData().map.destination != null) {
-            viewRouteToSystem(GameData.getCurrentData().map.destination);
+            ImageHelper.viewRouteToSystem(GameData.getCurrentData().map.destination);
             //controller.StarMap.getChildren().add(controller.lineToDestination);
         }
     }
@@ -274,7 +273,8 @@ public class MainScene extends Scene {
                 tree.getRoot().getChildren().add(unitItem);
                 if(unit instanceof AstartesSquad) {
                     // add the Astartes inside
-                    for(Astartes bth : ((AstartesSquad) unit).members) {
+                    for(Individual ind : ((AstartesSquad) unit).getMembers()) {
+                        Astartes bth = (Astartes) ind;
                         unitItem.getChildren().add(new TreeItem<>(bth,ImageHelper.getIconById(bth.getIconId())));
                     }
                 } else if(unit instanceof Vehicle) {
@@ -285,12 +285,14 @@ public class MainScene extends Scene {
             }
             needReloadingRoster = false;
         } else if(check == controller.InventoryTab) {
-//            Utility.handleSquadAttackSquad((AstartesSquad) GameData.getRoster().get(0), (AstartesSquad) GameData.getRoster().get(1), 1, false);
+
         } else if(check == controller.BattleTab) {
             if(GameData.getCurrentData().getCurrentBattle() != null) {
+                //System.out.print("\n\nBattleTab enabled");
                 controller.BattleTab.setDisable(false);
                 showField();
             } else {
+                //System.out.print("\n\nBattleTab disabled due to no current battle");
                 controller.BattleTab.setDisable(true);
                 controller.MainScene.getSelectionModel().select(controller.StatusTab);
             }
@@ -306,49 +308,11 @@ public class MainScene extends Scene {
             return;
         }
 
-        runningScene.controller.VoxLog.getChildren().add(comp);
-        runningScene.controller.VoxLogScrollPane.setVvalue(1.0);
+        Platform.runLater( () -> {
+            runningScene.controller.VoxLog.getChildren().add(comp);
+            runningScene.controller.VoxLogScrollPane.setVvalue(1.0);
+        });
 //        runningScene.controller.VoxLog.setHeight
-    }
-
-    public static void viewRouteToSystem(data.StarMap.System sys) {
-        //System.out.printf("\nRoute to %.2f %.2f.",sys.posX,sys.posY);
-        Line line = runningScene.controller.lineToDestination;
-        Text text = runningScene.controller.etaText;
-        if(line == null) {
-            runningScene.controller.lineToDestination = new Line();
-            line = runningScene.controller.lineToDestination;
-            runningScene.controller.StarMap.getChildren().add(line);
-            runningScene.controller.etaText = new Text();
-            text = runningScene.controller.etaText;
-            runningScene.controller.StarMap.getChildren().add(text);
-        }
-        line.setOpacity(1.0);
-        line.setEndX(sys.posX + 38);
-        line.setEndY(sys.posY + 36);
-        line.setStartX(GameData.getCurrentData().map.playerPosX + 20);
-        line.setStartY(GameData.getCurrentData().map.playerPosY + 20);
-
-        text.setText("ETA: " + GameData.getCurrentData().map.getEtaToSystem(sys));
-        text.setOpacity(1.0);
-        text.setX((sys.posX + GameData.getCurrentData().map.playerPosX + 30) / 2);
-        text.setY((sys.posY + GameData.getCurrentData().map.playerPosY + 30) / 2);
-        if(GameData.getCurrentData().map.checkRouteExist(sys)) {
-            line.setStroke(Color.GREEN);
-            text.setFill(Color.GREEN);
-        }
-        else {
-            line.setStroke(Color.RED);
-            text.setFill(Color.RED);
-        }
-
-    }
-
-    public static void hideRouteToSystem() {
-        if(runningScene.controller.lineToDestination != null) {
-            runningScene.controller.lineToDestination.setOpacity(0.0);
-            runningScene.controller.etaText.setOpacity(0.0);
-        }
     }
 
     public static void updateTooltip(String description) {
@@ -363,6 +327,7 @@ public class MainScene extends Scene {
         runningScene.controller.BattleTab.setDisable(true);
         runningScene.controller.MainScene.getSelectionModel().select(
                 runningScene.controller.StatusTab);
+        GameData.getCurrentData().setCurrentBattle(null);
     }
 
     public static void openBattleTab() {

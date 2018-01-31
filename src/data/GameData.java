@@ -1,5 +1,6 @@
 package data;
 
+import UI.Main;
 import UI.MainScene;
 import data.Battle.Battle;
 import data.Battle.Field;
@@ -46,15 +47,13 @@ public class GameData implements Serializable {
     List<MissionConfig> missionList;
     List<Trait> traitList;
     List<AscensionPath> statList;
-    Setting setting = new Setting();
+    public Setting setting = new Setting();
     Battle currentBattle = null;
 
     public GameData() {
-        chapterName = "Death Bringer";
-        chapterMaster = "Karkos";
+        // Needed 'you', hence a placeholder
         int[] baseStat = new int[]{40,90,90,8,2,9,2,2,Astartes.role_captain};
         you = new Astartes("Balzac", baseStat);
-        you.level = 4;
         roster = new ArrayList<>();
         weapons = new ArrayList<>();
         weaponsImageName = new ArrayList<>();
@@ -170,6 +169,14 @@ public class GameData implements Serializable {
                         defaultData.getJsonObject("special_progression")));
             }
 
+            if(Utility.nameList == null) {
+                JsonArray nameGeneratorList = defaultData.getJsonArray("names");
+                Utility.nameList = new String[nameGeneratorList.size()];
+                for(int i=0;i<Utility.nameList.length;i++)
+                    Utility.nameList[i] = nameGeneratorList.getString(i);
+            }
+
+
             EnemyIndividual.initialization = null;
             Trait.initialization = null;
             EnemySquadConfig.initialization = null;
@@ -179,36 +186,52 @@ public class GameData implements Serializable {
     }
 
     public void loadTestData() {
-        AstartesSquad sqd = new AstartesSquad("Sqd 1");
-        roster.add(sqd);
-        sqd.members.add(new Astartes("Alande",new int[]{90,75,15,4,5,8,2,-1,Astartes.role_tactical}));
-        sqd.members.add(new Astartes("Borien",new int[]{45,85,80,3,2,16,0,0,Astartes.role_sternguard}));
+        chapterName = "Death Bringer";
+        chapterMaster = "Karkos";
+        you = Utility.createAstartes("Balzac", new int[]{2,9,2,2}, 55, "Command", true);
 
-        AstartesSquad sqd2 = new AstartesSquad("Sqd 2");
-        roster.add(sqd2);
-        sqd2.members.add(new Astartes("Catharge",new int[]{40,50,50,6,0,14,3,1,Astartes.role_assault}));
-        sqd2.members.add(new Astartes("Daniel",  new int[]{40,80,34,2,1,5,15,4,Astartes.role_librarian}));
+//        AstartesSquad sqd = //new AstartesSquad("Sqd 1");
+//                Utility.createAstartesSquad(null);
+//        roster.add(sqd);
+////        sqd.tryAddMember(new Astartes("Alande",new int[]{90,75,15,4,5,8,2,-1,Astartes.role_tactical}));
+////        sqd.tryAddMember(new Astartes("Borien",new int[]{45,85,80,3,2,16,0,0,Astartes.role_sternguard}));
+//
+//        AstartesSquad sqd2 = new AstartesSquad("Sqd 2");
+//        roster.add(sqd2);
+////        sqd2.tryAddMember(new Astartes("Catharge",new int[]{40,50,50,6,0,14,3,1,Astartes.role_assault}));
+//        sqd2.tryAddMember(Utility.createAstartes("Catharge", new int[]{0,14,3,1}, 22, -1, false));
+//        //sqd2.tryAddMember(new Astartes("Daniel",  new int[]{40,80,34,2,1,5,15,4,Astartes.role_librarian}));
+//        sqd2.tryAddMember(Utility.createAstartes("Daniel", new int[]{1,5,15,4}, 40, -1, false));
+//
+//        Vehicle predator = new Vehicle(2,1,true);
+//        Astartes gunner = new Astartes("Etufae",new int[]{35,60,80,6,3,0,0,-1,Astartes.role_devastator});
+//        gunner.setHp(-10);
+//        predator.addCrewMember(gunner, false);
+//        predator.addCrewMember(new Astartes("Fragar",new int[]{40,50,80,3,4,0,0,-1,Astartes.role_devastator}), false);
+//        roster.add(predator);
+//
+//        roster.add(new Vehicle(3,0));
 
-        Vehicle predator = new Vehicle(2,1,true);
-        Astartes gunner = new Astartes("Etufae",new int[]{35,60,80,6,3,0,0,-1,Astartes.role_devastator});
-        gunner.hp = -10;
-        predator.addCrewMember(gunner, false);
-        predator.addCrewMember(new Astartes("Fragar",new int[]{40,50,80,3,4,0,0,-1,Astartes.role_devastator}), false);
-        roster.add(predator);
+        roster.addAll(Utility.createRandomCompany(null));
 
-        roster.add(new Vehicle(3,0));
+//        MissionConfig currentMission = missionList.get(0);
+//        List<Unit> frSqd = new ArrayList<>();
+//        frSqd.add(roster.get(0));
+//        frSqd.add(sqd);
+//        frSqd.add(sqd2);
+//        frSqd.add(predator);
 
-        MissionConfig currentMission = missionList.get(0);
-        List<Unit> frSqd = new ArrayList<>();
-        frSqd.add(sqd);
-        frSqd.add(sqd2);
-        frSqd.add(predator);
+//        currentBattle = new Battle(Field.type_rectangular + 10 * Field.randomize_medium,
+//                frSqd, currentMission.getEnemySquadList(), Battle.mode_encounterBattle);
+        MissionConfig firstMission = missionList.get(0);
+        data.StarMap.System systemChosen = Utility.getRandomItem(map.systems);
+        map.addMissionForSystem(systemChosen, firstMission);
+        System.out.printf("\nAdded mission: %s at system %s", firstMission.name, systemChosen.name);
 
-        currentBattle = new Battle(Field.type_rectangular + 10 * Field.randomize_medium,
-                frSqd, currentMission.getEnemySquadList(), Battle.mode_encounterBattle);
-
-        MainScene.runningScene.showField();
-        currentBattle.runActionLoop();
+//        MainScene.runningScene.showField();
+        MainScene.runningScene.checkAndUpdateTab(MainScene.runningScene.controller.StatusTab);
+        MainScene.runningScene.checkAndUpdateTab(MainScene.runningScene.controller.BattleTab);
+//        currentBattle.runActionLoop();
     }
 
     public static List<String> getWeaponsImageName() {
@@ -221,21 +244,40 @@ public class GameData implements Serializable {
 
     public static List<String> getVehicleWeaponsImageName() { return GameData.getCurrentData().vehicleWeaponsImageName; }
 
-    public static List<Unit> getRoster() {
-        return GameData.getCurrentData().roster;
-    }
+    public static List<Unit> getRoster() { return GameData.getCurrentData().roster; }
 
     public static List<VehicleType> getVehiclesVariant() { return GameData.getCurrentData().variants; }
 
     public static List<VehicleChassis> getVehiclesChassus() { return GameData.getCurrentData().vehicleChassus; }
 
-    public static List<Accessory> getAccessories() { return GameData.getCurrentData().accessories; }
+    public static List<Accessory> getAccessoryList() { return GameData.getCurrentData().accessories; }
 
     public static List<Trait> getTraitList() { return GameData.getCurrentData().traitList; }
 
     public static List<Armour> getArmourList() { return currentData.armours; }
 
     public static List<Weapon> getWeaponList() { return currentData.weapons; }
+
+    public static List<String> getCombatBadgeList() {
+        List<String> result = new ArrayList<>();
+        result.add(Utility.friendlyBadge);
+        result.add(Utility.hostileBadge);
+
+        // All Friendly squad badges
+        for(AscensionPath asp: currentData.statList) {
+            if(asp.unitBadge != null && !result.contains(asp.unitBadge)) result.add(asp.unitBadge);
+        }
+
+        for(VehicleType veh: currentData.variants) {
+            if(veh.unitBadge != null && !result.contains(veh.unitBadge)) result.add(veh.unitBadge);
+        }
+
+        for(EnemySquadConfig econf: currentData.enemyBaseSquad) {
+            if(econf.unitBadge != null && !result.contains(econf.unitBadge)) result.add(econf.unitBadge);
+        }
+
+        return result;
+    }
 
     public List<Item> getAllItem() {
         ArrayList<Item> listItem = new ArrayList<>();
@@ -252,9 +294,21 @@ public class GameData implements Serializable {
         return currentBattle;
     }
 
+    public void setCurrentBattle(Battle b) {
+        currentBattle = b;
+    }
+
     public static Armour getArmourById(int id) {
         if(id >= currentData.armours.size() || id < 0) return Armour.None;
         return currentData.armours.get(id);
+    }
+
+    public static int getArmourIdByName(String name) {
+        for(int i=0;i<currentData.armoursImageName.size();i++) {
+            if(currentData.armoursImageName.get(i).equals(name) || currentData.armours.get(i).getName().equals(name))
+                return i;
+        }
+        return -1;
     }
 
     public static Weapon getWeaponById(int id) {
@@ -262,17 +316,45 @@ public class GameData implements Serializable {
         return currentData.weapons.get(id);
     }
 
+    public static int getWeaponIdByName(String name) {
+        for(int i=0;i<currentData.weaponsImageName.size();i++) {
+            if(currentData.weaponsImageName.get(i).equals(name) || currentData.weapons.get(i).getName().equals(name))
+                return i;
+        }
+        return -1;
+    }
+
     public static Accessory getAccessoryById(int id) {
         if(id >= currentData.accessories.size() || id < 0) return Accessory.None;
         return currentData.accessories.get(id);
+    }
+
+    public static int getAccessoryIdByName(String name) {
+        for(int i=0;i<currentData.accessories.size();i++) {
+            if(currentData.accessories.get(i).imgName.equals(name) || currentData.accessories.get(i).getName().equals(name))
+                return i;
+        }
+        return -1;
     }
 
     public static VehicleType getVehiclesVariantById(int id) {
         return GameData.getCurrentData().variants.get(id);
     }
 
+    public static int getVehiclesIdByName(String name) {
+        for(int i=0;i<currentData.variants.size();i++) {
+            if(currentData.variants.get(i).getName().equals(name))
+                return i;
+        }
+        return -1;
+    }
+
     public static VehicleWeapon getVehiclesWeaponById(int id) {
-        return GameData.getCurrentData().vehicleWeapons.get(id);
+        try {
+            return GameData.getCurrentData().vehicleWeapons.get(id);
+        } catch(IndexOutOfBoundsException e) {
+            return VehicleWeapon.None;
+        }
     }
 
     public static Trait getTraitById(int id) {
@@ -313,28 +395,60 @@ public class GameData implements Serializable {
         return GameData.getCurrentData().statList.get(id);
     }
 
-    public static AscensionPath getAscensionPathAtLvl(int lvl, boolean includeSpecial) {
-        List<AscensionPath> list = new ArrayList<>(GameData.getCurrentData().statList);
-        list.removeIf(path -> (path.endLvl < lvl || path.beginLvl >= lvl) || (!includeSpecial && path.isSpecialAscension));
+    public static AscensionPath getRandomAscensionPathAtLvl(int lvl, boolean includeSpecial) {
+        List<AscensionPath> list = getAllAscensionPathAtLvl(lvl, includeSpecial);
         if(list.size() == 0) {
             System.err.printf("Cannot get list of path for %d, includeSpecial %s",lvl, includeSpecial);
             return null;
         } else {
-            return list.get(Utility.rollBetween(0, list.size()));
+            return list.get(Utility.rollBetween(0, list.size()-1));
         }
+    }
+
+    public static List<AscensionPath> getAllAscensionPathAtLvl(int lvl, boolean includeSpecial) {
+        List<AscensionPath> list = new ArrayList<>(GameData.getCurrentData().statList);
+        list.removeIf(path -> (path.endLvl <= lvl || path.beginLvl > lvl) || (!includeSpecial && path.isSpecialAscension));
+        return list;
+    }
+
+    public static int getAscensionPathIdx(AscensionPath asp) {
+        return GameData.getCurrentData().statList.indexOf(asp);
+    }
+
+    public static int getAscensionPathIdx(String aspName) {
+        List<AscensionPath> statList = GameData.getCurrentData().statList;
+        for(int i=0; i<statList.size(); i++) {
+            if(statList.get(i).name.equals(aspName))
+                return i;
+        }
+        return -1;
     }
 
     void reloadTraitOnWeapons() {
         Trait temp;
-        for(Weapon wpn: weapons){
-            for(String t:wpn.type.split(",")) {
+        List<Item> listAllWeapons = new ArrayList<>(weapons);
+        listAllWeapons.addAll(vehicleWeapons);
+        for(Item wpn: listAllWeapons){
+            String[] listNameTrait;
+            if(wpn instanceof Weapon) {
+                listNameTrait = ((Weapon) wpn).type.split(",");
+            } else {
+                listNameTrait = ((VehicleWeapon) wpn).type.split(",");
+            }
+            List<Trait> loT = new ArrayList<>();
+            for(String t: listNameTrait) {
                 if(t.equals("melee") || t.equals("short") || t.equals("medium") || t.equals("long") || t.equals("extreme")) continue;
                 temp = getTraitByName(t);
                 if(temp == Trait.None) {
                     System.err.printf("\nCannot find trait %s for weapon %s on traitList",t,wpn.getName());
                 } else {
-                    wpn.traitList.add(temp);
+                    loT.add(temp);
                 }
+            }
+            if(wpn instanceof Weapon) {
+                ((Weapon) wpn).traitList = loT;
+            } else {
+                ((VehicleWeapon) wpn).traitList = loT;
             }
         }
     }
@@ -351,6 +465,24 @@ public class GameData implements Serializable {
                 }
             }
         }
+    }
+
+    public Battle createBattleFromConfig(List<Unit> friendly, MissionConfig missionConfig) {
+        if(currentBattle != null) {
+            System.err.print("\nBattle already initialized. Please recheck");
+            // TODO null battle after finishing and return null here as well.
+            return currentBattle;
+        }
+
+        currentBattle = new Battle(Field.type_rectangular + 10 * Field.randomize_medium,
+                friendly, missionConfig.getEnemySquadList(), missionConfig.missionType);
+
+        // MainScene.runningScene.showField();
+        MainScene.openBattleTab();
+        MainScene.runningScene.checkAndUpdateTab(MainScene.runningScene.controller.BattleTab);
+        currentBattle.runActionLoop();
+
+        return currentBattle;
     }
 
     public static int scheme_monotone = 0;

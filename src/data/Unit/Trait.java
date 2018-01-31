@@ -161,6 +161,11 @@ public class Trait {
             case "enemy_dmg": return hp_enemy_offset;
             case "self_dmg": return hp_self_offset;
 
+            case "lock_dmg": return damage_locked;
+            case "lock_spd": return attack_locked;
+            case "lock_acc": return accuracy_locked;
+            case "lock_def": return armor_locked;
+
             default: return throwaway;
         }
     }
@@ -216,8 +221,8 @@ public class Trait {
      * Change attack data on launching attack
      * example: bolt have x2 setHp if setHp inflicted >10 per shot
      * -> phase afterAttack, single, pred setHp inflicted more, 10, aadamage multiplier, 100, -1
-     * rotary automatically switch between normal and -50% shot& +10 setHp, use an aux rotaryAlt trait
-     * -> phase beforeAttack, single, pred chooseBetterDamage, rotaryAlt id
+     * rotary automatically switch between normal and +50% shot& +10 setHp, use an aux rotaryAlt trait
+     * -> phase beforeAttack, single, pred chooseBetterDamage, -1, -1, -1, rotaryAlt id
      * -> rotaryAtt ?
      * */
 
@@ -281,22 +286,29 @@ public class Trait {
     public static final int armor_offset        = 9;
     public static final int hp_self_offset      = 10;
     public static final int hp_enemy_offset     = 11;
+    public static final int damage_locked       = 12;
+    public static final int accuracy_locked     = 13;
+    public static final int attack_locked       = 14;
+    public static final int aadamage_locked     = 15; // useless as aa is affecting damage
+    public static final int armor_locked        = 16;
 
     public static final int noncom_speed  = 0;
     public static final int noncom_igObs  = 1;
     public static final int noncom_required = 2;
     public static final int noncom_emptySlot = 3;
-    public static final int noncom_paired = 4;
+    public static final int noncom_paired_bonus = 4;
     public static final int noncom_split = 4;
     public static final int noncom_ = 1;
 
     public static final int noncom_require_armor_Termi = 0;
-    public static final int noncom_require_armor_normal = 1;
-    public static final int noncom_require_armor_scout = 2;
+    public static final int noncom_wearable_armor_Termi = 1;
+    public static final int noncom_require_armor_scout = 2; // Unused as we can use noncom_require_armor_specific instead
     public static final int noncom_require_armor_specific = 3;
     public static final int noncom_require_weapon_primary = 4;
     public static final int noncom_require_weapon_specific = 5;
     public static final int noncom_require_accessory_specific = 6;
+    public static final int noncom_must_not_use_slot = 7;
+    public static final int noncom_must_be_paired = 8;
 
     public boolean ofTargetDecisionPhase() {
         return data[traitPhase] == phase_targetDecision;
@@ -323,7 +335,9 @@ public class Trait {
         return data[traitPhase] == phase_nextAttack;
     }
 
-    boolean checkPredicateBeforeHit(int predicate, int value, int[] dataSet, boolean moved, boolean isFirstAttack, boolean isInfantry) {
+    boolean checkPredicateBeforeHit(int[] dataSet, boolean moved, boolean isFirstAttack, boolean isInfantry) {
+        int predicate = data[traitData1];
+        int value = data[traitData2];
         switch (predicate) {
             case predicate_every: return true;
             case predicate_random_chance: return Utility.rollForPercent(value);
@@ -334,12 +348,11 @@ public class Trait {
             case predicate_firstAttack: return isFirstAttack;
             case predicate_isInfantry: return isInfantry;
             case predicate_chooseBetterDamage:
-                //TODO fix this one immediately
-                Trait replacementUse = GameData.getTraitById(value);
+                Trait replacementUse = GameData.getTraitById(this.data[bindToOther]);
                 int[] ifReplace = replacementUse.checkForReplacement(dataSet,false);
-                return (ifReplace[Utility.atk_str]-ifReplace[Utility.def_arm]) * ifReplace[Utility.atk_spd] * ifReplace[Utility.atk_acc]
-                        > (dataSet[Utility.atk_str]-dataSet[Utility.def_arm]) * dataSet[Utility.atk_spd] * dataSet[Utility.atk_acc];
-
+                int projectedCurrentDamage = dataSet[Utility.atk_spd] * (dataSet[Utility.atk_str] - dataSet[Utility.def_arm]);
+                int projectedSwitchDamage = ifReplace[Utility.atk_spd] * (ifReplace[Utility.atk_str] - ifReplace[Utility.def_arm]);
+                return projectedCurrentDamage >= projectedSwitchDamage;
             case predicate_range_more: return dataSet[Utility.range] > value;
             case predicate_range_less: return dataSet[Utility.range] < value;
             default: {
@@ -349,7 +362,9 @@ public class Trait {
         }
     }
 
-    int checkPredicateReturningValue(int predicate, int value, int sqdSize, int enemySqdSize) {
+    int checkPredicateReturningValue(int sqdSize, int enemySqdSize) {
+        int predicate = data[traitData1];
+        int value = data[traitData2];
         switch (predicate) {
             case predicate_squad_alive_less: if(sqdSize < value) return value - sqdSize; break;
             case predicate_squad_alive_more: if(sqdSize > value) return sqdSize - value; break;
@@ -401,12 +416,20 @@ public class Trait {
             case hp_self_offset: dataSet[Utility.atk_hp] -= value; break;
             case hp_enemy_offset: dataSet[Utility.def_hp] -= value; break;
 
+            case damage_locked: dataSet[Utility.atk_str] = value; break;
+            case accuracy_locked: dataSet[Utility.atk_acc] = value; break;
+            case attack_locked: dataSet[Utility.atk_spd] = value; break;
+            case armor_locked: dataSet[Utility.def_arm] = value; break;
+
             default: {
                 System.err.printf("\nModifyStatFunction failed, data %d %d",target,value);
             }
         }
     }
 
+    /*
+    Only used for a switch profile that will use this kind of format
+    * */
     int[] checkForReplacement(int[] dataSet, boolean reuseDataArray) {
         // Reuse array for extra usage
         if(data[traitType] != traitType_extra) {
@@ -414,8 +437,8 @@ public class Trait {
             Utility.printCurrentData();
             return new int[]{0,0,0,0,0,0,0,0};
         }
-        int[] copy = Arrays.copyOf(dataSet,dataSet.length);
-        if(reuseDataArray) copy = dataSet;
+        int[] copy = dataSet;
+        if(!reuseDataArray) copy = Arrays.copyOf(dataSet,dataSet.length);
         modifyStat(data[traitData1],data[traitData2],copy);
         modifyStat(data[traitData3],data[traitData4],copy);
         return copy;
@@ -443,19 +466,22 @@ public class Trait {
     }
 
     public void handleChangeBeforeHit(int[] dataSet, boolean isMoved, boolean isFirstAttack, boolean isInfantry) {
-        int numericResult = isBooleanPredicate(data[traitData1]) ? 0 : checkPredicateReturningValue(
-                data[traitData1], data[traitData2], dataSet[Utility.atk_size], dataSet[Utility.def_size]
-        );
-        if(checkPredicateBeforeHit(data[traitData1],data[traitData2],dataSet,isMoved,isFirstAttack,isInfantry) || numericResult > 0){
+        int numericResult = isBooleanPredicate(data[traitData1]) ? 0 : checkPredicateReturningValue(dataSet[Utility.atk_size], dataSet[Utility.def_size]);
+        if(checkPredicateBeforeHit(dataSet,isMoved,isFirstAttack,isInfantry) || numericResult > 0){
             if(numericResult > 0) {
                 modifyStat(data[traitData3],data[traitData4] * numericResult,dataSet);
             } else {
                 modifyStat(data[traitData3],data[traitData4],dataSet);
             }
             if(data[bindToOther] >= 0) {
-                // There is new trait
-                Trait binded = GameData.getTraitById(data[bindToOther]);
-                binded.handleChangeBeforeHit(dataSet,isMoved,isFirstAttack,isInfantry);
+                Trait boundTrait = GameData.getTraitById(data[bindToOther]);
+                if(data[traitData1] != predicate_chooseBetterDamage) {
+                    // There is new trait, add like normal
+                    boundTrait.handleChangeBeforeHit(dataSet, isMoved, isFirstAttack, isInfantry);
+                } else {
+                    // There is switch_auto and proved true, use different one
+                    boundTrait.checkForReplacement(dataSet, true);
+                }
             }
         }
     }
@@ -523,6 +549,16 @@ public class Trait {
     public static Trait getReadTraitWithName(String name) {
         for(Trait trait:initialization) {
             if(trait.name.equals(name)) return trait;
+        }
+        return None;
+    }
+
+    public static Trait getArmorBindingTrait(List<Trait> traitList, int armorId) {
+        for(Trait t:traitList) {
+            if(t.data[traitPhase] == phase_nonCombat && t.data[traitData1] == noncom_required && t.data[traitData2] == noncom_require_armor_specific) {
+                System.err.printf("\nFound data concerning armor %d", armorId);
+                return t;
+            }
         }
         return None;
     }

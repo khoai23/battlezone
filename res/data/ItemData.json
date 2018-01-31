@@ -186,7 +186,7 @@
     "str":30,
     "spd":10,
     "hand":3,
-    "type":"long,heavy,bolt,req_pack,cumbersome,two_handed,primary,spread",
+    "type":"long,heavy,bolt,primary,req_pack,cumbersome,two_handed,spread",
     "imgName":"hbolt",
     "desc":"Upscaled and with dedicated feeding mechanism, it can cut through infantry with horrifying ease."
   },{
@@ -202,7 +202,7 @@
     "str":63,
     "spd":3,
     "hand":3,
-    "type":"long,heavy,hot,splash,req_pack,cumbersome,two_handed,primary",
+    "type":"long,heavy,hot,splash,primary,req_pack,cumbersome,two_handed",
     "imgName":"pcannon",
     "desc":"Rare. Powerful, especially against light vehicles and/or heavy infantry."
   },{
@@ -210,7 +210,7 @@
     "str":90,
     "spd":1,
     "hand":3,
-    "type":"medium,heavy,melta,req_pack,cumbersome,two_handed,primary",
+    "type":"medium,heavy,melta,primary,req_pack,cumbersome,two_handed,primary",
     "imgName":"mmelta",
     "desc":"This monstrous weapon can annihilate tanks easily, should any foolish enough to come to its range."
   },{
@@ -218,7 +218,7 @@
     "str":88,
     "spd":1,
     "hand":3,
-    "type":"extreme,heavy,req_pack,cumbersome,two_handed,primary",
+    "type":"extreme,heavy,primary,req_pack,cumbersome,two_handed,primary",
     "imgName":"lascannon",
     "desc":"Deadly against single target and heavily armoured vehicles, complemented with excellent range."
   },{
@@ -448,6 +448,7 @@
     "armor": 25,
     "hp":50,
     "carry":10,
+    "unitBadge":"own_rhino",
     "desc":"The Rhino APC had been the Astartes' main transport since its rediscovery."
   },{
     "name":"Razorback",
@@ -460,6 +461,7 @@
     "armor": 29,
     "hp":65,
     "carry":5,
+    "unitBadge":"own_razorback",
     "desc":"A variant of the Rhino, the Razorback sacrifice some troops carrying capacity in exchange for a deadly primary weapon."
   },{
     "name":"Predator",
@@ -472,6 +474,7 @@
     "armor": 40,
     "hp":85,
     "carry":0,
+    "unitBadge":"own_predator",
     "desc":"A full-pledged tank in its own right, the mighty Predator driven by an Astartes is a foe to be reckoned with."
   },{
     "name":"Vindicator",
@@ -484,6 +487,7 @@
     "armor":45,
     "hp":60,
     "carry":0,
+    "unitBadge":"own_vindicator",
     "desc":"A siege vehicle armed with the devastating Demolisher Cannon and a Siege Shield, it excels at fighting in close quarters."
   },{
     "name":"Land Speeder",
@@ -496,6 +500,7 @@
     "armor":15,
     "hp":60,
     "carry":0,
+    "unitBadge":"own_speeder",
     "desc":"The Land Speeder's excellent speed and armament allow it to be the spearhead of every Chapter's armored assault."
   }]
 }

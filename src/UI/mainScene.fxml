@@ -116,7 +116,7 @@
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <ScrollPane layoutX="25.0" layoutY="19.0" prefHeight="500.0" prefWidth="750.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                  <ScrollPane pannable="true" layoutX="25.0" layoutY="19.0" prefHeight="500.0" prefWidth="750.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                      <content>
                       <AnchorPane fx:id="StarMap" minHeight="0.0" minWidth="0.0" />
                      </content>

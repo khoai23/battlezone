@@ -1,8 +1,11 @@
 package data.Item;
 
 import data.Item.Item;
+import data.Unit.Trait;
 
 import javax.json.JsonObject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Quan on 12/23/2016.
@@ -62,6 +65,9 @@ public class Armour implements Item {
     public int getStock() {
         return stock;
     }
+
+    @Override
+    public List<Trait> getItemTraits() { return null; }
 
     public boolean isTerminator() { return isTerminator; }
 

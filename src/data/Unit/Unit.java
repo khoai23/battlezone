@@ -2,6 +2,7 @@ package data.Unit;
 
 import data.Battle.AttackFormat;
 import data.TreeViewable;
+import javafx.scene.image.ImageView;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,4 +20,5 @@ public interface Unit extends Serializable, TreeViewable {
     int getType();
     float getInitiative();
     String getDebugString();
+    ImageView getUnitBadge(int badgeSize);
 }

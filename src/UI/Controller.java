@@ -75,7 +75,7 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        System.out.println("Controller initialized.");
+        System.out.println("Controller @MainScene initialized.");
         MainScene.getStylesheets().add("file:res/css/stylesheet.css");
     }
 }

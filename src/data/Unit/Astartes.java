@@ -5,18 +5,14 @@ import data.Battle.AttackFormat;
 import data.GameData;
 import data.Item.Accessory;
 import data.Item.Armour;
+import data.Item.Item;
 import data.Item.Weapon;
 import data.TreeViewable;
-import data.Utility;
 import javafx.scene.image.ImageView;
 
-import javax.json.JsonArray;
-import javax.json.JsonObject;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,9 +27,10 @@ public class Astartes implements TreeViewable, Serializable, Individual {
     // wound, bs, ws, i
     public short level = 0;
     public int exp = 0;
-    public int role = 0;
-    public int hp = 5;
-    protected int path;
+    //public int role = role_tactical;
+    protected int hp = 5;
+    protected int path = 0;
+    public boolean isPathLeader = false;
     public String personalTrait;
     public List<Trait> traits = new ArrayList<>();
 
@@ -44,68 +41,76 @@ public class Astartes implements TreeViewable, Serializable, Individual {
         if(all.length>=8)
             equipment = Arrays.copyOfRange(all,4,8);
         if(all.length>=9)
-            role = all[8];
+            level = (short)all[8];
         hp = baseStat[basehp];
         personalTrait = "";
-        path = Utility.rollBetween(0,4);
+    }
+
+    public Astartes(Astartes clone) {
+        this(clone.name, clone.getCloneArray());
+        this.hp = clone.hp;
+        this.traits = new ArrayList<>(clone.traits);
     }
 
     public String toString() {
-        return ((level > 3) ? "Venerable " : "") + getRole() + " " + this.name;
+        return getRole() + " " + this.name;
     }
 
     public String getRole() {
-        switch (role) {
-            case role_recruit:
-            case role_neophyte:
-                return "Recruit";
-            case role_librarian:
-                return "Librarian";
-            case role_apothecary:
-                return "Apothecary";
-            case role_techmarine:
-                return "Techmarine";
-            case role_captain:
-                return "Brother-Captain";
-            case role_chaptermaster:
-                return "Chapter Master";
-            default:
-                return "Brother";
-        }
+        return GameData.getAscensionPathById(path).getNameOfPathFollower(isPathLeader);
+//        switch (role) {
+//            case role_recruit:
+//            case role_neophyte:
+//                return "Recruit";
+//            case role_librarian:
+//                return "Librarian";
+//            case role_apothecary:
+//                return "Apothecary";
+//            case role_techmarine:
+//                return "Techmarine";
+//            case role_captain:
+//                return "Brother-Captain";
+//            case role_chaptermaster:
+//                return "Chapter Master";
+//            default:
+//                return "Brother";
+//        }
     }
 
     @Override
     public int getIconId() {
-        switch (role) {
-            case role_recruit:
-            case role_neophyte:
-                return ImageHelper.normalIcon;
-            case role_devastator:
-                return ImageHelper.devastatorIcon;
-            case role_assault:
-                return ImageHelper.assaultIcon;
-            case role_tactical:
-                return ImageHelper.tacticalIcon;
-            case role_sternguard:
-            case role_vanguard:
-                return ImageHelper.eliteIcon;
-            case role_honourguard:
-                return ImageHelper.honourIcon;
-            case role_captain:
-                return ImageHelper.captainIcon;
-            case role_chaptermaster:
-                return ImageHelper.devastatorIcon;
-            case role_apothecary:
-                return ImageHelper.apothecaryIcon;
-            case role_librarian:
-                return ImageHelper.librarianIcon;
-            case role_chaplain:
-                return ImageHelper.chaplainIcon;
-            case role_techmarine:
-                return ImageHelper.cogIcon;
-            default:
-                return ImageHelper.normalIcon;
-        }
+        return GameData.getAscensionPathById(path).getIconOfPath(isPathLeader);
+
+//        switch (role) {
+//            case role_recruit:
+//            case role_neophyte:
+//                return ImageHelper.normalIcon;
+//            case role_devastator:
+//                return ImageHelper.devastatorIcon;
+//            case role_assault:
+//                return ImageHelper.assaultIcon;
+//            case role_tactical:
+//                return ImageHelper.tacticalIcon;
+//            case role_sternguard:
+//            case role_vanguard:
+//                return ImageHelper.eliteIcon;
+//            case role_honourguard:
+//                return ImageHelper.honourIcon;
+//            case role_captain:
+//                return ImageHelper.captainIcon;
+//            case role_chaptermaster:
+//                return ImageHelper.devastatorIcon;
+//            case role_apothecary:
+//                return ImageHelper.apothecaryIcon;
+//            case role_librarian:
+//                return ImageHelper.librarianIcon;
+//            case role_chaplain:
+//                return ImageHelper.chaplainIcon;
+//            case role_techmarine:
+//                return ImageHelper.cogIcon;
+//            default:
+//                return ImageHelper.normalIcon;
+//        }
     }
 
     public String statToString() {
@@ -120,7 +125,7 @@ public class Astartes implements TreeViewable, Serializable, Individual {
     }
 
     public String expToString() {
-        return "Lvl " + level + "[" + exp + "/" + AscensionPath.expRequired[level] + "]";
+        return "Lvl " + level + "[" + exp + "/" + AscensionPath.getExpNeededForLvl(level) + "]";
     }
 
     public static ArrayList<ImageView> display = new ArrayList<>();
@@ -175,25 +180,30 @@ public class Astartes implements TreeViewable, Serializable, Individual {
     public List<AttackFormat> getAttack(int range) {
         if(hp <= 0)  return new ArrayList<>();
         List<AttackFormat> attacksMade = new ArrayList<>();
+        AttackFormat temp = null;
         Weapon mainhand = GameData.getWeaponById(equipment[weapon1]);
         Weapon offhand = GameData.getWeaponById(equipment[weapon2]);
         if(range==0) {
-
             if(mainhand.getRange()==range) {
-                attacksMade.add(AttackFormat.createAttack(mainhand, this, range));
+                temp = AttackFormat.createAttack(mainhand, this, range);
+                if(temp != null)
+                attacksMade.add(temp);
             }
             if(offhand.getRange()==range) {
-                attacksMade.add(AttackFormat.createAttack(offhand, this, range));
+                temp = AttackFormat.createAttack(offhand, this, range);
+                if(temp != null)
+                    attacksMade.add(temp);
             }
-
-//            attacksMade.add(AttackFormat.createAttack(mainhand, this, 0));
-//            attacksMade.add(AttackFormat.createAttack(offhand, this, 0));
         } else {
             if(mainhand.getRange()>=range) {
-                attacksMade.add(AttackFormat.createAttack(mainhand, this, range));
+                temp = AttackFormat.createAttack(mainhand, this, range);
+                if(temp != null)
+                    attacksMade.add(temp);
             }
             if(offhand.getRange()>=range) {
-                attacksMade.add(AttackFormat.createAttack(offhand, this, range));
+                temp = AttackFormat.createAttack(mainhand, this, range);
+                if(temp != null)
+                    attacksMade.add(temp);
             }
         }
         return attacksMade;
@@ -239,7 +249,34 @@ public class Astartes implements TreeViewable, Serializable, Individual {
         return GameData.getAccessoryById(equipment[accessory]).getTrait();
     }
 
+    public boolean setPath(int pathIdx, boolean isLeader) {
+        try {
+            GameData.getAscensionPathById(pathIdx);
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+        path = pathIdx;
+        isPathLeader = isLeader;
+        return true;
+    }
+
+    public boolean setPath(int pathIdx) { return setPath(pathIdx, false); }
+
+    public boolean setPath(AscensionPath asp) {
+        int idx = GameData.getAscensionPathIdx(asp);
+        if(idx > -1) {
+            path = idx;
+            return true;
+        }
+        return false;
+    }
+
+    public int getFullHp(){
+        return baseStat[basehp];
+    }
+
     // role decide hp/+acc bonus.
+    // TODO remove this once implemented JSON
     public static final int role_recruit=0;
     public static final int role_neophyte=1;
     public static final int role_devastator=2;
@@ -271,6 +308,7 @@ public class Astartes implements TreeViewable, Serializable, Individual {
     }
 
     @Override
+    // set hp and see if unit is dead or alive
     public boolean setHp(int value) {
         hp = value;
         return hp < 0;
@@ -322,6 +360,19 @@ public class Astartes implements TreeViewable, Serializable, Individual {
 //        System.out.println("Equipment change called, new eq " + equipmentToString());
     }
 
+    public void changeEquipment(int type, Item item) {
+        if(type == armour && item instanceof Armour) {
+            equipment[type] = GameData.getArmourList().indexOf(item);
+        } else if((type == weapon1 || type == weapon2) && item instanceof Weapon) {
+            equipment[type] = GameData.getWeaponList().indexOf(item);
+        } else if(type == accessory && item instanceof Accessory) {
+            equipment[type] = GameData.getAccessoryList().indexOf(item);
+        } else {
+            equipment[type] = -1;
+            System.out.printf("\nItem may not be correct type %d item %s, default to -1.", type, item==null ? "null" : item.getName());
+        }
+    }
+
     public int getEquipment(int type) { return equipment[type]; }
 
     public void changeEquipment(int[] newEquipment) {
@@ -338,7 +389,8 @@ public class Astartes implements TreeViewable, Serializable, Individual {
         int[] clone = new int[9];
         System.arraycopy(baseStat,0,clone,0,4);
         System.arraycopy(equipment,0,clone,4,4);
-        clone[8] = role;
+        clone[8] = level;
         return clone;
     }
+
 }

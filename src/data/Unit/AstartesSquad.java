@@ -2,7 +2,9 @@ package data.Unit;
 
 import UI.ImageHelper;
 import data.Battle.AttackFormat;
+import data.GameData;
 import data.Utility;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,16 +15,32 @@ import java.util.List;
  */
 public class AstartesSquad implements Squad {
     private String squadName;
-    public ArrayList<Astartes> members;
+
+
+    protected ArrayList<Astartes> members;
     Astartes leader = null;
+    protected int restriction = -1;
 
     public AstartesSquad(String name) {
         squadName = name;
         members = new ArrayList<>();
     }
 
+    public AstartesSquad(String name, AscensionPath asp) {
+        this(name);
+        setRestriction(asp);
+    }
+
     public AstartesSquad() {
         this("Zatheas");
+    }
+
+    public void setRestriction(AscensionPath asp) {
+        setRestriction(GameData.getAscensionPathIdx(asp));
+    }
+
+    public void setRestriction(int idx) {
+        restriction = idx;
     }
 
     public boolean assignLeader(Astartes a) {
@@ -36,6 +54,14 @@ public class AstartesSquad implements Squad {
         int counter = 0;
         for(Astartes bth:members) if(bth.getHp()>0) counter++;
         return counter;
+    }
+
+    public boolean tryAddMember(Astartes newbie) {
+        if(restriction == -1 || newbie.path == restriction) {
+            members.add(newbie);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -74,6 +100,14 @@ public class AstartesSquad implements Squad {
         String data = "Squad " + squadName + ":\n";
         for(Astartes bth:members) data += bth.toString() + ' ' + bth.statToString() + '\n';
         return data;
+    }
+
+    @Override
+    public ImageView getUnitBadge(int badgeSize) {
+        String badge = (restriction < 0) ? Utility.friendlyBadge :
+                GameData.getAscensionPathById(restriction).unitBadge;
+        return ImageHelper.getBadgeByName(badge, true, badgeSize);
+//        return ImageHelper.getBadgeByName(Utility.friendlyBadge, true);
     }
 
     @Override

@@ -77,5 +77,8 @@ public class Accessory implements Item {
         return stock;
     }
 
+    @Override
+    public List<Trait> getItemTraits() { return new ArrayList<>(traitList); }
+
     public static Accessory None = new Accessory(-1,"None","","",true,true);
 }

@@ -1,6 +1,9 @@
 package data.Item;
 
+import data.Unit.Trait;
+
 import javax.json.JsonObject;
+import java.util.List;
 
 /**
  * Created by Quan on 2/22/2017.
@@ -15,18 +18,25 @@ public class VehicleWeapon implements Item {
     public int spd;
     int stock;
     int range;
-    String type;
+    public final String type;
     String description;
+    public List<Trait> traitList = null;
 
-    public VehicleWeapon(JsonObject obj, int id) {
+    public VehicleWeapon(String name, int str, int spd, String type, String desc, int id) {
         this.id = id;
-        name = obj.getString("name");
-        str = obj.getInt("str");
-        spd = obj.getInt("spd");
-        type = obj.getString("type");
-        description = obj.getString("desc");
+        this.name = name;
+        this.str = str;
+        this.spd = spd;
+        this.type = type;
+        this.description = desc;
         stock = 0;
         checkRange();
+    }
+
+
+    public VehicleWeapon(JsonObject obj, int id) {
+        this(obj.getString("name"), obj.getInt("str"), obj.getInt("spd"),
+                obj.getString("type"), obj.getString("desc"), id);
     }
 
     void checkRange() {
@@ -73,4 +83,11 @@ public class VehicleWeapon implements Item {
     public int getStock() {
         return stock;
     }
+
+    @Override
+    public List<Trait> getItemTraits() {
+        return null;
+    }
+
+    public static VehicleWeapon None = new VehicleWeapon("None", -1, -1, "melee", "Nothing", -1);
 }

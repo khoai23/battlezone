@@ -3,12 +3,14 @@ package data;
 import UI.Main;
 import UI.MainScene;
 import data.Battle.AttackFormat;
+import data.Item.VehicleType;
 import data.Unit.*;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
+import javax.json.JsonObject;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
@@ -28,6 +30,11 @@ public class Utility {
         else return list.get(rollBetween(0,list.size()-1));
     }
 
+    public static <T> T getRandomItem(T[] list) {
+        if(list.length == 0) return null;
+        else return list[rollBetween(0,list.length-1)];
+    }
+
     public static boolean rollForPercent(int percentage) {
         return Math.random() < (float)(percentage) / 100;
     }
@@ -37,7 +44,7 @@ public class Utility {
         for(AttackFormat att:attacksMade) {
             if(att.traits.contains("hot") && rollForPercent(4)) {
                 // Overload plasma
-                bth.hp -= att.strength * rollBetween(50,75) / 100 - bth.getArmourValue();
+               // bth.getHp() -= att.strength * rollBetween(50,75) / 100 - bth.getArmourValue();
             }
             if(moved) {
                 if(att.traits.contains("assault")) att.accuracy -= 5;
@@ -45,7 +52,7 @@ public class Utility {
                 else att.accuracy -= 25;
             }
         }
-        return (bth.hp < 0) ? new ArrayList<>() : attacksMade;
+        return (bth.getHp() < 0) ? new ArrayList<>() : attacksMade;
     }
 
     public static List<AttackFormat> handleLaunchingAttack(Vehicle veh, int range, boolean moved) {
@@ -58,7 +65,7 @@ public class Utility {
         for(AttackFormat att:attacksMade) {
             if(att.traits.contains("hot") && rollForPercent(4)) {
                 // Overload plasma
-                veh.hp -= att.strength * rollBetween(50,75) / 100 - veh.getArmourValue();
+                //veh.getHp() -= att.strength * rollBetween(50,75) / 100 - veh.getArmourValue();
             }
             if(att.traits.contains("pintle")) impededAccuracy = true;
         }
@@ -66,7 +73,7 @@ public class Utility {
         if(impededAccuracy || fotmPenalty>0)
             for(AttackFormat att:attacksMade) att.accuracy -= (impededAccuracy ? 10 : 0) + fotmPenalty;
 
-        return (veh.hp < 0) ? new ArrayList<>() : attacksMade;
+        return (veh.getHp() < 0) ? new ArrayList<>() : attacksMade;
     }
 
     public static boolean handleAttackOnVehicle(AttackFormat att, Vehicle target) {
@@ -109,12 +116,12 @@ public class Utility {
                     case "flame": if (actualDamage > 0) actualDamage *= rollBetween(4, 5);
                                   else actualDamage = data[0] / 10; break;
                     case "ordnance": actualDamage +=10;
-                        for(Astartes crw:target.getCrew()) crw.hp -= 10;
+                        //for(Astartes crw:target.getCrew()) crw.getHp() -= 10;
                         break;
                 }
             }
 
-            target.hp -= actualDamage;
+            //target.getHp() -= actualDamage;
         }
 
         for(String trait: laterUsedTrait) {
@@ -126,213 +133,7 @@ public class Utility {
         }
 
         // Check vehicle destroyed
-        return target.hp <= 0;
-    }
-
-
-    public static boolean handleAttackOnSquad(AttackFormat att, AstartesSquad sqd) {
-        int[] data = {att.strength,att.accuracy,att.time};
-        int estimatedArmor = sqd.getEstimatedArmor();
-        int estimateHp = sqd.getEstimatedHp();
-        String[] listTrait = att.traits.split(",");
-        List<String> laterUsedTrait = new ArrayList<>();
-        for(String trait:listTrait) {
-            // before applying trait
-            switch (trait) {
-                // wpnTrait
-                case "pintle":
-                case "req_pack": case "no_acc": break;
-                case "ordnance":
-                case "aoe":     data[1] += 10; laterUsedTrait.add(trait); break;
-                case "coaxial": data[1] += 5; break;
-                case "automated": data[1] = 80; break;
-                case "missile": data[0] /= 2; data[2] *= 2; laterUsedTrait.add(trait); break;
-                case "rotary":
-                case "spread":
-                    if(data[0]-estimatedArmor > estimateHp / (data[2] * 3 / 5) ) {
-                    data[0] += 10; data[2] /= 2; laterUsedTrait.add(trait); } break;
-                default:        laterUsedTrait.add(trait);
-            }
-        }
-
-        boolean twinLinkedBonus = false;
-        int numOfTarget = 1;
-        boolean isAOE = false;
-        for (Iterator<String> trait = laterUsedTrait.iterator();trait.hasNext();) {
-            switch (trait.next()) {
-                case "rotary":
-                case "spread": numOfTarget = 10; trait.remove(); break;
-                case "sponsons": data[3] /=2; numOfTarget = 2; trait.remove(); break;
-                case "splash": numOfTarget = rollBetween(1,3); trait.remove(); break;
-
-                case "aoe": case "missile": trait.remove();
-                case "ordnance": isAOE = true; break;
-            }
-        }
-        int actualDamage;
-        if(!isAOE) {
-            numOfTarget = Math.min(Math.min(numOfTarget, sqd.members.size()), data[2]);
-        } else {
-            numOfTarget = rollBetween(sqd.members.size() * 4 / 5, sqd.members.size());
-            data[2] = numOfTarget;
-        }
-
-        List<Astartes> targets = new ArrayList<>(sqd.members);
-        targets.removeIf(p -> (p.hp<0));
-        if(randomTargeting) {
-            Collections.shuffle(targets);
-        }
-        targets = targets.subList(0,numOfTarget);
-        if(targets.isEmpty()) {
-            System.err.println("No target found. Most likely squad annihilated.");
-            return true;
-        }
-
-        Astartes bth;
-        for(;data[2]>0;data[2]--) {
-            bth = targets.get(data[2] % numOfTarget);
-            int accuracy = data[1];
-            int damage = data[0];
-
-            if(bth.getAccessoryTrait().equals("c_field")) {
-                accuracy -= 30;
-            }
-
-            for(String defTrait:bth.personalTrait.split("\\|")) {
-                switch (defTrait) {
-                    case "com_fearless": damage += damage * 15 / 100; break;
-                    case "spe_nimble": damage += damage * 15 / 100; break;
-                }
-            }
-
-            // check for hit/miss and add bonus
-            if(!rollForPercent(data[1] + (twinLinkedBonus ? 10 : 0))) {
-                if(laterUsedTrait.contains("twin-linked")) twinLinkedBonus = true;
-                continue;
-            }
-
-            actualDamage = data[0] + rollBetween(-data[0]/10,data[0]/10) - bth.getArmourValue();
-            if(actualDamage < 0) actualDamage = 0;
-
-            for (String trait : laterUsedTrait) {
-                // traits applied after firing
-                switch (trait) {
-                    case "bolt":  if (actualDamage > 10) actualDamage *= 2; break;
-                    case "flame": if (actualDamage > 0) actualDamage *= rollBetween(4, 5);
-                    else actualDamage = data[0] / 10; break;
-                    case "ordnance": actualDamage +=10;
-                        break;
-                    case "concussive":
-                    case "poison": bth.status = trait; break;
-                }
-            }
-
-            bth.hp -= actualDamage;
-            if(bth.personalTrait.contains("spe_bloodthirsty") && rollForPercent(30)) bth.hp += 10;
-            if(bth.personalTrait.contains("spe_stoic")) bth.status = "";
-        }
-
-        // Check squad destroyed
-        for(Astartes b:sqd.members) {
-            if(b.hp > 0) return false;
-        }
-        return true;
-    }
-
-    public static String filterPersonalTraitForAttack(String original) {
-        List<String> traitList = Arrays.asList(original.split("\\|"));
-        traitList.removeIf(p -> (!p.contains("spe_") && !p.contains("com_")));
-        return String.join(",",traitList);
-    }
-
-    public static boolean handleSquadAttackSquad(AstartesSquad attacker, AstartesSquad defender, int range, boolean attackerMoved) {
-        for(Astartes a:attacker.members) {
-            List<AttackFormat> atkList = a.getAttack(range);
-            tempData[atk_hp] = a.hp; tempData[atk_size] = attacker.members.size();
-            for (AttackFormat atk : atkList) {
-                attackToData(atk, tempData);
-                moved = attackerMoved;
-                // Apply for firing decision - targets of the attack
-                List<Trait> applied = new ArrayList<>(atk.traitList);
-                applied.removeIf(p -> !p.ofTargetDecisionPhase());
-                for (Trait t : applied) t.handleChangeTargetNumber(tempData);
-                printCurrentData();
-
-                // Apply for firing data - stats of the attack
-                applied = new ArrayList<>(atk.traitList);
-                applied.removeIf(p -> !p.ofBeforeAllAttackPhase());
-                for (Trait t : applied) t.handleChangeBeforeHit(tempData, attackerMoved, false, true);
-                // firing data returned to atk
-                dataToAttack(atk, tempData);
-                atk.time = tempData[atk_spd];
-                a.hp = tempData[atk_hp];
-                if(a.hp < 0) { continue; }
-                printCurrentData();
-
-                // choose targets from list
-                List<Astartes> targets = new ArrayList<>(defender.members);
-                targets.removeIf(p -> (p.hp < 0));
-                if (randomTargeting) {
-                    Collections.shuffle(targets);
-                }
-                targets = targets.subList(0, Math.min(tempData[atk_tar], targets.size()));
-                if (targets.isEmpty()) {
-                    System.err.println("No target found. Most likely squad annihilated.");
-                    return true;
-                }
-
-                // begin firing
-                for (int i = 0; i < atk.time && !targets.isEmpty(); i++) {
-                    Astartes target = targets.get(i % targets.size());
-                    tempData[def_arm] = target.getArmourValue();
-                    tempData[def_hp] = target.hp;
-                    tempData[def_size] = defender.members.size();
-                    // Apply for firing data - stats of the one attack
-                    applied = new ArrayList<>(atk.traitList);
-                    applied.removeIf(p -> !p.ofBeforeEachAttackPhase());
-                    for (Trait t : applied) t.handleChangeBeforeHit(tempData, attackerMoved, i == 0, true);
-                    printCurrentData();
-                    // Doing the attack
-
-                    applied = new ArrayList<>(atk.traitList);
-                    applied.removeIf(p -> !p.ofAfterEachAttackPhase());
-                    boolean hit = false;
-                    if (rollForPercent(tempData[atk_acc])) {
-                        tempData[atk_str] += rollBetween(-tempData[atk_str]/10,tempData[atk_str]/10);
-                        tempData[atk_str] = tempData[atk_str] - tempData[def_arm];
-                        for (Trait t : applied) t.handleChangeAfterHit(tempData, true, true);
-                        tempData[def_hp] -= Math.max(tempData[atk_str],0);
-                        hit = true;
-
-                        System.out.print("\nAttack fired, setHp " + tempData[atk_str]);
-                    } else {
-                        for (Trait t : applied) t.handleChangeAfterHit(tempData, false, true);
-
-                        System.out.print("\nAttack missed.");
-                    }
-                    printCurrentData();
-                    target.hp = tempData[def_hp];
-                    a.hp = tempData[atk_hp];
-                    if (target.hp < 0) targets.remove(target);
-
-                    // Reload the attackData from the original AttackFormat, and apply the next
-                    attackToData(atk, tempData);
-                    applied = new ArrayList<>(atk.traitList);
-                    applied.removeIf(p -> !p.ofBeforeNextAttackPhase());
-                    for (Trait t : applied) t.handleChangeAfterHit(tempData, hit, true);
-                    printCurrentData();
-                }
-                if(a.hp < 0) {
-                    System.out.println("\nAttacker " + a.toString() + " suffered fatal setHp during attacking phase.");
-                    break;
-                }
-            }
-        }
-
-        for(Astartes b:defender.members) {
-            if(b.hp > 0) return false;
-        }
-        return true;
+        return target.getHp() <= 0;
     }
 
     public static boolean handleUnitOnUnitCombat(Unit attacker, Unit defender, int range, boolean attackerMoved) {
@@ -633,12 +434,119 @@ public class Utility {
 
 
     public static void waitForEnemy(double second) {
-        // TODO implement
+        // TODO implement actual wait time and second thread
         try {
             Thread.sleep((long)(second * 1000));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void waitForEnemy(long milisecond, java.util.function.Consumer function) {
+        try {
+            new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        function.accept(null);
+                    }
+                }, milisecond);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void waitForEnemy(double second, java.util.function.Consumer function) {
+        long milisecond = (long) second * 1000;
+        waitForEnemy(milisecond, function);
+    }
+
+    public static List<Unit> createRandomCompany(JsonObject structure) {
+        // TODO make object for this one
+        List<Unit> rosterAddon = new ArrayList<>();
+
+        rosterAddon.add(createAstartesSquad(structure));
+        rosterAddon.add(createAstartesSquad(structure));
+        rosterAddon.add(createAstartesSquad(structure));
+
+        ((AstartesSquad)(rosterAddon.get(0))).setRestriction(GameData.getAscensionPathIdx("Tactical"));
+
+        int aquila = GameData.getArmourIdByName("aquila");
+        int[] driverLoadout = new int[] {aquila, 0, -1, -1};
+        List<Astartes> rhinoDriver = new ArrayList<>();
+                rhinoDriver.add(createAstartes(getRandomName(), driverLoadout, 10, "Devastator", false));
+
+        rosterAddon.add(createVehicle("Rhino", rhinoDriver));
+
+        rosterAddon.add(createVehicle("Land Speeder", null));
+
+        rosterAddon.add(createVehicle("Vindicator", null));
+        return rosterAddon;
+    }
+
+    public static Vehicle createVehicle(String name, List<Astartes> crew) {
+        int vehicleId = GameData.getVehiclesIdByName(name);
+        if(vehicleId < 0)
+            return null;
+        VehicleType choices = GameData.getVehiclesVariantById(vehicleId);
+        int rollChoice = choices.getLoadOutData().size() > 0 ? rollBetween(0, choices.getLoadOutData().size()-1) : -1;
+        Vehicle result = new Vehicle(vehicleId, rollChoice);
+        if(crew != null)
+            for(Astartes bth:crew) result.addCrewMember(bth, true);
+        return result;
+    }
+
+    public static AstartesSquad createAstartesSquad(JsonObject structure) {
+        // TODO make object for this one, too
+        AstartesSquad newSquad = new AstartesSquad("");
+        int aquila = GameData.getArmourIdByName("aquila");
+        int bolter = GameData.getWeaponIdByName("bolter");
+        int boltpistol = GameData.getWeaponIdByName("bpistol");
+        int chainsword = GameData.getWeaponIdByName("chainsword");
+        int jumppack = GameData.getAccessoryIdByName("jumppack");
+        int heavyBolter = GameData.getWeaponIdByName("hbolt");
+        int devpack = GameData.getAccessoryIdByName("devpack");
+        int[][] loadout = new int[][] {
+                {aquila,bolter,chainsword,-1},
+                {aquila, chainsword, boltpistol, jumppack},
+                {aquila, heavyBolter, -1, devpack}
+        };
+        for(int i=0;i<defaultSquadSize;i++) {
+            newSquad.tryAddMember(createAstartes(getRandomName(), loadout[rollBetween(0,2)], 10, -1, false));
+        }
+
+        return newSquad;
+    }
+
+    public static Astartes createAstartes(String name, int[] equipment, int level, int path, boolean isLeader) {
+        int[] stats = new int[8];
+        // Generate random value to stats
+        for (int i = 0; i < 4; i++) {
+            stats[i] = rollBetween(-5, 5);
+            if(i==3) // initiative roll
+                stats[i] = rollBetween(-1, 1);
+            if(equipment.length > i)
+                stats[i+4] = equipment[i];
+        }
+        Astartes result = new Astartes(name, stats);
+        result.level = -1;
+        result.setPath(0);
+        AscensionPath.ascend(result, true, level);
+        if(path > -1) {
+            result.setPath(path);
+        }
+        result.setHp(result.getFullHp());
+        result.isPathLeader = isLeader;
+        return result;
+    }
+
+    public static Astartes createAstartes(String name, int[] equipment, int level, String path, boolean isLeader) {
+        int getPathIdx = GameData.getAscensionPathIdx(path);
+        return createAstartes(name, equipment, level, getPathIdx, isLeader);
+    }
+
+    public static Astartes createAstartes(String name, int[] equipment, int level, String path) {
+        return createAstartes(name, equipment, level, path, false);
     }
 
     public static int[] tempData = new int[10];
@@ -656,4 +564,13 @@ public class Utility {
 
     public static boolean randomTargeting = true;
     public static final int defaultSquadSize = 10;
+
+    public static String[] nameList = null;
+    public static String getRandomName() {
+        if(nameList == null) return "Zathreas";
+        return nameList[rollBetween(0,nameList.length-1)];
+    }
+
+    public static final String friendlyBadge = "default_friendly";
+    public static final String hostileBadge = "default_hostile";
 }

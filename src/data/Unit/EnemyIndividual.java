@@ -10,7 +10,7 @@ import java.util.List;
 
 public class EnemyIndividual implements Individual {
     String name;
-    int id;
+    int id; int fullHp;
     int hp; int armor; int initiative;
     int meleeAtkStr; int rangeAtkStr;
     int meleeAtkSpd; int rangeAtkSpd;
@@ -21,7 +21,7 @@ public class EnemyIndividual implements Individual {
     public EnemyIndividual(JsonObject obj, int id) {
         this.id = id;
         name = obj.getString("name");
-        hp = obj.getInt("hp");
+        fullHp = hp = obj.getInt("hp");
         armor = obj.getInt("armor");
         initiative = obj.getInt("init");
         JsonArray weapon = obj.getJsonArray("melee");
@@ -54,6 +54,11 @@ public class EnemyIndividual implements Individual {
     @Override
     public int getHp() {
         return hp;
+    }
+
+    @Override
+    public int getFullHp() {
+        return fullHp;
     }
 
     @Override

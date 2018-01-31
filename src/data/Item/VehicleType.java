@@ -1,10 +1,12 @@
 package data.Item;
 
 import data.GameData;
+import data.Utility;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class VehicleType implements Serializable {
     int crew;
     int[][] loadOutData;
     String description;
+    public String unitBadge = null;
     int carry;
 
     public VehicleType(JsonObject obj, int id) {
@@ -36,6 +39,10 @@ public class VehicleType implements Serializable {
         defaultHp = obj.getInt("hp");
         pintle = obj.getInt("pintle");
         JsonArray weapon_set = obj.getJsonArray("weapons");
+        if(obj.containsKey("unitBadge"))
+            unitBadge = obj.getString("unitBadge");
+        else
+            unitBadge = Utility.friendlyBadge;
         int weaponNum = weapon_set.size();
         if( weaponNum == 0) return;
         int numOfVariant = weapon_set.getJsonArray(0).size();
@@ -72,16 +79,22 @@ public class VehicleType implements Serializable {
     }
 
     public int getLoadoutPrimary(int loadout) {
-        if(loadOutData.length <= loadout || loadout <= -1) return -1;
+        if(loadOutData == null || loadOutData.length <= loadout || loadout <= -1) return -1;
         return loadOutData[loadout][0];
     }
 
     public int getLoadoutSecondary(int loadout) {
-        if(loadOutData.length <= loadout || loadout <= -1 || loadOutData[loadout].length <= 1) return -1;
+        if(loadOutData == null || loadOutData.length <= loadout || loadout <= -1 || loadOutData[loadout].length <= 1) return -1;
         return loadOutData[loadout][1];
     }
 
-    public List<int[]> getLoadOutData() { return Arrays.asList(loadOutData) ; }
+    public List<int[]> getLoadOutData() {
+        try {
+            return Arrays.asList(loadOutData) ;
+        } catch (NullPointerException e) {
+            return new ArrayList<>();
+        }
+    }
 
     public int getCrew() {
         return crew;

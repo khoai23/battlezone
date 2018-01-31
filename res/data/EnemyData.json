@@ -95,55 +95,64 @@
     "refComposition":[["choppaboy",10]],
     "description": "Ten slugga boyz made into a squad. ",
     "speed": 4,
-    "refname": "choppa_squad_n"
+    "refname": "choppa_squad_n",
+    "unitBadge":"enemy_choppa"
   },{
     "name": "Ork Boyz Squad (Large)",
     "refComposition":[["choppaboy", 20]],
     "description": "Twenty slugga boyz made into a squad. ",
     "speed": 4,
-    "refname": "choppa_squad_l"
+    "refname": "choppa_squad_l",
+    "unitBadge":"enemy_choppa"
   },{
     "name": "Ork Boyz Squad (Normal)",
     "refComposition":[["shootaboy",10]],
     "description": "Ten shoota boyz made into a squad. ",
     "speed": 4,
-    "refname": "shoota_squad_n"
+    "refname": "shoota_squad_n",
+    "unitBadge":"enemy_shoota"
   },{
     "name": "Ork Boyz Squad (Large)",
     "refComposition":[["shootaboy", 20]],
     "description": "Twenty shoota boyz made into a squad. ",
     "speed": 4,
-    "refname": "shoota_squad_l"
+    "refname": "shoota_squad_l",
+    "unitBadge":"enemy_shoota"
   },{
     "name": "'Ard Boyz Squad",
     "refComposition":[["hardboy",10]],
     "description": "A squad of slightly armored 'ard boyz. ",
     "speed": 3,
-    "refname": "hardboy_squad"
+    "refname": "hardboy_squad",
+    "unitBadge":"enemy_hard"
   },{
     "name": "Burna Boyz Squad",
     "refComposition":[["burnaboy",10]],
     "description": "A squad of burna boyz specialized in using flamer.",
     "speed": 4,
-    "refname": "burnaboy_squad"
+    "refname": "burnaboy_squad",
+    "unitBadge":"enemy_burna"
   },{
     "name": "Loota Half Squad",
     "refComposition":[["shootaboy",5],["loota", 5]],
     "description": "A fireteam of loota accompanied by meatshields.",
     "speed": 3,
-    "refname": "loota_squad_s"
+    "refname": "loota_squad_s",
+    "unitBadge":"enemy_loota"
   },{
     "name": "Loota Full Squad",
     "refComposition":[["loota",10]],
     "description": "A full squad of loota and their corresponding dakka.",
     "speed": 3,
-    "refname": "loota_squad_n"
+    "refname": "loota_squad_n",
+    "unitBadge":"enemy_loota"
   },{
     "name": "Nob Squad",
     "refComposition":[["nob",10]],
     "description": "Ten Nobz grouped into an elite melee squad.",
     "speed": 3,
-    "refname": "nob_squad"
+    "refname": "nob_squad",
+    "unitBadge":"enemy_nob"
   },{
     "name": "Meganobz Squad",
     "refComposition":[["meganob",10]],
@@ -153,39 +162,45 @@
   }],
 
   "mission":[{
-    "name": "Clean out feral orks",
+    "name": "Cleanse feral orks",
     "refname": "m_ork_feral_0",
     "composition":[["choppa_squad_n", 1, 2],["shoota_squad_n", 1, 2]],
+    "description": "Orks had been reported to attack nearby human settlements. They will make fine practices for our recruits.",
     "missionType": 0,
     "weight": 1
   },{
-    "name": "Clean out feral orks",
+    "name": "Cleanse feral orks",
     "refname": "m_ork_feral_1",
     "composition":[["choppa_squad_n", 2, 4]],
+    "description": "Orks had been reported to attack nearby human settlements. They will make fine practices for our recruits.",
     "missionType": 0,
     "weight": 1
   },{
-    "name": "Clean out feral orks",
+    "name": "Cleanse feral orks",
     "refname": "m_ork_feral_2",
     "composition":[["shoota_squad_n", 2, 4]],
+    "description": "Orks had been reported to attack nearby human settlements. They will make fine practices for our recruits.",
     "missionType": 0,
     "weight": 1
   },{
     "name": "Take out forward base",
     "refname": "m_ork_base_0",
     "composition":[["choppa_squad_l", 2, 3],["shoota_squad_n", 2, 3], ["hardboy_squad", 1], ["nob_squad", 1]],
+    "description": "The feral ork have been showing signs to organize. Crush them before they gain traction on the system.",
     "missionType": 0,
     "weight": 2
   },{
     "name": "Take out forward base",
     "refname": "m_ork_base_1",
     "composition":[["choppa_squad_n", 2, 3],["shoota_squad_l", 2, 3], ["loota_squad_s", 1], ["nob_squad", 1]],
+    "description": "The feral ork have been showing signs to organize. Crush them before they gain traction on the system.",
     "missionType": 0,
     "weight": 2
   },{
     "name": "Take out forward base",
     "refname": "m_ork_base_2",
     "composition":[["choppa_squad_n", 2, 3],["shoota_squad_n", 2, 3], ["hardboy_squad", 1], ["loota_squad_s", 1], ["nob_squad", 1]],
+    "description": "The feral ork have been showing signs to organize. Crush them before they gain traction on the system.",
     "missionType": 0,
     "weight": 2
   }]

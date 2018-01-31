@@ -1,8 +1,10 @@
 package data.Unit;
 
+import UI.ImageHelper;
 import data.Battle.AttackFormat;
 import data.GameData;
 import data.Utility;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +90,12 @@ public class EnemySquad implements Squad {
         String data = this.toString() + '\n';
         for(EnemyIndividual bth:members) data += bth.toString() + '|' + bth.getHp() + '\n';
         return data;
+    }
+
+    @Override
+    public ImageView getUnitBadge(int badgeSize) {
+        String badge = GameData.getBaseSquad(squadTypeId).unitBadge;
+        return ImageHelper.getBadgeByName(badge, false, badgeSize);
     }
 
     @Override

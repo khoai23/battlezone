@@ -1,21 +1,18 @@
 package data.Battle;
 
-import UI.Controller;
 import UI.ImageHelper;
-import UI.Main;
 import UI.MainScene;
-import com.sun.xml.internal.bind.v2.schemagen.Util;
 import data.GameData;
-import data.StarMap.*;
 import data.Unit.Unit;
 import data.Utility;
 import javafx.application.Platform;
-import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 
 import java.io.Serializable;
 import java.lang.System;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,25 +111,34 @@ public class Battle implements Serializable {
     }
 
     void deploySingleUnitRandomly(Deployment deployment, int range) {
-        if(deployment.posX != -1 || deployment.posY != -1) // deployed
+        if(deployment.posX != -1 && deployment.posY != -1) // deployed
             return;
-            do {
-                if(range == 0) { // all
-                    deployment.posX = Utility.rollBetween(0, terrain.fieldTerrain.length - 1);
-                } else if(range == 1) { // friendly territories
-                    deployment.posX = Utility.rollBetween(0, terrain.fieldTerrain.length / 2);
-                } else { // hostile territories
-                    deployment.posX = Utility.rollBetween(terrain.fieldTerrain.length / 2, terrain.fieldTerrain.length - 1);
-                }
-                deployment.posY = Utility.rollBetween(0, terrain.fieldTerrain[deployment.posX].length - 1);
-            } while (terrain.fieldTerrain[deployment.posX][deployment.posY] == Field.impassable);
-
+        int posX, posY;
+        do {
+            if(range == 0) { // all
+                posX = Utility.rollBetween(0, terrain.fieldTerrain.length - 1);
+            } else if(range == 1) { // friendly territories
+                posX = Utility.rollBetween(0, terrain.fieldTerrain.length / 2);
+            } else { // hostile territories
+                posX = Utility.rollBetween(terrain.fieldTerrain.length / 2, terrain.fieldTerrain.length - 1);
+            }
+            posY = Utility.rollBetween(0, terrain.fieldTerrain[posX].length - 1);
+        } while (terrain.fieldTerrain[posX][posY] == Field.impassable);
+        move(deployment, posX, posY, false, deployment.unit.getMovement());
     }
 
     // Units killed/added during the duration of the game require a reshuffle of orders
     void recalculateOrder() {
         // remove killed and calculate the ordering speed
-        carousel.removeIf(d -> d.unit.getStrength()<=0);
+        for(Iterator<Deployment> it = carousel.iterator(); it.hasNext(); ) {
+            Deployment unit = it.next();
+            if(unit.unit.getStrength() <= 0) {
+                unit.unitBadge.setOpacity(0.0);
+                it.remove();
+            }
+        }
+
+        // carousel.removeIf(d -> d.unit.getStrength()<=0);
         carousel.sort(Deployment::compareInitiative);
     }
 
@@ -145,6 +151,7 @@ public class Battle implements Serializable {
             recalculateOrder();
         }
         if(d.unit.getStrength() <= 0) {
+            d.unitBadge.setOpacity(0.0);
             // Killed themselves, no modification to the ordering
             int counter = 0;
             do {
@@ -161,6 +168,12 @@ public class Battle implements Serializable {
         }
         System.out.printf("\nNextDeployment called, unit %s at %d %d", res.unit, res.posX, res.posY);
         this.currentDeployment = res;
+        if(friendly.contains(res))
+            ImageHelper.getWaitAnimation(ImageHelper.friendlyWait, res.posX, res.posY);
+        else if(hostile.contains(res))
+            ImageHelper.getWaitAnimation(ImageHelper.hostileWait, res.posX, res.posY);
+        else
+            ImageHelper.getWaitAnimation(ImageHelper.neutralWait, res.posX, res.posY);
         return res;
     }
 
@@ -210,15 +223,7 @@ public class Battle implements Serializable {
         for(int i=0;i<data.length;i++)
             for(int j=0;j<data[i].length;j++) {
                 if(moveMap[i][j] <= spd) {
-                    if(data[i][j] == Field.occupied_hostile) {
-                        data[i][j] = Field.movable_hostile;
-                    } else if(data[i][j] == Field.occupied_both) {
-                        data[i][j] = Field.movable_both;
-                    } else if(data[i][j] == Field.occupied_objective) {
-                        data[i][j] = Field.movable_objective;
-                    } else if(data[i][j] != Field.occupied_friendly) {
-                        data[i][j] = Field.movable_friendly;
-                    }
+                    data[i][j] = getMovableTile(data[i][j]);
                 }
             }
         return data;
@@ -240,6 +245,8 @@ public class Battle implements Serializable {
         MainScene.addToVoxLog(Utility.debugMessage(String.format("%s moved to %d %d",dep.unit,newX,newY)));
         System.out.printf("\nSetting unit %s at %d %d", dep.unit, newX, newY);
         dep.setPos(newX,newY);
+        if(recheck)
+            ImageHelper.getWaitAnimation(-1, newX, newY);
         return true;
     }
 
@@ -363,13 +370,16 @@ public class Battle implements Serializable {
         MainScene.updateTooltip(result);
     }
 
+    boolean actionBeingPerformed = false;
     public void runActionLoop() {
+        if(actionBeingPerformed) return;
         isMovement = true;
         movedDuringMovement = false;
         if(checkBattleCondition() != 0) {
             MainScene.updateBattleResult(checkBattleCondition() == 1 ? "You won!" : "You lost.");
             return;
         }
+        actionBeingPerformed = true;
 
         if(friendly.contains(currentDeployment)) {
             // If controllable, initialize movement and show path
@@ -377,12 +387,15 @@ public class Battle implements Serializable {
             isSelected = true;
         } else {
             // IF not, let AI handle unit
+            ImageHelper.updateFromIntMap(displayTerrain());
             isSelected = false;
-            Utility.waitForEnemy(1.0);
-            runningEnemyAction(currentDeployment);
-            getNextDeployment(currentDeployment);
-            runActionLoop();
+            Utility.waitForEnemy(1.0, arg -> {
+                runningEnemyAction(currentDeployment);
+                getNextDeployment(currentDeployment);
+                runActionLoop();
+            });
         }
+        actionBeingPerformed = false;
     }
 
     public int checkBattleCondition() {
@@ -477,16 +490,66 @@ public class Battle implements Serializable {
         }
         return null;
     }
+
+    static int getMovableTile(int tileValue) {
+        switch (tileValue) {
+            case Field.occupied_hostile:
+                return Field.movable_hostile;
+            case Field.occupied_both:
+                return Field.movable_both;
+            case Field.occupied_objective:
+                return Field.movable_objective;
+            case Field.occupied_friendly:
+                return Field.occupied_friendly;
+            default:
+                return Field.movable_friendly;
+        }
+    }
+
+    public List<ImageView> getDisplay(float hexSize) {
+        // Get map display
+        List<ImageView> displayElements = new ArrayList<>(ImageHelper.getMapFromIntMap(this.displayTerrain(), hexSize));
+        // Get the wait anim
+        displayElements.add(
+                ImageHelper.getWaitAnimation(ImageHelper.hostileWait, this.currentDeployment.posX, this.currentDeployment.posY));
+
+        // Get deployment display
+        for(Deployment d: carousel)
+            if(d.unitBadge != null) {
+                ImageView badge = d.unitBadge;
+                displayElements.add(d.unitBadge);
+                ImageHelper.moveUnitToPosition(d.unitBadge, d.posX, d.posY);
+
+                badge.setOnMouseClicked(event -> {
+                    System.out.printf("\nBadge clicked for unit %s",d.unit.getDebugString());
+                    int[][] newMap = GameData.getCurrentData().getCurrentBattle().handleClick(d.posX,d.posY);
+                    if(newMap!=null) ImageHelper.updateFromIntMap(newMap);
+                });
+                badge.setOnMouseEntered(event -> {
+                    Battle.handleTooltipDisplay(d.posX,d.posY);
+                });
+            }
+
+        return displayElements;
+    }
+
+
 }
 
 class Deployment implements Serializable {
     public int posX = -1;
     public int posY = -1;
     public Unit unit;
+    public ImageView unitBadge = null;
 
-    public Deployment(Unit unit) { this.unit = unit; }
+    public Deployment(Unit unit) {
+        this.unit = unit;
+        if(unit != null)
+            unitBadge = unit.getUnitBadge(GameData.getCurrentData().setting.badgeSize);
+    }
 
     public void setPos(int x, int y) {
+        ImageHelper.moveUnitToPosition(unitBadge, x, y);
         posX = x; posY = y;
     }
 

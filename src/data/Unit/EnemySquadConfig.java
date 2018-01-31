@@ -1,5 +1,7 @@
 package data.Unit;
 
+import data.Utility;
+
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.io.Serializable;
@@ -16,6 +18,7 @@ public class EnemySquadConfig implements Serializable {
     public int [][] composition;
     public String desc;
     public String refname;
+    public String unitBadge = null;
 
     public EnemySquadConfig(JsonObject obj, int id) {
         this.id = id;
@@ -39,6 +42,11 @@ public class EnemySquadConfig implements Serializable {
         }
         desc = obj.getString("description");
         refname = obj.getString("refname");
+
+        if(obj.containsKey("unitBadge"))
+            unitBadge = obj.getString("unitBadge");
+        else
+            unitBadge = Utility.hostileBadge;
     }
 
     static final int indId = 0;

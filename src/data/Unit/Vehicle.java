@@ -1,14 +1,14 @@
 package data.Unit;
 
+import UI.ImageHelper;
 import data.Battle.AttackFormat;
 import data.GameData;
-import data.Item.Accessory;
 import data.Item.VehicleType;
 import data.Item.VehicleWeapon;
 import data.TreeViewable;
 import data.Utility;
+import javafx.scene.image.ImageView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +117,12 @@ public class Vehicle implements TreeViewable, Unit, Individual {
         return toString() + '(' + this.getHp() + '/' + GameData.getVehiclesVariant().get(type).getDefaultHp() + ")\n";
     }
 
+    @Override
+    public ImageView getUnitBadge(int badgeSize) {
+        String badge = GameData.getVehiclesVariantById(type).unitBadge;
+        return ImageHelper.getBadgeByName(badge, true, badgeSize);
+    }
+
     public int getLoadout() { return loadout; }
 
     public void setLoadout(int loadout) { if(vehicleType().checkLoadoutViable(loadout)) this.loadout = loadout; }
@@ -181,6 +187,11 @@ public class Vehicle implements TreeViewable, Unit, Individual {
     @Override
     public int getHp() {
         return hp;
+    }
+
+    @Override
+    public int getFullHp() {
+        return GameData.getVehiclesVariant().get(type).getDefaultHp();
     }
 
     @Override

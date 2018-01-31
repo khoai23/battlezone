@@ -13,6 +13,7 @@ import java.util.List;
 public class MissionConfig {
     int id;
     public String name;
+    public String description;
     public String refname;
     public int [][] composition;
     public int missionType;
@@ -22,6 +23,7 @@ public class MissionConfig {
         this.id = id;
         this.name = obj.getString("name");
         this.refname = obj.getString("refname");
+        this.description = obj.getString("description");
         JsonArray comp = obj.getJsonArray("composition");
         composition = new int[comp.size()][];
         for(int i=0;i<composition.length;i++) {
@@ -36,6 +38,7 @@ public class MissionConfig {
         //desc = obj.getString("description");
         missionType = obj.getInt("missionType");
         missionWeight = obj.getInt("weight");
+        //System.out.printf("\nMission loaded: %s, %s, %s, %d-%d",name,refname,description,missionType,missionWeight);
     }
 
     public List<Unit> getEnemySquadList() {

@@ -103,5 +103,8 @@ public class Weapon implements Item {
         return stock;
     }
 
+    @Override
+    public List<Trait> getItemTraits() { return new ArrayList<>(traitList); }
+
     public static final Weapon None = new Weapon(-1,0,0,0,0,"Empty","","");
 }

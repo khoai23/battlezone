@@ -4,6 +4,22 @@
     -fx-padding: 5;
 }
 
+#MainScene {
+    -fx-background-image: url("../texture/background_default.jpg");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 800 600;
+    -fx-background-position: center center;
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);
+}
+
+#BattleScrollPane {
+    -fx-background-color: grey;
+}
+
+.pane {
+    -fx-background-color: ghostwhite;
+}
+
 .progress-bar {
     -fx-accent: green;
     /*noinspection CssInvalidFunction*/
@@ -103,4 +119,14 @@
 
 .land-movable-objective:hover {
     -fx-image: url("../texture/battlemap/sqr_objective_selected.png");
+}
+
+.growWhenHover {
+
+}
+
+.growWhenHover:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-scale-z: 1.1;
 }

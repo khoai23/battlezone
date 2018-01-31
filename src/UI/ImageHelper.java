@@ -2,20 +2,35 @@ package UI;
 
 import data.Battle.Battle;
 import data.Battle.Field;
+import data.Battle.MissionConfig;
 import data.GameData;
 import data.Item.VehicleChassis;
 import data.Item.VehicleType;
-import javafx.application.Platform;
+import data.Unit.Unit;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import sun.reflect.generics.tree.BaseType;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+import javafx.util.Callback;
+import javafx.util.Duration;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.System;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +41,7 @@ public class ImageHelper {
     public static void init() {
         rootIcon = new Image("file:res/texture/all_icon.png");
 
-        backgroundImage = new Image("file:res/texture/bg_star.jpg");
+        starMapImage = new Image("file:res/texture/bg_star.jpg");
 
         starImage = loadPrefixedImage("starmap/star_",6);
 
@@ -61,7 +76,7 @@ public class ImageHelper {
             weaponImage[i] = loadPrefixedImage("view_weapon/weapon_" + getWeaponNameById(i) + "_",5);
         }
 
-        int accNum = GameData.getAccessories().size();
+        int accNum = GameData.getAccessoryList().size();
         accessoryImage = new Image[accNum][];
         for(int i=0;i<accNum;i++) {
             // accessory with 4 parts
@@ -94,6 +109,20 @@ public class ImageHelper {
         for(int i=0;i<chassisNum;i++) {
             vehicleChassisImage[i] = loadPrefixedImage("view_vehicle/" + getChassisById(i) + "_",6);
         }
+
+        List<String> badgeListNames = GameData.getCombatBadgeList();
+        fieldBadgeName = new String[badgeListNames.size()];
+        badgeListNames.toArray(fieldBadgeName);
+        fieldBadgeImage = new Image[fieldBadgeName.length];
+        for(int i=0;i<fieldBadgeName.length;i++) {
+            fieldBadgeImage[i] = new Image("file:res/texture/unit_icon/" + fieldBadgeName[i] + ".png");
+        }
+
+        possibleWaitIcon = new Image[4];
+        possibleWaitIcon[friendlyWait] = new Image("file:res/texture/unit_icon/spin_green.png");
+        possibleWaitIcon[hostileWait] = new Image("file:res/texture/unit_icon/spin_red.png");
+        possibleWaitIcon[neutralWait] = new Image("file:res/texture/unit_icon/spin_yellow.png");
+        possibleWaitIcon[otherWait] = new Image("file:res/texture/unit_icon/spin_white.png");
     }
 
     /**
@@ -110,13 +139,15 @@ public class ImageHelper {
     /**
      * Getting the current background for star map
      * */
-    public static ImageView getBackgroundImage() {
-        return new ImageView(backgroundImage);
+    @NotNull
+    public static ImageView getStarMapImage() {
+        return new ImageView(starMapImage);
     }
 
     /**
      * Getting the corresponding star by id
      * */
+    @NotNull
     public static ImageView getStarById(int id) {
         return new ImageView(starImage[id]);
     }
@@ -157,10 +188,10 @@ public class ImageHelper {
      * @return string
      * */
     public static String getVWeaponNameById(int id) {
-        List<String> weaponlist = GameData.getVehicleWeaponsImageName();
+        List<String> weaponList = GameData.getVehicleWeaponsImageName();
 
-        if(id<weaponlist.size() && !weaponlist.get(id).equals("")) {
-            return weaponlist.get(id);
+        if(id<weaponList.size() && !weaponList.get(id).equals("")) {
+            return weaponList.get(id);
         }
 
         return "";
@@ -172,10 +203,10 @@ public class ImageHelper {
      * @return string
      * */
     public static String getChassisById(int id) {
-        List<VehicleChassis> weaponlist = GameData.getVehiclesChassus();
+        List<VehicleChassis> weaponList = GameData.getVehiclesChassus();
 
-        if(id<weaponlist.size() && !weaponlist.get(id).imgName.equals("")) {
-            return weaponlist.get(id).imgName;
+        if(id<weaponList.size() && !weaponList.get(id).imgName.equals("")) {
+            return weaponList.get(id).imgName;
         }
 
         return "";
@@ -491,6 +522,35 @@ public class ImageHelper {
         return currentDisplay;
     }
 
+    public static void moveUnitToPosition(ImageView unitImg, int x, int y) {
+        if(currentMapping == null) {
+            System.err.printf("Cannot move unit to %d %d (uninitialized).",x,y);
+            return;
+        }
+        if(x < 0 || y < 0) {
+            System.err.printf("Cannot move unit to %d %d (wrong value).",x,y);
+            return;
+        }
+
+        int counter = y;
+        for(int i=0;i<x;i++)
+            counter += currentMapping[i].length;
+        ImageView currentSquare = currentDisplay.get(counter);
+        double validX = currentSquare.getX() + currentSquare.getFitWidth() / 2 - unitImg.getFitWidth() / 2;
+        double validY = currentSquare.getY() + currentSquare.getFitHeight() / 2 - unitImg.getFitHeight() / 2;
+        unitImg.setX(validX);
+        unitImg.setY(validY);
+        System.err.printf("Moved map badge to %.2f %.2f (%d %d).",validX,validY, x, y);
+    }
+
+    public static ImageView getSquareAtPosition(int x, int y) {
+        if(x < 0 || y < 0) return null;
+        int counter = y;
+        for(int i=0;i<x;i++)
+            counter += currentMapping[i].length;
+        return currentDisplay.get(counter);
+    }
+
     /**
      * Get the icon's images
      * @param id icon id
@@ -506,13 +566,81 @@ public class ImageHelper {
         return cropper;
     }
 
-    public static boolean isHeavyWeapon(int id) {
-        return false;
+    public static ImageView getBadgeByName(String name, boolean isFriendly, float badgeSize) {
+        ImageView result = null;
+        for(int i=0;i<fieldBadgeName.length;i++) {
+            if(fieldBadgeName[i].equals(name)) {
+                result = new ImageView(fieldBadgeImage[i]);
+            }
+        }
+        // friendlyBadge and hostileBadge is at 0 and 1 respectively due to initialization
+        // most likely never going to reach, but better safe
+        if(result == null) result = new ImageView(fieldBadgeImage[isFriendly ? 0 : 1]);
+        result.setFitHeight(badgeSize);
+        result.setFitWidth(badgeSize);
+        result.getStyleClass().add("growWhenHover");
+        return result;
+    }
+
+    public static ImageView currentWaitAnimation = null;
+    private static ImageView getWaitAnimation(int type, float badgeSize, double x, double y) {
+        System.out.printf("\n WaitAnimation %d, badgeSize %f, coord (%.2f, %.2f) ", type, badgeSize, x, y);
+        if(currentWaitAnimation != null) {
+            if(type >= 0)
+                currentWaitAnimation.setImage(possibleWaitIcon[type]);
+            currentWaitAnimation.setX(x);
+            currentWaitAnimation.setY(y);
+            return currentWaitAnimation;
+        }
+
+        currentWaitAnimation = new ImageView((type >= 0) ? possibleWaitIcon[type] : null);
+        currentWaitAnimation.setFitHeight(badgeSize);
+        currentWaitAnimation.setFitWidth(badgeSize);
+        //Creating a rotate transition
+        RotateTransition rotateTransition = new RotateTransition();
+
+        //Setting the duration for the transition
+        rotateTransition.setDuration(Duration.millis(1000));
+
+        //Setting the node for the transition
+        rotateTransition.setNode(currentWaitAnimation);
+
+        //Setting the angle of the rotation
+        rotateTransition.setByAngle(360);
+
+        // Use LINEAR to make sure a smooth transition
+        rotateTransition.setInterpolator(Interpolator.LINEAR);
+
+        //Setting the cycle count for the transition
+        rotateTransition.setCycleCount(1000);
+
+        //Setting auto reverse value to false
+        rotateTransition.setAutoReverse(false);
+
+        //Playing the animation
+        rotateTransition.play();
+
+        currentWaitAnimation.setX(x);
+        currentWaitAnimation.setY(y);
+        return currentWaitAnimation;
+    }
+
+    public static ImageView getWaitAnimation(int type, int x, int y) {
+        ImageView squareNeeded = getSquareAtPosition(x, y);
+        int badgeSize = GameData.getCurrentData().setting.badgeSize + 12;
+        if(squareNeeded == null) {
+            squareNeeded = new ImageView();
+            squareNeeded.setX(-1000);
+            squareNeeded.setY(-1000);
+        }
+        double validX = squareNeeded.getX() + squareNeeded.getFitWidth() / 2 - badgeSize / 2;
+        double validY = squareNeeded.getY() + squareNeeded.getFitHeight() / 2 - badgeSize / 2;
+        return getWaitAnimation(type, badgeSize, validX, validY);
     }
 
     private static Image rootIcon = null;
 
-    private static Image backgroundImage = null;
+    private static Image starMapImage = null;
 
     private static Image[] starImage = null;
 
@@ -529,6 +657,11 @@ public class ImageHelper {
     private static Image[][] vehicleWeaponImage = null;
 
     private static Image[][] vehicleChassisImage = null;
+
+    private static Image[] fieldBadgeImage = null;
+    private static String[] fieldBadgeName = null;
+
+    private static Image[] possibleWaitIcon = null;
 
     public static Rectangle2D getIconRectById(int id) {
         switch (id) {
@@ -595,34 +728,231 @@ public class ImageHelper {
     public static final int inquisitorIcon = 14;
     public static final int cogIcon = 15;
 
-    // Armor list
-    public static final int aquilaArmour = 0;
-    public static final int corvusArmour = 1;
-    public static final int errantArmour = 2;
-    public static final int ironArmour = 3;
-    public static final int ironArmour_alt = 4;
-    public static final int maximusArmour = 5;
-    public static final int indomitusArmour = 6;
-    public static final int tartarosArmour = 7;
-    public static final int tartarosArmour_alt = 8;
-    public static final int artificerArmour = 9;
+    public static final int friendlyWait=0;
+    public static final int hostileWait=1;
+    public static final int neutralWait=2;
+    public static final int otherWait=3;
 
-    // Vehicle list
-    public static final int rhino = 0;
-    public static final int razorback = 1;
-    public static final int predator = 2;
-    public static final int land_raider = 3;
+    public static void viewRouteToSystem(data.StarMap.System sys) {
+        //System.out.printf("\nRoute to %.2f %.2f.",sys.posX,sys.posY);
+        Controller mainController = MainScene.runningScene.controller;
+        Line line = mainController.lineToDestination;
+        Text text = mainController.etaText;
+        if(line == null) {
+            mainController.lineToDestination = new Line();
+            line = mainController.lineToDestination;
+            mainController.StarMap.getChildren().add(line);
+            mainController.etaText = new Text();
+            text = mainController.etaText;
+            mainController.StarMap.getChildren().add(text);
+        }
+        line.setOpacity(1.0);
+        line.setEndX(sys.posX + 38);
+        line.setEndY(sys.posY + 36);
+        line.setStartX(GameData.getCurrentData().map.playerPosX + 20);
+        line.setStartY(GameData.getCurrentData().map.playerPosY + 20);
 
-    // Vehicle type
-    public static final int Razorback_HB = 0;
-    public static final int Razorback_MM = 1;
-    public static final int Razorback_L = 2;
-    public static final int Predator_Annihilator = 0;
-    public static final int Predator_Destructor = 1;
+        text.setText("ETA: " + GameData.getCurrentData().map.getEtaToSystem(sys));
+        text.setOpacity(1.0);
+        text.setX((sys.posX + GameData.getCurrentData().map.playerPosX + 30) / 2);
+        text.setY((sys.posY + GameData.getCurrentData().map.playerPosY + 30) / 2);
+        if(GameData.getCurrentData().map.checkRouteExist(sys)) {
+            line.setStroke(Color.GREEN);
+            text.setFill(Color.GREEN);
+        } else {
+            line.setStroke(Color.RED);
+            text.setFill(Color.RED);
+        }
 
-    public static final int square_empty=0;
-    public static final int square_impassable=1;
-    public static final int square_objective=2;
-    public static final int square_friendly=3;
-    public static final int square_hostile=4;
+    }
+
+    public static void hideRouteToSystem() {
+        if(MainScene.runningScene.controller.lineToDestination != null) {
+            MainScene.runningScene.controller.lineToDestination.setOpacity(0.0);
+            MainScene.runningScene.controller.etaText.setOpacity(0.0);
+        }
+    }
+    //public static final int square_hostile=4;
+
+    public static MissionDisplay currentMissionDisplay = null;
+    public static void handleClickOnSystem(data.StarMap.System sys, double x, double y) {
+        List<MissionConfig> listMissions = GameData.getCurrentData().map.getMissionsForSystem(sys);
+        if(listMissions.size() == 0) {
+            System.out.printf("\nNo mission available for System %s.", sys.name);
+            return;
+        }
+        if(currentMissionDisplay == null) {
+            try {
+                currentMissionDisplay = new MissionDisplay();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            currentMissionDisplay.initialize();
+            currentMissionDisplay.loadDisplayForMission(listMissions.get(0), MainScene.runningScene.controller.StarMap, x, y);
+        } else {
+            currentMissionDisplay.loadDisplayForMission(listMissions.get(0), MainScene.runningScene.controller.StarMap, x, y);
+        }
+    }
+}
+
+class MissionDisplay {
+    public MissionDisplay(String sourceFile) throws IOException {
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource(sourceFile));
+        controller = new MissionDisplayController();
+        loader.setController(controller);
+        component = loader.load();
+//        controller = loader.getController();
+    }
+
+    public MissionDisplay() throws IOException {
+        this("missionBox.fxml");
+    }
+
+    Pane component;
+    MissionDisplayController controller;
+    ObservableList<Unit> selected = FXCollections.observableList(new ArrayList<>());
+    ObservableList<Unit> available = FXCollections.observableList(new ArrayList<>());
+
+    public void initialize() {
+        component.getStylesheets().add("file:res/css/stylesheet.css");
+//        if(controller == null) { System.err.print("CONTROLLER NULL!!1!"); }
+        controller.MissionImg.setId("canvas");
+        controller.DeployingIconList.setId("canvas");
+        controller.MissionImg.getParent().getStyleClass().add("pane");
+        controller.DeployPane.getStyleClass().add("pane");
+
+        controller.SelectBtn.setOnAction(event -> toogleDeployPane(true));
+        controller.StartBtn.setOnAction(event -> {
+            MissionConfig mcfg = MissionDisplay.currentDisplayingMission;
+            GameData.getCurrentData().createBattleFromConfig( getListDeployment(), mcfg);
+        });
+        controller.CancelBtn.setOnAction(event -> ((javafx.scene.layout.Pane) component.getParent()).getChildren().remove(component));
+
+        controller.AllLeftBtn.setOnAction(event -> handleTransfer(controller.AllLeftBtn));
+        controller.AllRightBtn.setOnAction(event -> handleTransfer(controller.AllRightBtn));
+        controller.LeftBtn.setOnAction(event -> handleTransfer(controller.LeftBtn));
+        controller.RightBtn.setOnAction(event -> handleTransfer(controller.RightBtn));
+    }
+
+    public void loadDisplayForMission(MissionConfig mcfg, javafx.scene.layout.Pane parent, double displayX, double displayY) {
+        currentDisplayingMission = mcfg;
+        controller.Description.setText(currentDisplayingMission.description);
+        controller.Title.setText(currentDisplayingMission.name);
+        controller.DeployPane.setVisible(false);
+
+        controller.UnitAvailable.setCellFactory(param -> new UnitCell());
+        controller.UnitCommitted.setCellFactory(param -> new UnitCell());
+        controller.UnitAvailable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        controller.UnitCommitted.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        component.setLayoutX(displayX);
+        component.setLayoutY(displayY);
+        if(component.getParent() != parent) {
+            parent.getChildren().add(component);
+        }
+
+        available.clear();
+        selected.clear();
+        available.addAll(GameData.getRoster());
+    }
+
+    public void toogleDeployPane(boolean toggling) {
+//        if((controller.DeployPane.isVisible() && toggling) || (!controller.DeployPane.isVisible() && !toggling)) {
+        if(controller.DeployPane.isVisible() == toggling) {
+            controller.DeployPane.setVisible(false);
+            return;
+        }
+        // Populate the available and command list
+        controller.UnitAvailable.setItems(available);
+        controller.UnitCommitted.setItems(selected);
+        controller.DeployPane.setVisible(true);
+    }
+
+    public void handleTransfer(javafx.scene.control.Button button) {
+        if(button == controller.AllRightBtn) {
+            selected.addAll(available);
+            available.clear();
+        } else if(button == controller.AllLeftBtn) {
+            available.addAll(selected);
+            selected.clear();
+        } else if(button == controller.RightBtn) {
+            List<Unit> transfer = controller.UnitAvailable.getSelectionModel().getSelectedItems();
+            available.removeAll(transfer);
+            selected.addAll(transfer);
+        } else if(button == controller.LeftBtn) {
+            List<Unit> transfer = controller.UnitCommitted.getSelectionModel().getSelectedItems();
+            selected.removeAll(transfer);
+            available.addAll(transfer);
+        } else {
+            System.err.print("\nError: Unknown button call @handleTransfer");
+        }
+    }
+
+    public void updateDeployingIconList(List<Unit> unitList) {
+        List<Node> images = new ArrayList<>();
+        int badgeSize = (int) controller.DeployingIconList.getHeight() - 4;
+        for(Unit u:unitList)
+            images.add(u.getUnitBadge(badgeSize));
+        images.add(new Separator());
+        for(Unit u:currentDisplayingMission.getEnemySquadList())
+            images.add(u.getUnitBadge(badgeSize));
+        controller.DeployingIconList.getChildren().removeAll();
+        controller.DeployingIconList.getChildren().addAll(images);
+    }
+
+    public void updateDeployingIconList() {
+        updateDeployingIconList(selected);
+    }
+
+    List<Unit> getListDeployment() {
+        return new ArrayList<>();
+    }
+
+    public static MissionConfig currentDisplayingMission = null;
+    public static final int unitBadgeSize = 20;
+
+    static class UnitCell extends ListCell<Unit> {
+        @Override
+        public void updateItem(Unit unit, boolean empty) {
+            super.updateItem(unit, empty);
+            if(unit != null) {
+                Label item = (Label) this.getGraphic();
+                if(item != null) {
+                    item.setText(unit.toString());
+                } else {
+                    item = new Label(unit.toString());
+                }
+                item.setGraphic(unit.getUnitBadge(unitBadgeSize));
+                this.setGraphic(item);
+            } else {
+                this.setGraphic(null);
+            }
+        }
+    }
+}
+
+class MissionDisplayController {
+    @FXML Pane MissionImg;
+    @FXML ProgressBar StrengthBar;
+    @FXML javafx.scene.control.Label Description;
+    @FXML javafx.scene.control.Label Title;
+    @FXML HBox DeployingIconList;
+    @FXML javafx.scene.control.Button CancelBtn;
+    @FXML javafx.scene.control.Button SelectBtn;
+    @FXML javafx.scene.control.Button StartBtn;
+    @FXML javafx.scene.control.Button AutoBtn;
+    @FXML javafx.scene.control.Button AllRightBtn;
+    @FXML javafx.scene.control.Button RightBtn;
+    @FXML javafx.scene.control.Button LeftBtn;
+    @FXML javafx.scene.control.Button AllLeftBtn;
+    @FXML javafx.scene.control.ListView UnitAvailable;
+    @FXML javafx.scene.control.ListView UnitCommitted;
+
+    @FXML
+    Pane DeployPane;
+
+    @FXML
+    public void initialize() {
+        System.out.println("Controller @MissionDisplay initialized.");
+    }
 }

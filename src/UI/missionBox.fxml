@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="500.0">
+         <children>
+            <Label fx:id="Title" layoutX="250.0" layoutY="10.0" prefWidth="170.0" text="Mission Name" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="Description" layoutX="170.0" layoutY="40.0" prefHeight="50.0" prefWidth="320.0" text="Description: Blah blah blah blah blah blah blah blah blah blah. Blah blah blah blah blah blah blah blah blah blah blah!" wrapText="true" />
+            <Label fx:id="StrengthBarLabel" layoutX="170.0" layoutY="95.0" prefHeight="17.0" prefWidth="46.0" text="Strength" />
+            <Label fx:id="DeployingLabel" layoutX="170.0" layoutY="125.0" prefHeight="17.0" prefWidth="60.0" text="Deploying" />
+            <ProgressBar fx:id="StrengthBar" layoutX="240.0" layoutY="95.0" prefHeight="18.0" prefWidth="220.0" progress="0.0" />
+            <HBox fx:id="DeployingIconList" layoutX="240.0" layoutY="117.0" prefHeight="30.0" prefWidth="220.0" />
+            <Button fx:id="CancelBtn" layoutX="438.0" layoutY="154.0" mnemonicParsing="false" text="Cancel" />
+            <Button fx:id="SelectBtn" layoutX="350.0" layoutY="154.0" mnemonicParsing="false" text="Deployment" />
+            <Button fx:id="StartBtn" layoutX="296.0" layoutY="154.0" mnemonicParsing="false" text="Begin" />
+            <Button fx:id="AutoBtn" layoutX="200.0" layoutY="154.0" mnemonicParsing="false" text="Auto Resolve" />
+            <Pane fx:id="MissionImg" layoutX="10.0" layoutY="10.0" prefHeight="150.0" prefWidth="150.0" />
+            <Pane fx:id="DeployPane" layoutX="150.0" layoutY="200.0">
+               <children>
+                  <AnchorPane prefHeight="195.0" prefWidth="350.0">
+                     <children>
+                        <ScrollPane layoutX="15.0" layoutY="15.0" prefHeight="170.0" prefWidth="120.0">
+                           <content>
+                              <ListView fx:id="UnitAvailable" layoutX="1.0" layoutY="1.0" prefHeight="168.0" prefWidth="118.0" />
+                           </content>
+                        </ScrollPane>
+                        <ScrollPane layoutX="214.0" layoutY="15.0" prefHeight="170.0" prefWidth="120.0">
+                           <content>
+                              <ListView fx:id="UnitCommitted" layoutX="1.0" layoutY="1.0" prefHeight="168.0" prefWidth="118.0" />
+                           </content>
+                        </ScrollPane>
+                        <Button fx:id="AllRightBtn" layoutX="159.0" layoutY="30.0" mnemonicParsing="false" text="&gt;&gt;" />
+                        <Button fx:id="RightBtn" layoutX="163.0" layoutY="60.0" mnemonicParsing="false" text="&gt;" />
+                        <Button fx:id="LeftBtn" layoutX="163.0" layoutY="90.0" mnemonicParsing="false" text="&lt;" />
+                        <Button fx:id="AllLeftBtn" layoutX="159.0" layoutY="120.0" mnemonicParsing="false" text="&lt;&lt;" />
+                        <Button fx:id="AutoDeployBtn" layoutX="155.0" layoutY="150.0" mnemonicParsing="false" text="Auto" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+   </children>
+</Pane>

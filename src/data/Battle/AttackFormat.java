@@ -51,6 +51,10 @@ public class AttackFormat {
     }
 
     public static AttackFormat createAttack(Weapon wpn, Astartes ast, int range) {
+        if(wpn == Weapon.None) {
+            System.out.printf("\nEmpty hand on btr %s", ast.name);
+            return null;
+        }
         MainScene.addToVoxLog(Utility.debugMessage(String.format("\nCreate attack with weapon %s on btr %s",wpn.getName(),ast.name)));
         System.out.printf("\nCreate attack with weapon %s on btr %s", wpn.getName(), ast.name);
         AttackFormat att = new AttackFormat();

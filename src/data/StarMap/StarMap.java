@@ -1,16 +1,12 @@
 package data.StarMap;
 
-import UI.MainScene;
+import UI.ImageHelper;
+import data.Battle.MissionConfig;
 import data.Utility;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,6 +24,8 @@ public class StarMap implements Serializable {
     public float playerPosY;
     public System destination = null;
     public int eta;
+
+    public List<Mission> listOfAvailableMissions = new ArrayList<>();
 
     public StarMap() {
         this(Utility.rollBetween(10,20));
@@ -65,11 +63,29 @@ public class StarMap implements Serializable {
             Node system = system1.getSystemImage();
 //            system.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, event -> MainScene.viewRouteToSystem(system1));
 //            system.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, event -> MainScene.hideRouteToSystem());
-            system.setOnMouseEntered(event -> MainScene.viewRouteToSystem(system1));
-            system.setOnMouseExited(event -> MainScene.hideRouteToSystem());
+            system.setOnMouseEntered(event -> ImageHelper.viewRouteToSystem(system1));
+            system.setOnMouseExited(event -> ImageHelper.hideRouteToSystem());
+            system.setOnMouseClicked(event -> ImageHelper.handleClickOnSystem(system1, event.getX(), event.getY()));
             data.add(system);
         }
         return data;
+    }
+
+    public void addMissionForSystem(System sys, MissionConfig mcfg) {
+        listOfAvailableMissions.add(new Mission(mcfg, sys));
+    }
+
+    public void removeMissionForSystem(System sys, MissionConfig mcfg) {
+        listOfAvailableMissions.removeIf(m -> m.mission == mcfg && m.position == sys);
+    }
+
+    public List<MissionConfig> getMissionsForSystem(System sys) {
+        List<MissionConfig> listMissions = new ArrayList<>();
+        for(Mission m:listOfAvailableMissions) {
+            if(m.position == sys)
+                listMissions.add(m.mission);
+        }
+        return listMissions;
     }
 
     void loadTestData() {
@@ -129,5 +145,21 @@ class Route implements Serializable {
 
     public static int getNormalLength(float x1, float y1, float x2, float y2) {
         return (int)Math.round(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))) / 50;
+    }
+}
+
+class Mission implements Serializable {
+    MissionConfig mission;
+    System position;
+
+    Mission(MissionConfig ms, System at) {
+        mission = ms;
+        position = at;
+    }
+
+    Node getImage() {
+        // TODO continue later
+        float posX = position.posX, posY = position.posY;
+        return new ImageView();
     }
 }

@@ -4,6 +4,7 @@ import UI.ImageHelper;
 import UI.Main;
 import data.GameData;
 import data.Utility;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -38,6 +39,7 @@ public class System implements Serializable {
         Label systemName = new Label(name);
         ImageView image =  ImageHelper.getStarById(starType);
         systemName.setGraphic(image);
+        image.getStyleClass().add("system");
         systemName.setTextFill(Color.WHITE);
         systemName.setContentDisplay(ContentDisplay.TOP);
 //        image.setX(posX);
@@ -45,6 +47,17 @@ public class System implements Serializable {
         systemName.setLayoutX(posX);
         systemName.setLayoutY(posY);
         return systemName;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder string = new StringBuilder("System: " + this.name + " - Planets: [");
+        for(int i=0;i<listPlanet.length;i++) {
+            if(i != 0)
+                string.append('|');
+            string.append(listPlanet[i].fullName(this.name));
+        }
+        return string.toString();
     }
 }
 
@@ -60,7 +73,7 @@ class Planet implements Serializable {
 //        habitat = (int)Math.floor(Math.random() * 5) * 3 + (int)(Math.floor(Math.random() * 3));
         habitat = Utility.rollBetween(0,5) * 3 + Utility.rollBetween(0,3);
         // habitat type*3+specific
-        if(habitat < 3 * habitat_type_death) {
+        if(habitat < 3) {
             // dead, no population
             population = 0;
         } else {
@@ -71,10 +84,13 @@ class Planet implements Serializable {
     }
 
     // TODO a roman number generator
-    public static String getName(String name, String designation) {
+    public static String getName(String name, int designation) {
         return name + " " + designation;
     }
 
+    public String fullName(String systemName) {
+        return getName(systemName, this.designation) + '{' + habitat + ',' + population + '}';
+    }
     public static final int habitat_type_dead=0;
     public static final int habitat_type_death=1;
     public static final int habitat_type_feral=2;
