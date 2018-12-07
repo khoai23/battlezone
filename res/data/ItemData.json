@@ -66,6 +66,7 @@
     "str":23,
     "spd":7,
     "hand":1,
+    "hide_primary_arm": true,
     "type":"melee,chain",
     "imgName":"chainsword",
     "desc":"The main melee weapon of the Astartes, their teeth can bite through steel with little effort."
@@ -74,6 +75,7 @@
     "str":25,
     "spd":6,
     "hand":1,
+    "hide_primary_arm": true,
     "type":"melee,power",
     "imgName":"psword",
     "desc":"The most common form of power weapon, its power field can penetrate most armor with little issue."
@@ -82,6 +84,7 @@
     "str":35,
     "spd":4,
     "hand":1,
+    "hide_primary_arm": true,
     "type":"melee,power",
     "imgName":"paxe",
     "desc":"The axe sacrifices finesse and speed for even more striking power."
@@ -90,6 +93,7 @@
     "str":22,
     "spd":7,
     "hand":1,
+    "hide_primary_arm": true,
     "type":"melee,power",
     "imgName":"crozius",
     "desc":"The Crozius Arcanum is both a potent weapon and a symbol of a chaplain's faith."
@@ -114,6 +118,7 @@
     "str":30,
     "spd":8,
     "hand":2,
+    "hide_primary_arm": true,
     "type":"melee,chain",
     "imgName":"eviscerator",
     "desc":"A heavier, two handed version of the chainsword that offer a little more power and strength."
@@ -164,7 +169,7 @@
     "hand":2,
     "imgName":"sniper",
     "type":"long",
-    "desc":"Combine adequate power and long range, this is the favorite weapon for the Scouts who cannot take a beating."
+    "desc":"Combine adequate power and long range, this is the favorite weapon for the Scouts, who lacks the heavier Power Armor."
   },{
     "name":"Bolt Pistol",
     "str":20,
@@ -187,6 +192,8 @@
     "spd":10,
     "hand":3,
     "type":"long,heavy,bolt,primary,req_pack,cumbersome,two_handed,spread",
+    "hide_primary_arm": true,
+    "hide_secondary_arm": true,
     "imgName":"hbolt",
     "desc":"Upscaled and with dedicated feeding mechanism, it can cut through infantry with horrifying ease."
   },{
@@ -202,6 +209,8 @@
     "str":63,
     "spd":3,
     "hand":3,
+    "hide_primary_arm": true,
+    "hide_secondary_arm": true,
     "type":"long,heavy,hot,splash,primary,req_pack,cumbersome,two_handed",
     "imgName":"pcannon",
     "desc":"Rare. Powerful, especially against light vehicles and/or heavy infantry."
@@ -210,7 +219,9 @@
     "str":90,
     "spd":1,
     "hand":3,
-    "type":"medium,heavy,melta,primary,req_pack,cumbersome,two_handed,primary",
+    "hide_primary_arm": true,
+    "hide_secondary_arm": true,
+    "type":"medium,heavy,melta,primary,req_pack,cumbersome,two_handed",
     "imgName":"mmelta",
     "desc":"This monstrous weapon can annihilate tanks easily, should any foolish enough to come to its range."
   },{
@@ -218,6 +229,8 @@
     "str":88,
     "spd":1,
     "hand":3,
+    "hide_primary_arm": true,
+    "hide_secondary_arm": true,
     "type":"extreme,heavy,primary,req_pack,cumbersome,two_handed,primary",
     "imgName":"lascannon",
     "desc":"Deadly against single target and heavily armoured vehicles, complemented with excellent range."
@@ -237,35 +250,37 @@
     "name":"Ammunition Feeder",
     "trait":"stable",
     "imgName":"devpack",
+    "replaceBackpack": true,
     "desc":"Certain heavy weapons utilized by the Astartes require this feeding mechanism."
   },{
     "name":"Jump Pack",
     "trait":"jump",
     "imgName":"jumppack",
+    "replaceBackpack": true,
     "desc":"A Jump Pack allow the Assault Marine to easily pass obstacle and grant extra movement speed."
   },{
     "name": "Iron Halo",
     "trait": "r_field",
     "imgName": "halo",
-    "useBeforeBackpack": true,
+    "underlay": true,
     "desc": "Emit a reductor field that disperse enemy attacks upon impact."
   },{
     "name": "Rosarius",
     "trait": "c_field",
     "imgName": "",
-    "useBeforeBackpack": false,
+    "underlay": false,
     "desc": "Emit a conversion field that convert approaching kinetic energy into light."
   },{
     "name": "Psychic Hood (Amplify)",
     "trait": "psy_amp",
     "imgName": "psyhood",
-    "useBeforeBackpack": false,
+    "underlay": false,
     "desc": "This device allow the psyker wearing it greater control over the Warp's energy flow."
   },{
     "name": "Psychic Hood (Protective)",
     "trait": "psy_pro",
     "imgName": "psyhood2",
-    "useBeforeBackpack": false,
+    "underlay": false,
     "desc": "This device reduce the Peril of the Warp to a much safer level."
   },{
     "name": "Cyclone Missile Launcher",
@@ -390,7 +405,7 @@
     "spd": 2,
     "type": "extreme,heavy,barrage,aoe",
     "imgName":"whirlwind_cannon",
-    "desc":"The whirlwind echo the Adeptus Astartes' modus operandi - overwhelming force in a compact package."
+    "desc":"The whirlwind package echo the Adeptus Astartes' modus operandi - overwhelming force in a compact package."
   },{
     "name": "Pintle-mounted Heavy Bolter",
     "str": 30,

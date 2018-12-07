@@ -156,9 +156,10 @@
   },{
     "name": "Meganobz Squad",
     "refComposition":[["meganob",10]],
-    "description": "Ten Mega Nobz grouped into an elite melee squad.",
+    "description": "Ten Mega Nobz grouped into an even more elite melee squad.",
     "speed": 3,
-    "refname": "nob_squad"
+    "refname": "nob_squad",
+    "unitBadge":""
   }],
 
   "mission":[{
@@ -186,21 +187,21 @@
     "name": "Take out forward base",
     "refname": "m_ork_base_0",
     "composition":[["choppa_squad_l", 2, 3],["shoota_squad_n", 2, 3], ["hardboy_squad", 1], ["nob_squad", 1]],
-    "description": "The feral ork have been showing signs to organize. Crush them before they gain traction on the system.",
+    "description": "The feral ork have been showing signs to organize. Crush them before they gain traction.",
     "missionType": 0,
     "weight": 2
   },{
     "name": "Take out forward base",
     "refname": "m_ork_base_1",
     "composition":[["choppa_squad_n", 2, 3],["shoota_squad_l", 2, 3], ["loota_squad_s", 1], ["nob_squad", 1]],
-    "description": "The feral ork have been showing signs to organize. Crush them before they gain traction on the system.",
+    "description": "The feral ork have been showing signs to organize. Crush them before they gain traction.",
     "missionType": 0,
     "weight": 2
   },{
     "name": "Take out forward base",
     "refname": "m_ork_base_2",
     "composition":[["choppa_squad_n", 2, 3],["shoota_squad_n", 2, 3], ["hardboy_squad", 1], ["loota_squad_s", 1], ["nob_squad", 1]],
-    "description": "The feral ork have been showing signs to organize. Crush them before they gain traction on the system.",
+    "description": "The feral ork have been showing signs to organize. Crush them before they gain traction.",
     "missionType": 0,
     "weight": 2
   }]
