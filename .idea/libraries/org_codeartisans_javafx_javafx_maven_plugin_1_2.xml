@@ -1,0 +1,33 @@
+<component name="libraryTable">
+  <library name="org.codeartisans.javafx:javafx-maven-plugin:1.2" type="repository">
+    <properties maven-id="org.codeartisans.javafx:javafx-maven-plugin:1.2" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/javafx-maven-plugin-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-plugin-api-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-project-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-settings-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-profile-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-model-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-artifact-manager-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-repository-metadata-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/wagon-provider-api-1.0-beta-6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/backport-util-concurrent-3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-plugin-registry-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/plexus-interpolation-1.11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/plexus-utils-1.5.15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/maven-artifact-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/plexus-container-default-1.0-alpha-9-stable-1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junit-3.8.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/classworlds-1.1-alpha-2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/truezip-file-7.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/truezip-driver-file-7.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/truezip-kernel-7.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/truezip-driver-zip-7.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/truezip-swing-7.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-compress-1.4.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/bcprov-jdk16-1.46.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

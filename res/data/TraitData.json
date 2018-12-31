@@ -1,6 +1,9 @@
 [{
   "name":"twin-linked",
   "numberData":[4, 2, 5, -1, 3, 10, -1],
+  "evalFn": "if(missed_previous): accuracy = accuracy + 0.1",
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"1. If previous shot miss, next shot have +10% accuracy."
 },{
   "name":"spread_aux",
@@ -9,26 +12,42 @@
 },{
   "name":"spread",
   "numberData":[0, 0, 0, 10, 10, -1, 1],
+  "evalFn": "atk_spd = atk_spd * 0.6; target_multiple=True; max_target = 1000",
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"3. -40% shots in exchange for multiple targets hit. Referencing spread_aux"
 },{
   "name":"bolt",
   "stringData":"after|single|aad_more|9|dmg_mult|100|-1",
+  "evalFn": "if(damage >= 10.0): damage *= 2.0",
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"4. x2 damage against light target (score>=10dmg per shot)"
 },{
   "name":"melta",
   "stringData":"before|single|armor_more|34|str_off|10|-1",
+  "evalFn": "if(def_armor_reduction >= 35.0): damage += 10",
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"5. +10 damage on target with >35 defense."
 },{
   "name":"power",
   "stringData":"before|single|every|-1|armor_off|20|-1",
+  "evalFn": "def_armor_reduction -= 20.0",
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"6. Cut through 20 enemy armor"
 },{
   "name":"assault",
   "stringData":"before|single|moved|-1|acc_off|20|-1",
-  "desc":"7. -5% accuracy on the move (Normal weapon suffer -25%)."
+  "evalFn": "if(moved): accuracy += 0.2",
+  "apply_before_calc": true,
+  "affect": "self_atk",
+  "desc":"7. Only -5% accuracy on the move (Normal weapon suffer -25%)."
 },{
   "name":"req_pack",
   "stringData":"noncom|none|required|6|0|-1|-1",
+  "require_item": ["Ammunition Feeder"],
   "desc":"8. Require Accessory @0 - Ammunition Feeder"
 },{
   "name":"flame_aux",
@@ -37,14 +56,23 @@
 },{
   "name":"flame",
   "stringData":"after|single|every|-1|dmg_mult|400|flame_aux",
-  "desc":"10. x5 damage after armour, and guarantee scratch damage on target."
+  "evalFn": "damage = max(2.0, damage * 5.0)",
+  "apply_before_calc": false,
+  "affect": "self_atk",
+  "desc":"10. x5 damage after armour, and guarantee scratch damage (2.0hp) on target."
 },{
   "name":"hot",
   "stringData":"all|single|random|4|self_dmg|30|-1",
+  "evalFn": "if(random.uniform(0.0, 1.0) <= 0.04): user_hp -= 30;",
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"11. 4% chance of injuring the wielder with 30 damage on firing phase."
 },{
   "name":"splash",
   "stringData":"target|single|inc_target_mult|100|300|-1|-1",
+  "evalFn": "target_multiple=True; max_target=max_target * random.randint(1, 3)",
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"12. No firing preference, but can injure 1-3 per shot."
 },{
   "name":"missile_aux",
@@ -53,34 +81,58 @@
 },{
   "name":"missile",
   "stringData":"all|single|switch|-1|spd_mult|100|missile_aux",
+  "evalFn": "if(def_is_infantry): damage, atk_spd = damage * 0.5, atk_spd * 2.0", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"14. Automatically choose between keeping normal stats for vehicle and -50% damage, x2 shot for infantry."
 },{
   "name":"aoe",
   "stringData":"target|single|inc_target_mult|80|100|7|-1",
+  "evalFn": "target_all=True, max_target=int(def_squad_size * random.uniform(0.8, 1.0))", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"15. dealing damage to 80-100% of enemy."
 },{
   "name":"coaxial",
   "stringData":"before|single|every|-1|acc_off|5|-1",
+  "evalFn": "accuracy += 0.05", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"16. +5% accuracy."
 },{
   "name":"stable",
   "stringData":"before|single|range_more|0|acc_off|5|-1",
+  "evalFn": "if(is_ranged): accuracy += 0.05", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"17. +5% ranged accuracy."
 },{
   "name":"stationary",
   "stringData":"all|single|moved|-1|spd_off|-100|-1",
+  "evalFn": "if(moved): stopFlag = True", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"18. No firing on the move. (Using a little hack on SPD)"
 },{
   "name":"rally",
   "stringData":"before|friendly|every|-1|acc_off|5|-1",
+  "evalFn": "accuracy += 0.05", 
+  "apply_before_calc": true,
+  "affect": "all_atk",
   "desc":"19. All friendly get a bonus +5% accuracy."
 },{
   "name":"r_field",
   "stringData":"before|self|every|-1|armor_off|15|-1",
+  "evalFn": "def_armor_reduction += 15.0", 
+  "apply_before_calc": true,
+  "affect": "self_def",
   "desc":"20. +15 armor rating."
 },{
   "name":"c_field",
   "stringData":"before|self|range_more|0|acc_off|-30|-1",
+  "evalFn": "accuracy -= 0.3", 
+  "apply_before_calc": true,
+  "affect": "self_def",
   "desc":"21. -30% accuracy to all ranged attack made upon the wearer."
 },{
   "name":"fast",
@@ -93,6 +145,9 @@
 },{
   "name":"jump",
   "stringData":"before|self|first|-1|-1|-1|jump_aux",
+  "evalFn": "if(first_attack): damage += 15.", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"24. +15 damage on first melee attack."
 },{
   "name":"ignore_terrain",
@@ -101,31 +156,47 @@
 },{
   "name":"com_inspiring",
   "stringData":"before|squad_off|every|-1|acc_off|5|-1",
+  "evalFn": "accuracy -= 0.3", 
+  "apply_before_calc": true,
+  "affect": "squad_atk",
   "desc":"26. +5% accuracy to all attacks made by squad members."
 },{
   "name":"com_fearless1",
   "stringData":"before|squad_off|every|-1|acc_off|15|-1",
+  "evalFn": "accuracy -= 0.15", 
+  "apply_before_calc": true,
+  "affect": "squad_atk",
   "desc":"27. +15% accuracy to all attacks made by your squad."
 },{
   "name":"com_fearless2",
   "stringData":"before|squad_def|every|-1|acc_off|10|-1",
-  "desc":"28. +10% accuracy to all attacks inflicted to your squad."
+  "evalFn": "damage -= 5", 
+  "apply_before_calc": false,
+  "affect": "squad_def",
+  "desc":"28. -5 damage to all attacks inflicted to your squad."
 },{
   "name":"com_avenger",
   "stringData":"before|single|sqdSize_less|10|str_off|3|-1",
+  "evalFn": "damage += atk_deads * 3.0", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"29. +3 melee damage to self for each squad member fell in battle."
 },{
   "name":"melee",
   "stringData":"target|single|inc_target_offset|3|10|-1|-1",
+  "evalFn": "target_multiple = True; max_target=1000", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"29. Melee damage have spread by default."
 },{
   "name":"cumbersome",
   "stringData":"noncom|none|required|8|-1|-1|-1",
+  "incompatible_item": ["Terminator Armor"],
   "desc":"30. Cannot be wielded by Terminator armor. Useless as of now"
 },{
   "name":"two_handed",
   "stringData":"noncom|none|required|5|-1|-1|-1",
-  "desc":"31. Can only be wielded in conjunction with Weapon @0 Knife."
+  "desc":"31. Can only be wielded by itself."
 },{
   "name":"primary",
   "stringData":"noncom|none|required|4|-1|-1|-1",
@@ -133,6 +204,7 @@
 },{
   "name":"req_term",
   "stringData":"noncom|none|required|6|-1|-1|-1",
+  "require_item": ["Terminator Armor"],
   "desc":"33. Must be used alongside Terminator armor."
 },{
   "name":"heavy_aux",
@@ -141,14 +213,23 @@
 },{
   "name":"heavy",
   "stringData":"all|single|moved|-1|lock_spd|1|heavy_aux",
-  "desc":"35. Heavy, if moved then you can only fire once with reduced accuracy."
+  "evalFn": "if(moved): atk_spd, accuracy = 1, accuracy * 0.2", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
+  "desc":"35. Heavy, if moved then you can only fire once with reduced (20%) accuracy."
 },{
   "name":"automated",
   "stringData":"before|single|every|-1|lock_acc|66|-1",
-  "desc":"36. Weapon linked with a logic engine, can shoot by itself."
+  "evalFn": "accuracy = 0.66", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
+  "desc":"36. Weapon linked with a logic engine, can shoot by itself. Constant 66% accuracy regardless of user skill"
 },{
   "name":"chain",
   "stringData":"after|single|aad_more|7|dmg_off|10|-1",
+  "evalFn": "if(damage >= 8.0): damage += 10.0", 
+  "apply_before_calc": false,
+  "affect": "self_atk",
   "desc":"36. Chain weapon add 10 damage when deal more than 8 damage on a target."
 },{
   "name":"shred_aux",
@@ -157,6 +238,9 @@
 },{
   "name":"shred",
   "stringData":"all|single|range_less|1|-1|-1|shred_aux",
+  "evalFn": "if(moved and not is_ranged): atk_spd += 1", 
+  "apply_before_calc": true,
+  "affect": "self_atk",
   "desc":"38. Shred weapon add +1 attack when assault (melee range, moved)."
 },{
   "name":"any_armor",

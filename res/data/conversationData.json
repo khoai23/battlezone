@@ -1,0 +1,61 @@
+{
+	"start_game": [
+		"<ally>Advisor: <\ally> Captain @your_name!",
+		"<ally>Advisor: <\ally> This is @advisor_name, your second-in-command. Can you read?",
+		"@your_name: I do. Relay the situation, brother @advisor_name, I am as dizzy as a Space Wolves in his off day.",
+		"<ally>@advisor_name: <\ally> The damned Orks landed a lucky shot on your drop pod, milord.",
+		"<ally>@advisor_name: <\ally> I don't see any friendly near your position, so you better make your way to our rendevouz point. I am marking it on your display.",
+		"@your_name: Understood. I will be there shortly."
+	],
+	"start_game_encounter": [
+		"<ally>@advisor_name: <\ally> Chapter Master @your_name, what is taking you so long?",
+		"@your_name: Some stragglers. I got distracted.",
+		"<ally>@advisor_name: <\ally> Please return to our position shortly, milord, there would be more for you to kill here.",
+		"@your_name: Alright."
+	],
+	"group_banters": [
+		["<ally>@sergeant1: <\ally> How boring.",
+		 "<ally>@sergeant2: <\ally> @sergeant1, we are doing the Emperor's holy work here.",
+		 "<ally>@sergeant1: <\ally> Yes, I know, @sergeant2. I sure love doing my work. Killing defenseless @enemy, how holy, how grand.",
+		 "<ally>@sergeant2: <\ally> You are welcome to strip and even out the field, @sergeant1. I am sure the @enemy will be overjoyed.",
+		 "<ally>@sergeant1: <\ally> I'll pass."
+		],
+		["<ally>@sergeant1: <\ally> This is troublesome.",
+		 "<ally>@sergeant2: <\ally> How so?",
+		 "<ally>@sergeant1: <\ally> They should not have retreated this early. This could very well be a trap.",
+		 "<ally>@sergeant3: <\ally> They were broken by our relentless attack, @sergeant1. You are being a coward.",
+		 "<ally>@sergeant2: <\ally> Keep your tongue between your cheek, @sergeant3. There is things you are not meant to say.",
+		 "<ally>@sergeant1: <\ally> You are saying I am a coward as well, @sergeant2?",
+		 "<ally>@sergeant2: <\ally> I am saying there is no need to be all accusative. Take it however you will."
+		],
+		["<ally>@sergeant1: <\ally> This is no doubt a trap.",
+		 "<ally>@sergeant2: <\ally> I agree. The @enemy really got careless on this one.",
+		 "<ally>@sergeant1: <\ally> We should be waiting it out, then.",
+		 "<ally>@sergeant2: <\ally> I think we can definitely do better. I will hold position, and you to our flank. When they drop the facade and came back, we would be able to lure them into our crossfire.",
+		 "<ally>@sergeant1: <\ally> Good idea. My squad will move out immediately"
+		],
+		["<ally>@sergeant1: <\ally> @sergeant2.",
+		 "<ally>@sergeant2: <\ally> What?",
+		 "<ally>@sergeant1: <\ally> I have been hearing static noise ever since the start of this battle. Do you hear anything?",
+		 "<ally>@sergeant2: <\ally> No, not a thing. Had you asked your squad?",
+		 "<ally>@sergeant1: <\ally> I did, but only some of us can hear it.",
+		 "<ally>@sergeant2: <\ally> Interesting. Keep your eyes peeled. The @enemy could be putting up a jamming device",
+		 "<ally>@sergeant1: <\ally> Will do, brother."
+		],
+		["<ally>@sergeant1: <\ally> I wonder what are we doing on this damn planet.",
+		 "<ally>@sergeant2: <\ally> It is the Emperor's domain, so we are protecting it, @sergeant1",
+		 "<ally>@sergeant3: <\ally> True, @sergeant2, but we are Astartes. I do think we could be doing something better.",
+		 "<ally>@sergeant2: <\ally> Maybe. The Chapter demands we go, so off we went.",
+		 "<ally>@sergeant1: <\ally> Once I get to higher office, the Chapter is going to make @sergeant2 go clean our communal toilet.",
+		 "<ally>@sergeant3: <\ally> You have as much chance as a Chaos cultist against our Terminator brothers, @sergeant1",
+		 "<ally>@sergeant1: <\ally> Hey, I can dream."
+		],
+		["<ally>@sergeant1: <\ally> As we are fighting @enemy, I suppose we should ask @sergeant2.",
+		 "<ally>@sergeant2: <\ally> I don't think I will be of much use, brother @sergeant1.",
+		 "<ally>@sergeant1: <\ally> I believe the Chapter record said that you had fought @enemy before.",
+		 "<ally>@sergeant2: <\ally> So I did. But I found tactics in general are useful no matter what kind of enemy we fought.",
+		 "<ally>@sergeant3: <\ally> Surely you have something to share, no? What kind of things are the @enemy most vulnerable of?",
+		 "<ally>@sergeant2: <\ally> Honest bolter rounds. And @enemy_weakness, I suppose. But unlike bolt rounds, the latter is not a certainty."
+		]
+	]
+}
