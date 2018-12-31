@@ -158,7 +158,8 @@
     "refComposition":[["meganob",10]],
     "description": "Ten Mega Nobz grouped into an elite melee squad.",
     "speed": 3,
-    "refname": "nob_squad"
+    "refname": "nob_squad",
+    "unitBadge":"enemy_nob"
   }],
 
   "mission":[{

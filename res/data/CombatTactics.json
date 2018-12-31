@@ -1,0 +1,109 @@
+{
+	"tactics":[
+		{
+			"name": "Frontal Attack",
+			"type": "heavy",
+			"atk": {"heavy": 1.0, "light": 2.0, "feint": 0.5},
+			"def": {"heavy": 1.0, "light": 1.0, "feint": 1.0},
+			"requirement": 0
+		},
+		{
+			"name": "Skirmish",
+			"type": "light",
+			"atk": {"heavy": 0.5, "light": 1.0, "feint": 2.0},
+			"def": {"heavy": 1.0, "light": 1.0, "feint": 1.0},
+			"requirement": 0
+		},
+		{
+			"name": "Feigned Retreat",
+			"type": "feint",
+			"atk": {"heavy": 1.5, "light": 0.5, "feint": 1.0},
+			"def": {"heavy": 1.35, "light": 1.0, "feint": 1.0},
+			"requirement": 0
+		},
+		{
+			"name": "Overwhelming Mass",
+			"type": "heavy",
+			"atk": {"heavy": 1.1, "light": 2.5, "feint": 0.2},
+			"def": {"heavy": 0.9, "light": 1.1, "feint": 0.5},
+			"requirement": 5
+		},
+		{
+			"name": "Lightning Strike",
+			"type": "light",
+			"atk": {"heavy": 0.45, "light": 1.15, "feint": 2.25},
+			"def": {"heavy": 0.65, "light": 1.1, "feint": 1.25},
+			"requirement": 5
+		},
+		{
+			"name": "Harassment",
+			"type": "light",
+			"atk": {"heavy": 0.8, "light": 1.0, "feint": 1.25},
+			"def": {"heavy": 0.8, "light": 1.0, "feint": 1.5},
+			"requirement": 5
+		},
+		{
+			"name": "Ambush Lure",
+			"type": "feint",
+			"atk": {"heavy": 1.75, "light": 0.25, "feint": 1.0},
+			"def": {"heavy": 1.5, "light": 0.5, "feint": 1.0},
+			"requirement": 5
+		},
+		{
+			"name": "Combined Assault",
+			"type": "heavy",
+			"atk": {"heavy": 1.25, "light": 2.0, "feint": 0.35},
+			"def": {"heavy": 1.0, "light": 1.25, "feint": 0.75},
+			"requirement": 10
+		},
+		{
+			"name": "Loose Swarm",
+			"type": "light",
+			"atk": {"heavy": 0.9, "light": 1.1, "feint": 3.0},
+			"def": {"heavy": 0.25, "light": 1.1, "feint": 1.0},
+			"requirement": 10
+		},
+		{
+			"name": "Outflank",
+			"type": "feint",
+			"atk": {"heavy": 2.5, "light": 0.8, "feint": 0.5},
+			"def": {"heavy": 1.5, "light": 0.8, "feint": 0.5},
+			"requirement": 10
+		},
+		{
+			"name": "Night Raid",
+			"type": "feint",
+			"atk": {"heavy": 2.0, "light": 0.25, "feint": 0.5},
+			"def": {"heavy": 2.0, "light": 0.5, "feint": 1.0},
+			"requirement": 10
+		},
+		{
+			"name": "All-out Charge",
+			"type": "heavy",
+			"atk": {"heavy": 2.0, "light": 2.5, "feint": 0.75},
+			"def": {"heavy": 0.5, "light": 1.0, "feint": 0.25},
+			"requirement": 15
+		},
+		{
+			"name": "Rolling Storm",
+			"type": "heavy",
+			"atk": {"heavy": 1.5, "light": 1.75, "feint": 0.25},
+			"def": {"heavy": 1.0, "light": 2.0, "feint": 1.0},
+			"requirement": 15
+		},
+		{
+			"name": "Barrage Movement",
+			"type": "light",
+			"atk": {"heavy": 1.5, "light": 0.5, "feint": 2.0},
+			"def": {"heavy": 0.75, "light": 0.8, "feint": 2.0},
+			"requirement": 15
+		},
+		{
+			"name": "Bait and Switch",
+			"type": "feint",
+			"atk": {"heavy": 2.0, "light": 0.25, "feint": 0.5},
+			"def": {"heavy": 2.0, "light": 0.5, "feint": 1.0},
+			"requirement": 15
+		}
+	]
+}
