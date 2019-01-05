@@ -4,8 +4,8 @@ import tkinter.ttk as ttk
 import python.lib_image as imageLib
 import python.lib_text as textLib
 import python.manager as managerLib
-from python.utils import Debug
-import os, random
+import python.utils as utils
+import os, random, sys
 
 def testWindow():
 	window = createWindow()
@@ -23,7 +23,7 @@ def createWindow(screenName="Game", size=None):
 
 def mainLayout(window):
 	assert isinstance(window, tk.Tk)
-#	Debug.changeMessageLevel("INFO")
+#	utils.Debug.changeMessageLevel("INFO")
 	# load all manager
 #	statManager = managerLib.IndividualStatManager("./res/data/AstartesStat.json")
 #	itemManager = managerLib.ItemManager("./res/data/ItemData.json", "./res/texture")
@@ -93,7 +93,7 @@ def campaignMap(window):
 		others = list(systemList)
 		others.pop(idx)
 		others = list(enumerate(others))
-#		Debug.printDebug(others)
+#		utils.Debug.printutils.Debug(others)
 		closestIdx, closest = min(others, key=lambda other: (sys[1]-other[1][1]) ** 2 + (sys[2]-other[1][2]) ** 2)
 		key = getKey(idx, closestIdx)
 		if(key not in route):
@@ -101,7 +101,7 @@ def campaignMap(window):
 			route[key] = 1
 			starMap.create_line(sys[1], sys[2], closest[1], closest[2], fill=safe, dash=(3,1))
 
-#		Debug.printDebug(x, y, systemType)
+#		utils.Debug.printutils.Debug(x, y, systemType)
 	starMap.update()
 	
 	return starMap
@@ -120,7 +120,8 @@ def interactionPanel(window, textFunc=None, overallManager=None):
 	statManager = overallManager.statManager
 	enemyManager = overallManager.enemyManager
 	combatManager = overallManager.combatManager
-	# create the random dude for dress-up game
+	conversationManager = overallManager.conversationManager
+	# get your commander for your filthy dress-up game
 	astartes = overallManager.company.commander
 	def callbackDrawAndAddText():
 		# write message of new astartes
@@ -148,7 +149,7 @@ def interactionPanel(window, textFunc=None, overallManager=None):
 		# load the entire company as yourUnits
 		yourUnits = overallManager.company.squads
 		# run defaultGameDialog
-		defaultGameDialog(BattleDialogBox, yourUnits=yourUnits, battleManagerObj=combatManager, mission=testMission)
+		defaultGameDialog(window, BattleDialogBox, yourUnits=yourUnits, battleManagerObj=combatManager, conversationManagerObj=conversationManager, missionObj=testMission)
 	# bind the button with your object
 	combatButton = tk.Button(pane, text="Combat", command=sendWholeCompanyToTestMission)
 	combatButton.grid(row=1, column=1)
@@ -195,7 +196,7 @@ class ArmoryDialogBox(DefaultDialogBox):
 		self._armoryPane.pack()
 
 	def updateArmoryCount(self):
-		Debug.printDebug(self._itemManager.armoryCounts)
+		utils.Debug.printutils.Debug(self._itemManager.armoryCounts)
 		for label, value in zip(self._counterLabels, self._itemManager.armoryCounts):
 			label.config(text=value)
 
@@ -208,7 +209,7 @@ class LoadoutDialogBox(DefaultDialogBox):
 		self._itemManager = itemManagerObj
 		self._statManager = statManagerObj
 		self._target = target
-		self._target_original_equipments = dict(astartes.equipments)
+		self._target_original_equipments = dict(target.equipments)
 		self.colorScheme = colorScheme
 		# create the canvas and selections
 		self._mainCanvas = tk.Canvas(master=self, width=imageLib.DEFAULT_CANVAS_WIDTH, height=imageLib.DEFAULT_CANVAS_HEIGHT)
@@ -258,7 +259,7 @@ class LoadoutDialogBox(DefaultDialogBox):
 #		self._mainCanvas.update()
 
 	def onModifyEvent(self, *args):
-		Debug.printDebug("Event called from: {}".format(args))
+		utils.Debug.printutils.Debug("Event called from: {}".format(args))
 		self._populateChoices()
 		self._changeDisplay()
 
@@ -266,19 +267,19 @@ class LoadoutDialogBox(DefaultDialogBox):
 		if(cancel):
 			# reset all changes
 			self._target.equipments = self._target_original_equipments
-			Debug.printDebug("Revert to target original equipments: ", self._target.equipments)
+			utils.Debug.printutils.Debug("Revert to target original equipments: ", self._target.equipments)
 		else:
-			Debug.printDebug("Target changed from set {} to set {}".format(self._target_original_equipments, self._target.equipments))
+			utils.Debug.printutils.Debug("Target changed from set {} to set {}".format(self._target_original_equipments, self._target.equipments))
 		self.destroy()
 
 class BattleDialogBox(DefaultDialogBox):
 	NO_ORDER_STR = "No Order"
 	END_TURN_STR = "End Turn"
-	def __init__(self, master, yourUnits=None, battleManagerObj=None, missionObj=None):
-		super(ArmoryDialogBox, self).__init__(master=master)
-		assert unitManagerObj is not None and mission is not None
+	def __init__(self, master, yourUnits=None, battleManagerObj=None, conversationManagerObj=None, missionObj=None):
+		super(BattleDialogBox, self).__init__(master=master)
 		self._yourUnits = yourUnits
 		self._battleManager = battleManagerObj
+		self._conversationManager = conversationManagerObj
 		self._mission = missionObj
 
 		self._constructBattleList()
@@ -287,9 +288,9 @@ class BattleDialogBox(DefaultDialogBox):
 	def _constructBattleList(self):
 		# for now, just have a text box for vox channel, each unit of friendly get nametag + status (label), healthbar (progressbar), and tactic selector to override the usual 
 		vox_panel = tk.Frame(master=self)
-		vox_panel.grid(row=0, column=0)
+		vox_panel.grid(row=1, column=0)
 		self._voxLog = textLib.createTextWithScrollbar(vox_panel)
-		self._moveTurnButton = tk.Button(master=vox_panel, text=BattleDialogBox.END_TURN_STR, command= lambda: self._endTurn())
+		self._moveTurnButton = tk.Button(master=self, text=BattleDialogBox.END_TURN_STR, command= lambda: self._endTurn())
 		self._moveTurnButton.grid(row=1, column=1)
 
 		main_panel = tk.Frame(master=self)
@@ -304,10 +305,10 @@ class BattleDialogBox(DefaultDialogBox):
 			squad_name_label = tk.Label(master=main_panel, text=unit.name)
 			squad_name_label.grid(row=upper_row, column=0)
 			# status
-			squad_status_label = tk.Label(master=main_panel, text=squad_status_var)
+			squad_status_label = tk.Label(master=main_panel, textvariable=squad_status_var)
 			squad_status_label.grid(row=upper_row, column=1)
 			# tactic selector
-			squad_selection_dropdown = tk.OptionMenu(main_panel, squad_tactic_var, BattleDialogBox.NO_ORDER_STR, *self._battleManager.getSquadTactics(unit))
+			squad_selection_dropdown = tk.OptionMenu(main_panel, squad_tactic_var, BattleDialogBox.NO_ORDER_STR, *self._battleManager.getSquadTactics(unit, bare=True))
 			squad_selection_dropdown.grid(row=upper_row, column=2)
 			# health bar
 			squad_health_bar = ttk.Progressbar(master=main_panel, value=100, maximum=100)
@@ -315,7 +316,7 @@ class BattleDialogBox(DefaultDialogBox):
 			# save to the list
 			self._turnComponent.append( (unit, squad_status_var, squad_tactic_var, squad_health_bar) )
 		# hostile
-		for i, enemyUnit in enumerate(self._mission.units):
+		for i, enemyUnit in enumerate(self._mission.composition):
 			# similarly to the ones above
 			upper_row, lower_row = i*2, i*2+1
 			enemy_status_var = tk.StringVar()
@@ -323,7 +324,7 @@ class BattleDialogBox(DefaultDialogBox):
 			enemy_name_label = tk.Label(master=main_panel, text=enemyUnit.name)
 			enemy_name_label.grid(row=upper_row, column=4)
 			# status
-			enemy_status_label = tk.Label(master=main_panel, text=enemy_status_var)
+			enemy_status_label = tk.Label(master=main_panel, textvariable=enemy_status_var)
 			enemy_status_label.grid(row=upper_row, column=5)
 			# health bar
 			enemy_health_bar = ttk.Progressbar(master=main_panel, value=100, maximum=100)
@@ -343,7 +344,7 @@ class BattleDialogBox(DefaultDialogBox):
 			if(tactic_var):
 				# tactic is only available to friendly side
 				tactic_var.set(BattleDialogBox.NO_ORDER_STR)
-			status_var.set("HP: {:.1f}/{:.1f}, Battle-able: {:d}/{:d}".format(current_hp, total_hp, remaining_member, total_members))
+			status_var.set("HP: {:.1f}/{:.1f}, Battle-able: {:d}/{:d}".format(current_hp, total_hp, remaining_members, total_members))
 			if(total_hp == 0):
 				# to prevent divide by zero
 				total_hp = 1
@@ -356,10 +357,9 @@ class BattleDialogBox(DefaultDialogBox):
 	def _writeToVox(self, text):
 		textLib.addFormatText(self._voxLog, text)
 
-def battleDialog(window, yourUnits, battleManager, mission):
-	"""See LoadoutDialogBox for details"""
-	dialogBox = BattleDialogBox(window, yourUnits=yourUnits, battleManagerObj=battleManager, missionObj=mission)
-	window.wait_window(dialogBox)
-
-testWindow()
+if __name__ == "__main__":
+	debug_level = utils.tryConvertStringToInt(sys.argv[-1])
+	if(debug_level in utils.Debug.MESSAGE_LEVEL_NAME or (isinstance(debug_level, int) and len(utils.Debug.MESSAGE_LEVEL_NAME) > debug_level)):
+		utils.Debug.changeMessageLevel(debug_level)
+	testWindow()
 

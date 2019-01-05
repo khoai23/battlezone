@@ -8,8 +8,12 @@ class CombatManager:
 			json_data = json.load(json_file)
 		self.tacticList = [Tactic(block) for block in json_data["tactics"]]
 
-	def getSquadTactics(self, squad):
-		return getAvailableTactics(squad.command_level)
+	def getSquadTactics(self, squad, bare=False):
+		squad_tactics = self.getAvailableTactics(squad.command_level)
+		if(bare):
+			return [tactic.name for tactic in squad_tactics]
+		else:
+			return squad_tactics
 
 	def getAvailableTactics(self, level):
 		return [t for t in self.tacticList if t.requirement <= level]
@@ -46,6 +50,19 @@ class CombatManager:
 				second_tactic = utils.select_with_preference(self.getAvailableTactics(secondLevel), second_preference_fn)
 				first_tactic = self.selectWorseTactic(second_tactic, self.getAvailableTactics(firstLevel))
 			return first_tactic, second_tactic
+
+class CombatSession:
+	def __init__(self, friendly, enemy, dimensions=(800, 400)):
+		self._friendly = friendly
+		self._enemy = enemy
+		self._board_dimension = dimensions
+	
+	def _initializePositioning(self):
+		# drop units randomly on the sides of the board
+		pass
+	
+	def calculatePositioning(self):
+		pass
 
 class Tactic(collections.namedtuple("Tactic", ["name", "type", "coefficients", "requirement"])):
 	TACTIC_TYPES = ("heavy", "light", "feint")

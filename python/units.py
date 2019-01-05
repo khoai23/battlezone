@@ -172,13 +172,13 @@ class Company:
 		self.chapterName = chapterName
 		self.name = name
 		self.commander = commander
-		self.statManagerObj = statManagerObj
+		self._statManagerObj = statManagerObj
 	
 	def getSquadByIdx(self, squadIdx, safety=False, fullName=False):
 		"""Return tuple of squadObj, name"""
-		assert not safety or len(self.squads) > squadIdx > 0
+		assert not safety or len(self.squads) > squadIdx >= 0
 		squad_str = Company.SQUAD_FULL_STR if fullName else Company.SQUAD_PARTIAL_STR
-		return self.squads[squadIdx], squad_str.format({'squad_name': self.statManagerObj.squadNumberFn(squadIdx+1), "chapter_name": self.chapterName, "company_name": self.name})
+		return self.squads[squadIdx], squad_str.format(squad_name=self._statManagerObj.squadNumberFn(squadIdx), chapter_name=self.chapterName, company_name=self.name)
 	
 	def getSquadNameByObj(self, squadObj, fullName=False):
 		squadObj, squadName = self.getSquadByIdx(self.squads.index(squadObj), safety=True, fullName=fullName)
@@ -186,7 +186,7 @@ class Company:
 
 	def getCompanyName(self, fullName=False):
 		squad_str = Company.SQUAD_FULL_STR if fullName else Company.SQUAD_PARTIAL_STR
-		return squad_str.format({"chapter_name": self.chapterName, "company_name": self.name})
+		return squad_str.format(chapter_name=self.chapterName, company_name=self.name)
 
 class Squad:
 	def __init__(self, parentCompany, members=[], leader=None):
@@ -265,6 +265,10 @@ class EnemySquad( collections.namedtuple("EnemySquad", ["name", "composition", "
 		# only those made by json data are considered template
 		jsonData["isTemplate"] = True
 		return super(EnemySquad, _cls).__new__(_cls, **jsonData)
+
+	def getSquadHp(self):
+		assert not self.isTemplate, "a template cannot be used for combat"
+		return sum( (member.current_hp for member in self.composition) ), sum( (member.base_hp for member in self.composition) ), len([member for member in self.composition if member.current_hp > 0]), len(self.composition)
 
 	def clone(self):
 		assert self.isTemplate, "must use a template to initiate an enemy squad"

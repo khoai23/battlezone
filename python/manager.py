@@ -89,7 +89,7 @@ class ItemManager:
 
 class IndividualStatManager:
 	"""Manage the processing of levels of individual"""
-	def __init__(self, jsonFilePath):
+	def __init__(self, jsonFilePath, numbering="roman_num"):
 		with io.open(jsonFilePath, "r", encoding="utf8") as json_file:
 			json_data = json.load(json_file)
 #			utils.Debug.printDebug("JSON data read @IndividualStatManager: {}".format(json_data))
@@ -104,7 +104,8 @@ class IndividualStatManager:
 		second_probs = [0.5] + [0.5 / (len(names_components[1]) - 1)] * (len(names_components[1]) - 1)
 		third_probs = [0.2] + [0.8 / (len(names_components[2]) - 1)] * (len(names_components[2]) - 1)
 		self.namesComponents = list(zip(names_components, [first_probs, second_probs, third_probs]))
-		utils.Debug.printDebug("IndividualStatManager initialized to file {:s}".format(jsonFilePath))
+		self.setNumbering(numbering, numbering)
+		utils.Debug.printDebug("IndividualStatManager initialized to file {:s}, numbering used {:s}".format(jsonFilePath, numbering))
 	
 	def setNumbering(self, comNumType, sqdNumType):
 		assert comNumType in self.numberingTypes, "Invalid comNumType {:s}, must be one of {}".format(comNumType, self.numberingTypes.keys())
@@ -161,7 +162,7 @@ class IndividualStatManager:
 
 DEFAULT_JSON_PATH = {"stat":"./res/data/AstartesStats.json", "enemy": "./res/data/EnemyData.json",
 "item": "./res/data/Item.json", "texture_location": "./res/texture",
-"combat": "./res/data/CombatTactics.json"}
+"combat": "./res/data/CombatTactics.json", "conversation": "./res/data/conversationData.json"}
 
 DEFAULT_LEADER = {"lvl": 80, "progression": ["Initiate", "Neophyte", "Tactical", "Command", "Ancient"], "gears": [["paxe", "plasma", "artificer", "halo"]]}
 DEFAULT_VETERAN = {"lvl": (70, 90), "progression": None, "gears": [["psword", "ppistol", "corvus", None], ["chainsword", "bolter", "errant", None], ["pcannon", "__empty__", "aquila", "devpack"], ["pfist", "bpistol", "aquila", "jumppack"]]}
@@ -177,7 +178,8 @@ class OverallManager:
 		self.enemyManager = EnemyManager(allJSONPath["enemy"])
 		self.itemManager = ItemManager(allJSONPath["item"], allJSONPath["texture_location"])
 		self.combatManager = CombatManager(allJSONPath["combat"])
-		self._company = Company(chapterName, companyName, self.statManager)
+		self.conversationManager = ConversationManager(allJSONPath["conversation"])
+		self._company = Company(chapterName, companyName, None, self.statManager)
 		self.colorScheme = colorScheme
 	
 	def createAstartes(self, astartesConfig=None):
@@ -208,12 +210,66 @@ class OverallManager:
 	def company(self):
 		return self._company
 
+class ConversationManager:
+	DUPLICATE_PACING = 4
+	TACTIC_DIFF_THRESHOLDS = [4.0, 2.0, 0.5, 0.25]
+	TACTIC_DIFF_KEY = ["advantage_high", "advantage_low", "balance", "disadvantage_low", "disadvantage_high"]
+	def __init__(self, jsonFilePath):
+		with io.open(jsonFilePath, "r", encoding="utf8") as json_file:
+			json_data = json.load(json_file)
+		# TODO load the conversation during normal 
+		# load the conversation during normal/battle differently
+		self._battleBanters = json_data["group_banters"]
+		self._battleReports = json_data["report_tactic"]
+		enemy_raw_filler = json_data["race_data"]
+		# for each race entry, convert the keys to @ format (enemy->@enemy) for formatting purpose
+		self._enemyStrings = {"@"+key:value for key, value in enemy_raw_filler.items()}
+		
+		# implement a query system to make sure that lines will not directly be repeated due to random choices
+		self._pastNormalLines = []
+		self._pastBattleLines = []
+
+	@staticmethod
+	def _getKeyFromDiff(diff):
+		key_idx = next((idx for idx, threshold in enumerate(ConversationManager.TACTIC_DIFF_THRESHOLDS) if diff >= threshold), -1)
+		return TACTIC_DIFF_KEY[key_idx]
+
+	@staticmethod
+	def _randomizeWords(enemyStringDict):
+		return {k:v if isinstance(v, str) else utils.select_random(v) for k, v in enemyStringDict}
+
+	def getRandomBattleReportLine(self, tactic_differences, enemy_key, lineReplacementDict=None):
+		"""Get a random line and replace it using the combined lineReplacementDict and enemy preset strings
+			Args:
+				tactic_differences: the difference between tactics between your squad and enemy. >4.0 is very good, 4.0 > val > 2.0 is good, 2.0 > val > 0.5 is normal, 0.5 > val > 0.25 is bad, and > 0.25 is very fucking bad. float
+				enemy_key: the name of enemy in this mission. must be a key in self._enemyStrings. str
+				lineReplacementDict: the name of your squad/squad leader/various other things that might be used
+			Returns:
+				a string that is a report which is guaranteed to not be duplicated within DUPLICATE_PACING values
+		"""
+		# select an eligible line
+		line_key = ConversationManager._getKeyFromDiff(tactic_differences)
+		list_sentences = [line for line in self._battleReports[line_key] if line not in self._pastBattleLines]
+		selected_line = utils.select_random(list_sentences)
+		# convert the replacement dict to a valid replacer, and select a random word in the strings
+		replacer = {k if "@" in k else "@"+k:v for k, v in lineReplacementDict.items()}
+		replacer.update(ConversationManager._randomizeWord(self._enemyStrings[enemy_key]))
+		# update the self._pastBattleLines in FIFO style
+		if(len(self._pastBattleLines) >= DUPLICATE_PACING):
+			self._pastBattleLines.pop()
+		self._pastBattleLines.insert(0, selected_line)
+		# replace everything in the selected_line dictated by the replacer 
+		# do sorted to make sure overlaps will not cause trouble (e.g @enemy_slur replaced by @enemy key)
+		for key, value in sorted(replacer.items(), key=lambda item: len(item[0])):
+			selected_line = selected_line.replace(key, value)
+		return selected_line
+
 class EnemyManager:
 	"""Manage the enemy, being mission(participable combat), EnemyUnits, EnemyIndividual"""
 	def __init__(self, jsonFilePath):
 		with io.open(jsonFilePath, "r", encoding="utf8") as json_file:
 			json_data = json.load(json_file)
-#			utils.Debug.printMsg(1, "Enemy JSONDATA: ".format(json_data))
+#			utils.Debug.printMsg(1, "Enemy JSONDATA: {}".format(json_data))
 		invalid_block = next( (block for block in json_data["individual"] + json_data["unit"] if "refname" not in block), None)
 		assert invalid_block is None, "Invalid block: {}".format(invalid_block)
 		#self._enemyIndividualTemplate = { block["refname"]: EnemyIndividual(block) for block in json_data["individual"] }
@@ -224,8 +280,8 @@ class EnemyManager:
 	
 	def createSquad(self, squadNameOrTemplate):
 		if(isinstance(squadNameOrTemplate, str)):
-			utils.Debug.printDebug("Searching for template: {:s}".format(squadTemplate))
-			squadTemplate = self._enemySquadTemplate[squadTemplate]
+			utils.Debug.printDebug("Searching for template: {:s}".format(squadNameOrTemplate))
+			squadTemplate = self._enemySquadTemplate[squadNameOrTemplate]
 		elif(squadNameOrTemplate, EnemySquad):
 			squadTemplate = squadNameOrTemplate
 		else:
@@ -279,7 +335,7 @@ class Mission( collections.namedtuple("Mission", ["name", "composition", "descri
 		# add isTemplate
 		jsonData["isTemplate"] = True
 		# initialize
-		super(Mission, _cls).__new__(_cls, **jsonData)
+		return super(Mission, _cls).__new__(_cls, **jsonData)
 	
 	def clone(self):
 		# the composition will be a list to be updated by the EnemyManager

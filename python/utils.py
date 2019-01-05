@@ -49,6 +49,13 @@ def convertJSONToDictObject(jsonList, referenceKey, classProto):
 	"""Convert the list of json objects to dict which refer to the created class using ClassProto(jsonBlock)"""
 	return { k: classProto(v) for k, v in [_splitJSONBlock(block, referenceKey) for block in jsonList] }
 
+def tryConvertStringToInt(string):
+	try:
+		int_value = int(string)
+	except ValueError:
+		return string
+	return int_value
+
 class Debug:
 	MESSAGE_LEVEL = 0
 	MESSAGE_LEVEL_NAME = ["DEBUG", "INFO", "WARNING", "ERROR"]
@@ -56,7 +63,7 @@ class Debug:
 	def changeMessageLevel(newLevel):
 		"""Debug will show messages on this level and above"""
 		if(isinstance(newLevel, str)):
-			newLevel = MESSAGE_LEVEL_NAME.index(newLevel)
+			newLevel = Debug.MESSAGE_LEVEL_NAME.index(newLevel)
 		assert isinstance(newLevel, int), "Value {} must be int/str, but is {}".format(newLevel)
 		Debug.MESSAGE_LEVEL = newLevel
 	
