@@ -1,8 +1,8 @@
-import json, io, os
+import json, io, os, collections
 import python.items as itemLib
 import python.utils as utils
 from python.combat import CombatManager
-from python.units import *
+import python.units as units
 
 def vehicleVariantSplit(statDict):
 	# vehicles have different variants, which should be splitted to different statDict
@@ -65,27 +65,42 @@ class ItemManager:
 	def allItemList(self):
 		return self.armorList + self.weaponList + self.accessoryList + self.chassisList + self.vehicleWeaponList + self.vehicleList
 
-	def initializeArmory(self):
-		self.armoryItems, self.armoryCounts = ( list(item) for item in zip(*[(item, 0) for item in self.allItemList]) )
+	def getItemsByGroup(self):
+		return {
+			"Armour": self.armorList,
+			"Weapon": self.weaponList,
+			"Accessory": self.accessoryList,
+			"Vehicle": self.vehicleList,
+			"Vehicle Modules:": self.chassisList + self.vehicleWeaponList
+		}
 
-	def changeItemCounts(self, itemOrItemName, amount, safety=True):
-		if(itemOrItemName == None):
-			utils.Debug.printDebug("Item None caught, assume to be empty item value")
-			return
-		if(isinstance(itemOrItemName, str)):
-			item_idx = next( (i for i,x in enumerate(self.armoryItems) if x["name"] == itemOrItemName) )
-		else:
-			item_idx = next( (i for i,x in enumerate(self.armoryItems) if x == itemOrItemName) )
-		if(safety and self.armoryCounts[item_idx] + amount < 0):
-			raise ValueError("Error! item {} with count {:d} cannot accept modify value {:d}".format(itemOrItemName, self.armoryCounts[item_idx], amount))
-		self.armoryCounts[item_idx] += amount
+	def _retrieveItemId(self, item):
+		return next( (idx for idx, it in enumerate(self.armoryItems) if item == it) )
+
+	def initializeArmory(self):
+		self.armoryItems = self.allItemList
+		self.availableItem = [0 for _ in range(len(self.armoryItems))]
+		self.damagedItem = [0 for _ in range(len(self.armoryItems))]
+
+	def changeItemCount(self, item, amount, safety=True, damagedItem=False):
+		# extract the name and select the type of the item (normal or damaged)
+		item_id = self._retrieveItemId(item)
+		item_counter = self.availableItem if not damagedItem else self.damagedItem
+		# check if the amount changed will cause negative stock
+		if(safety and item_counter[item_id] + amount < 0):
+			raise ValueError("Error! item {} with count {:d} cannot accept modify value {:d}".format(item, item_counter[item_id], amount))
+		# execute the change
+		item_counter[item_id] += amount
 	
 	def searchItemByName(self, name, itemType, searchImgName=True):
 		utils.Debug.printDebug("Searching for {} with type {}, useImgName {}".format(name, itemType, searchImgName))
 		return next( (x for x in self.armoryItems if x.checkProperty(name, itemType, useImgName=searchImgName)), None)
 
-	def getItemsByType(self, itemType, available=True):
-		return [(item, count) for item, count in zip(self.armoryItems, self.armoryCounts) if (item.type == itemType and (not available or count <= 0))]
+	def getItemCount(self, item, damagedItem=False):
+		# extract the name and select the type of the item (normal or damaged)
+		item_id = self._retrieveItemId(item)
+		item_counter = self.availableItem if not damagedItem else self.damagedItem
+		return item_counter[item_id]
 
 class IndividualStatManager:
 	"""Manage the processing of levels of individual"""
@@ -125,7 +140,7 @@ class IndividualStatManager:
 		name = self.createName()
 		current_progression = self.statList[0] if not progressionLine else self.searchProgressionByName(progressionLine[0])
 		hp = ws = bs = i = 0.0
-		new_unit = Astartes(name, hp, ws, bs, i, lvl=0, current_progression=current_progression)
+		new_unit = units.Astartes(name, hp, ws, bs, i, lvl=0, current_progression=current_progression)
 		for i in range(level):
 			self.addLevel(new_unit, progressionLine=None)
 		return new_unit
@@ -150,19 +165,161 @@ class IndividualStatManager:
 			character.current_progression = current_progression
 		hp_increase = utils.variance(current_progression["baseHP"], 0.2)
 		character.base_hp = character.base_hp + hp_increase
-		character.current_hp = min(character.base_hp, character.current_hp + hp_increase)
+		character.current_hp = character.current_hp + hp_increase
 		character.ws = character.ws + utils.variance(current_progression["baseWS"], 0.1)
 		character.bs = character.bs + utils.variance(current_progression["baseBS"], 0.1)
-		character.i = character.i + utils.variance(current_progression["baseI"], 0.1)
+		character.init = character.init + utils.variance(current_progression["baseI"], 0.1)
 		character.lvl = lvl + 1
 		if("special" in character.current_progression):
 			special_type = character.current_progression["special"]
 			character.addSpecialistLevel(special_type)
 		return character
 
+class ConversationManager:
+	"""A manager to create random banter for flavored vox, both in and out of combat"""
+	DUPLICATE_PACING = 4
+	TACTIC_DIFF_THRESHOLDS = [4.0, 2.0, 0.5, 0.25]
+	TACTIC_DIFF_KEY = ["advantage_high", "advantage_low", "balance", "disadvantage_low", "disadvantage_high"]
+	def __init__(self, jsonFilePath):
+		with io.open(jsonFilePath, "r", encoding="utf8") as json_file:
+			json_data = json.load(json_file)
+		# TODO load the conversation during normal 
+		# load the conversation during normal/battle differently
+		self._battleBanters = json_data["group_banters"]
+		self._battleReports = json_data["report_tactic"]
+		enemy_raw_filler = json_data["race_data"]
+		# for each race entry, convert the keys to @ format (enemy->@enemy) for formatting purpose
+		self._enemyStrings = {"@"+key:value for key, value in enemy_raw_filler.items()}
+		
+		# implement a query system to make sure that lines will not directly be repeated due to random choices
+		self._pastNormalLines = []
+		self._pastBattleLines = []
+
+	@staticmethod
+	def _getKeyFromDiff(diff):
+		key_idx = next((idx for idx, threshold in enumerate(ConversationManager.TACTIC_DIFF_THRESHOLDS) if diff >= threshold), -1)
+		return ConversationManager.TACTIC_DIFF_KEY[key_idx]
+
+	@staticmethod
+	def _randomizeWords(enemyStringDict):
+		return {k:v if isinstance(v, str) else utils.select_random(v) for k, v in enemyStringDict}
+
+	def getRandomBattleReportLine(self, tactic_differences, enemy_key, lineReplacementDict=None):
+		"""Get a random line and replace it using the combined lineReplacementDict and enemy preset strings
+			Args:
+				tactic_differences: the difference between tactics between your squad and enemy. >4.0 is very good, 4.0 > val > 2.0 is good, 2.0 > val > 0.5 is normal, 0.5 > val > 0.25 is bad, and > 0.25 is very fucking bad. float
+				enemy_key: the name of enemy in this mission. must be a key in self._enemyStrings. str
+				lineReplacementDict: the name of your squad/squad leader/various other things that might be used
+			Returns:
+				a string that is a report which is guaranteed to not be duplicated within DUPLICATE_PACING values
+		"""
+		# select an eligible line
+		line_key = ConversationManager._getKeyFromDiff(tactic_differences)
+		list_sentences = [line for line in self._battleReports[line_key] if line not in self._pastBattleLines]
+		selected_line = utils.select_random(list_sentences)
+		# convert the replacement dict to a valid replacer, and select a random word in the strings
+		replacer = {k if "@" in k else "@"+k:v for k, v in lineReplacementDict.items()}
+		replacer.update(ConversationManager._randomizeWord(self._enemyStrings[enemy_key]))
+		# update the self._pastBattleLines in FIFO style
+		if(len(self._pastBattleLines) >= ConversationManager.DUPLICATE_PACING):
+			self._pastBattleLines.pop()
+		self._pastBattleLines.insert(0, selected_line)
+		# replace everything in the selected_line dictated by the replacer 
+		# do sorted to make sure overlaps will not cause trouble (e.g @enemy_slur replaced by @enemy key)
+		for key, value in sorted(replacer.items(), key=lambda item: len(item[0])):
+			selected_line = selected_line.replace(key, value)
+		return selected_line
+
+class EnemyManager:
+	"""Manage the enemy, being mission(participable combat), EnemyUnits, EnemyIndividual"""
+	def __init__(self, jsonFilePath):
+		with io.open(jsonFilePath, "r", encoding="utf8") as json_file:
+			json_data = json.load(json_file)
+#			utils.Debug.printMsg(1, "Enemy JSONDATA: {}".format(json_data))
+		invalid_block = next( (block for block in json_data["individual"] + json_data["unit"] if "refname" not in block), None)
+		assert invalid_block is None, "Invalid block: {}".format(invalid_block)
+		#self._enemyIndividualTemplate = { block["refname"]: EnemyIndividual(block) for block in json_data["individual"] }
+		self._enemyIndividualTemplate = utils.convertJSONToDictObject(json_data["individual"], "refname", units.EnemyIndividual)
+		self._enemySquadTemplate = utils.convertJSONToDictObject(json_data["unit"], "refname", units.EnemySquad)
+		self._missionTemplate = utils.convertJSONToDictObject(json_data["mission"], "refname", Mission)
+#		utils.Debug.printDebug("Mission templates: ".format(self._missionTemplate))
+	
+	def createSquad(self, squadNameOrTemplate):
+		if(isinstance(squadNameOrTemplate, str)):
+			utils.Debug.printDebug("Searching for template: {:s}".format(squadNameOrTemplate))
+			squadTemplate = self._enemySquadTemplate[squadNameOrTemplate]
+		elif(squadNameOrTemplate, units.EnemySquad):
+			squadTemplate = squadNameOrTemplate
+		else:
+			raise ValueError("Value {} (type {}) invalid @createIndividual".format(squadNameOrTemplate, type(squadNameOrTemplate)))
+		# create a new squad using the template, having empty composition
+		new_squad = squadTemplate.clone()
+		# populate it with the concerning individual object
+		for ind_name, ind_num in squadTemplate.composition:
+#			individual = self.getIndividualTemplate(ind_name)
+			new_squad.composition.extend( (self.createIndividual(ind_name) for _ in range(ind_num)) )
+		return new_squad
+
+	def createIndividual(self, refnameOrTemplate):
+			if(isinstance(refnameOrTemplate, units.EnemyIndividual)):
+				# input is object, clone it
+				return refnameOrTemplate.clone()
+			elif(isinstance(refnameOrTemplate, str)):
+				# input is name, search and clone it
+				return self._enemyIndividualTemplate[refnameOrTemplate].clone()
+			else:
+				raise ValueError("Value {} (type {}) invalid @createIndividual".format(refnameOrTemplate, type(refnameOrTemplate)))
+	
+	def getIndividualTemplate(self, refname):
+		return self._enemyIndividualTemplate[refname]
+
+	def createMission(self, missionNameOrTemplate):
+		# search mission if needed
+		if(isinstance(missionNameOrTemplate, units.EnemyIndividual)):
+			# input is object, clone it
+			mission = missionNameOrTemplate
+		elif(isinstance(missionNameOrTemplate, str)):
+			# input is name, search and clone it
+			mission = self._missionTemplate[missionNameOrTemplate]
+		else:
+			raise ValueError("Value {} (type {}) invalid @createIndividual".format(missionNameOrTemplate, type(missionNameOrTemplate)))
+		instance_composition = []
+		# generate the units randomly
+		for unit_name, bound_lower, bound_upper in mission.composition:
+			for _ in range(utils.roll_random_int(bound_lower, bound_upper)):
+				instance_composition.append(self.createSquad(unit_name))
+		# clone to a working mission object
+		mission = mission.clone()
+		mission.composition.extend(instance_composition)
+		return mission
+
+class TimeManager:
+	def __init__(self):
+		self._currentTime = 0
+		self._scheduledEvents = []
+
+	def advanceCounter(self):
+		self._currentTime += 1
+		self._executeDueEvents()
+	
+	def _executeDueEvents(self):
+		due_events = [event for due_time, event in self._scheduledEvents if due_time <= self._currentTime]
+		self._scheduledEvents = [e for e in self._scheduledEvents if e[0] > self._currentTime]
+		for event_fn in due_events:
+			event_fn()
+
+	def addEvent(self, due_time, event_fn):
+		self._scheduledEvents.append( (due_time, event_fn) )
+
+	@property
+	def counter(self):
+		return self._currentTime
+
+"""Default values"""
+
 DEFAULT_JSON_PATH = {"stat":"./res/data/AstartesStats.json", "enemy": "./res/data/EnemyData.json",
-"item": "./res/data/Item.json", "texture_location": "./res/texture",
-"combat": "./res/data/CombatTactics.json", "conversation": "./res/data/conversationData.json"}
+"item": "./res/data/ItemData.json", "texture_location": "./res/texture", "icon_location": "./res/texture/unit_icon",
+"combat": "./res/data/CombatTactics.json", "conversation": "./res/data/ConversationData.json"}
 
 DEFAULT_LEADER = {"lvl": 80, "progression": ["Initiate", "Neophyte", "Tactical", "Command", "Ancient"], "gears": [["paxe", "plasma", "artificer", "halo"]]}
 DEFAULT_VETERAN = {"lvl": (70, 90), "progression": None, "gears": [["psword", "ppistol", "corvus", None], ["chainsword", "bolter", "errant", None], ["pcannon", "__empty__", "aquila", "devpack"], ["pfist", "bpistol", "aquila", "jumppack"]]}
@@ -177,9 +334,10 @@ class OverallManager:
 		self.statManager = IndividualStatManager(allJSONPath["stat"])
 		self.enemyManager = EnemyManager(allJSONPath["enemy"])
 		self.itemManager = ItemManager(allJSONPath["item"], allJSONPath["texture_location"])
-		self.combatManager = CombatManager(allJSONPath["combat"])
+		self.combatManager = CombatManager(allJSONPath["combat"], allJSONPath["icon_location"])
+		self.timeManager = TimeManager()
 		self.conversationManager = ConversationManager(allJSONPath["conversation"])
-		self._company = Company(chapterName, companyName, None, self.statManager)
+		self._company = units.Company(chapterName, companyName, None, self.statManager)
 		self.colorScheme = colorScheme
 	
 	def createAstartes(self, astartesConfig=None):
@@ -203,129 +361,12 @@ class OverallManager:
 			for _ in range(num_squad):
 				# members is -1, since leader is initiated separately
 				num_members = utils.roll_random_int(num_members_tuple[0]-1, num_members_tuple[1])
-				new_squad = Squad(self._company, (self.createAstartes(squad_member_config) for _ in range(num_members)), self.createAstartes(squad_leader_config))
+				new_squad = units.Squad(self._company, (self.createAstartes(squad_member_config) for _ in range(num_members)), self.createAstartes(squad_leader_config))
 				self._company.squads.append(new_squad)
 
 	@property
 	def company(self):
 		return self._company
-
-class ConversationManager:
-	DUPLICATE_PACING = 4
-	TACTIC_DIFF_THRESHOLDS = [4.0, 2.0, 0.5, 0.25]
-	TACTIC_DIFF_KEY = ["advantage_high", "advantage_low", "balance", "disadvantage_low", "disadvantage_high"]
-	def __init__(self, jsonFilePath):
-		with io.open(jsonFilePath, "r", encoding="utf8") as json_file:
-			json_data = json.load(json_file)
-		# TODO load the conversation during normal 
-		# load the conversation during normal/battle differently
-		self._battleBanters = json_data["group_banters"]
-		self._battleReports = json_data["report_tactic"]
-		enemy_raw_filler = json_data["race_data"]
-		# for each race entry, convert the keys to @ format (enemy->@enemy) for formatting purpose
-		self._enemyStrings = {"@"+key:value for key, value in enemy_raw_filler.items()}
-		
-		# implement a query system to make sure that lines will not directly be repeated due to random choices
-		self._pastNormalLines = []
-		self._pastBattleLines = []
-
-	@staticmethod
-	def _getKeyFromDiff(diff):
-		key_idx = next((idx for idx, threshold in enumerate(ConversationManager.TACTIC_DIFF_THRESHOLDS) if diff >= threshold), -1)
-		return TACTIC_DIFF_KEY[key_idx]
-
-	@staticmethod
-	def _randomizeWords(enemyStringDict):
-		return {k:v if isinstance(v, str) else utils.select_random(v) for k, v in enemyStringDict}
-
-	def getRandomBattleReportLine(self, tactic_differences, enemy_key, lineReplacementDict=None):
-		"""Get a random line and replace it using the combined lineReplacementDict and enemy preset strings
-			Args:
-				tactic_differences: the difference between tactics between your squad and enemy. >4.0 is very good, 4.0 > val > 2.0 is good, 2.0 > val > 0.5 is normal, 0.5 > val > 0.25 is bad, and > 0.25 is very fucking bad. float
-				enemy_key: the name of enemy in this mission. must be a key in self._enemyStrings. str
-				lineReplacementDict: the name of your squad/squad leader/various other things that might be used
-			Returns:
-				a string that is a report which is guaranteed to not be duplicated within DUPLICATE_PACING values
-		"""
-		# select an eligible line
-		line_key = ConversationManager._getKeyFromDiff(tactic_differences)
-		list_sentences = [line for line in self._battleReports[line_key] if line not in self._pastBattleLines]
-		selected_line = utils.select_random(list_sentences)
-		# convert the replacement dict to a valid replacer, and select a random word in the strings
-		replacer = {k if "@" in k else "@"+k:v for k, v in lineReplacementDict.items()}
-		replacer.update(ConversationManager._randomizeWord(self._enemyStrings[enemy_key]))
-		# update the self._pastBattleLines in FIFO style
-		if(len(self._pastBattleLines) >= DUPLICATE_PACING):
-			self._pastBattleLines.pop()
-		self._pastBattleLines.insert(0, selected_line)
-		# replace everything in the selected_line dictated by the replacer 
-		# do sorted to make sure overlaps will not cause trouble (e.g @enemy_slur replaced by @enemy key)
-		for key, value in sorted(replacer.items(), key=lambda item: len(item[0])):
-			selected_line = selected_line.replace(key, value)
-		return selected_line
-
-class EnemyManager:
-	"""Manage the enemy, being mission(participable combat), EnemyUnits, EnemyIndividual"""
-	def __init__(self, jsonFilePath):
-		with io.open(jsonFilePath, "r", encoding="utf8") as json_file:
-			json_data = json.load(json_file)
-#			utils.Debug.printMsg(1, "Enemy JSONDATA: {}".format(json_data))
-		invalid_block = next( (block for block in json_data["individual"] + json_data["unit"] if "refname" not in block), None)
-		assert invalid_block is None, "Invalid block: {}".format(invalid_block)
-		#self._enemyIndividualTemplate = { block["refname"]: EnemyIndividual(block) for block in json_data["individual"] }
-		self._enemyIndividualTemplate = utils.convertJSONToDictObject(json_data["individual"], "refname", EnemyIndividual)
-		self._enemySquadTemplate = utils.convertJSONToDictObject(json_data["unit"], "refname", EnemySquad)
-		self._missionTemplate = utils.convertJSONToDictObject(json_data["mission"], "refname", Mission)
-#		utils.Debug.printDebug("Mission templates: ".format(self._missionTemplate))
-	
-	def createSquad(self, squadNameOrTemplate):
-		if(isinstance(squadNameOrTemplate, str)):
-			utils.Debug.printDebug("Searching for template: {:s}".format(squadNameOrTemplate))
-			squadTemplate = self._enemySquadTemplate[squadNameOrTemplate]
-		elif(squadNameOrTemplate, EnemySquad):
-			squadTemplate = squadNameOrTemplate
-		else:
-			raise ValueError("Value {} (type {}) invalid @createIndividual".format(squadnameOrTemplate, type(squadnameOrTemplate)))
-		# create a new squad using the template, having empty composition
-		new_squad = squadTemplate.clone()
-		# populate it with the concerning individual object
-		for ind_name, ind_num in squadTemplate.composition:
-			individual = self.getIndividualTemplate(ind_name)
-			new_squad.composition.extend( (self.createIndividual(ind_name) for _ in range(ind_num)) )
-		return new_squad
-
-	def createIndividual(self, refnameOrTemplate):
-			if(isinstance(refnameOrTemplate, EnemyIndividual)):
-				# input is object, clone it
-				return refnameOrTemplate.clone()
-			elif(isinstance(refnameOrTemplate, str)):
-				# input is name, search and clone it
-				return self._enemyIndividualTemplate[refnameOrTemplate].clone()
-			else:
-				raise ValueError("Value {} (type {}) invalid @createIndividual".format(refnameOrTemplate, type(refnameOrTemplate)))
-	
-	def getIndividualTemplate(self, refname):
-		return self._enemyIndividualTemplate[refname]
-
-	def createMission(self, missionNameOrTemplate):
-		# search mission if needed
-		if(isinstance(missionNameOrTemplate, EnemyIndividual)):
-			# input is object, clone it
-			mission = missionNameOrTemplate
-		elif(isinstance(missionNameOrTemplate, str)):
-			# input is name, search and clone it
-			mission = self._missionTemplate[missionNameOrTemplate]
-		else:
-			raise ValueError("Value {} (type {}) invalid @createIndividual".format(missionNameOrTemplate, type(missionNameOrTemplate)))
-		instance_composition = []
-		# generate the units randomly
-		for unit_name, bound_lower, bound_upper in mission.composition:
-			for _ in range(utils.roll_random_int(bound_lower, bound_upper)):
-				instance_composition.append(self.createSquad(unit_name))
-		# clone to a working mission object
-		mission = mission.clone()
-		mission.composition.extend(instance_composition)
-		return mission
 
 class Mission( collections.namedtuple("Mission", ["name", "composition", "description", "missionType", "weight", "isTemplate"]) ):
 	def __new__(_cls, jsonData):

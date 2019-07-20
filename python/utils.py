@@ -6,6 +6,9 @@ roll_random_int = random.randint
 def variance(val, fluctuation=0.5):
 	return float(val) * (1.0 + random.uniform(-fluctuation, fluctuation))
 
+def roll_between(lower_bound, upper_bound):
+	return lower_bound + (upper_bound-lower_bound) * roll_random()
+
 def random_choice(sequence, num_choices=1, probs=None):
 	# select one/many random element from the sequence
 	result = []
@@ -27,7 +30,7 @@ def random_choice(sequence, num_choices=1, probs=None):
 		return result
 
 def roll_percentage(percentage):
-	return roll_random() * 100.0 > roll_percentage
+	return roll_random() * 100.0 > percentage
 
 def select_random(roll_list):
 	return roll_list[roll_random_int(0, len(roll_list)-1)]
@@ -39,6 +42,10 @@ def select_with_preference(roll_list, preference_fn):
 	# double the chances of those which passes the preference_fn
 	extended_roll_list = roll_list + [item for item in roll_list if preference_fn(item)]
 	return select_random(extended_roll_list)
+
+def sublist_by_chance(roll_list, chance):
+	# create a list by roll for chance for each item in list
+	return [item for item in roll_list if roll_random() <= chance]
 
 def _splitJSONBlock(jsonBlock, key):
 	Debug.printDebug(jsonBlock)

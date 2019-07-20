@@ -1,12 +1,15 @@
-import collections
+import collections, abc
 
 class Individual:
+	@abc.abstractmethod
 	def getAllPossibleMeleeAttacks(self):
 		"""Return the attacks which could be made in melee
 			Returns:
 				a list of (attack_damage, attack_speed, attack_accuracy, traits)
 		"""
 		raise NotImplementedError("Base abstract class Individual")
+
+	@abc.abstractmethod
 	def getAllPossibleRangedAttack(self, attackRange):
 		"""Return the attacks which could be made at range
 			Args:
@@ -17,26 +20,28 @@ class Individual:
 		raise NotImplementedError("Base abstract class Individual")
 
 class Astartes(Individual):
-	def __init__(self, name, hp, ws, bs, i, lvl=0, current_progression=None):
+	BASE_SPEED = 3.0
+	def __init__(self, name, hp, ws, bs, init, lvl=0, current_progression=None):
 		self.name = name
 		self.base_hp = self.current_hp = hp
 		self.ws = ws
 		self.bs = bs
-		self.i = i
+		self.init = init
 		self.lvl = 0
 		self.exp = 0.0
+		self._speed = Astartes.BASE_SPEED
 		self._specialist_level = {}
 		self.equipments = {"armor": None, "main": None, "secondary": None, "accessory": None}
 		if(current_progression is None):
 			raise ValueError("progression must exist to have character leveling up")
 		self.current_progression = current_progression
 
+	def set_hp(self, hpValue):
+		self.current_hp = hpValue
+
 	@property
 	def command_level(self):
 		return self._specialist_level.get("command", 0)
-	@property
-	def init(self):
-		return self.i
 
 	def getAllPossibleMeleeAttacks(self):
 		all_weapons = [weapon for weapon in (self.equipments["main"], self.equipments["secondary"]) if weapon is not None]
@@ -45,7 +50,7 @@ class Astartes(Individual):
 		hand_count = sum((weapon.weapon_hand for weapon in all_weapons))
 		# return the hand count alongside the formatted weapon
 		# tuple is damage/num_of_attack/accuracy
-		return hand_count, [(weapon.attack_damage, weapon.attack_speed, self.ws, weapon.weapon_traits) for weapon in all_weapons if weapon.isMelee]
+		return hand_count, [(weapon.attack_damage, weapon.attack_speed, self.ws, weapon.weapon_traits) for weapon in all_weapons if weapon.is_melee]
 
 	def getAllPossibleRangedAttack(self, attackRange):
 		all_weapons = [weapon for weapon in (self.equipments["main"], self.equipments["secondary"]) if weapon is not None]
@@ -54,7 +59,7 @@ class Astartes(Individual):
 		hand_count = sum((weapon.weapon_hand for weapon in all_weapons))
 		# return the hand count alongside the formatted weapon
 		# tuple is damage/num_of_attack/accuracy
-		return hand_count, [(weapon.attack_damage, weapon.attack_speed, self.ws, weapon.weapon_traits) for weapon in all_weapons if weapon.range >= attackRange]
+		return hand_count, [(weapon.attack_damage, weapon.attack_speed, self.ws, weapon.weapon_traits) for weapon in all_weapons if not weapon.is_melee and weapon.range >= attackRange]
 	
 	@property
 	def armor(self):
@@ -62,7 +67,7 @@ class Astartes(Individual):
 		if(armor_item == None):
 			return 0
 		else:
-			return armor.armor_rating
+			return armor_item.armor_rating
 
 	def equip(self, item, slot):
 		self.equipments[slot] = item
@@ -94,7 +99,8 @@ class Astartes(Individual):
 				listDir["armor_omit"].extend(accessory_omit)
 		if("armor_omit" in listDir and self.current_hp <= 0 ):
 			# if injured/no armor equipped, remove all weapons/accessory
-			_, _, _ = listDir.pop("accessory_dir", None), listDir.pop("main_dir", None), listDir.pop("secondary_dir", None)
+			_ = listDir.pop("accessory_dir", None), listDir.pop("main_dir", None), listDir.pop("secondary_dir", None)
+			_ = _
 		else:
 			# if not, remove the scarring (outline_scar)
 			listDir["armor_omit"].append("outline_scar")
@@ -105,6 +111,16 @@ class Astartes(Individual):
 
 	def addSpecialistLevel(self, type_str):
 		self._specialist_level[type_str] = self._specialist_level.get(type_str, 0) + 1
+
+	@property
+	def speed(self):
+		# TODO increase/decrease speed by gears
+		return self._speed
+
+	def rosterRowData(self):
+		"""Create the tuple to be displayed in the roster management
+		Format is (path, level, stat, equipment)
+		"""
 
 class EnemyIndividual( collections.namedtuple("EnemyIndividual", ["name", "hp", "armor", "init", "melee", "ranged", "isTemplate"]), Individual ):
 	def __new__(_cls, jsonData):
@@ -153,12 +169,12 @@ class EnemyIndividual( collections.namedtuple("EnemyIndividual", ["name", "hp", 
 	def ranged_range(self):
 		return self.ranged[3]
 	def getAllPossibleMeleeAttacks(self):
-		return [(self.melee_damage, self.melee_attack_speed, self.melee_accuracy, "")]
+		return 2, [(self.melee_damage, self.melee_attack_speed, self.melee_accuracy, "")]
 	def getAllPossibleRangedAttack(self, attackRange):
 		if(attackRange <= self.ranged_range):
-			return [(self.ranged_damage, self.ranged_attack_speed, self.ranged_accuracy, "")]
+			return 2, [(self.ranged_damage, self.ranged_attack_speed, self.ranged_accuracy, "")]
 		else:
-			return []
+			return 2, []
 
 class Company:
 	COMPANY_FULL_STR = "{chapter_name} Chapter, {company_name} Company"
@@ -188,13 +204,63 @@ class Company:
 		squad_str = Company.SQUAD_FULL_STR if fullName else Company.SQUAD_PARTIAL_STR
 		return squad_str.format(chapter_name=self.chapterName, company_name=self.name)
 
-class Squad:
+class Unit:
+	@property
+	@abc.abstractmethod
+	def members(self):
+		"""List the members of the units to be called
+			Returns:
+				list of Individual that are still combat-available
+		"""
+		raise NotImplementedError("Base abstract class Unit")
+
+	@property
+	def speed(self):
+		"""List the speed of the unit
+			Returns:
+				a float value equal to the speed of that unit
+		"""
+		return min((ind.speed for ind in self.members))
+
+	@property
+	def initiative(self):
+		"""List the initiative of the unit
+			Returns:
+				a float value equal to the initiative of that unit
+		"""
+		return min((ind.init for ind in self.members))
+
+	@property
+	def alive(self):
+		"""Check if the unit is alive
+			Returns:
+				a bool specify if the unit is combat available
+		"""
+		return any( (ind for ind in self.members if ind.current_hp > 0) )
+	
+	@property
+	@abc.abstractmethod
+	def command_level(self):
+		"""Get the command expertise of the squad
+			Returns:
+				an int in the range of 1-20
+		"""
+		raise NotImplementedError("Base abstract class Unit")
+	
+	@property
+	@abc.abstractmethod
+	def is_vehicle(self):
+		raise NotImplementedError("Base abstract class Unit")
+		
+class Squad(Unit):
+	"""Despite the name, this is an Astartes squad"""
 	def __init__(self, parentCompany, members=[], leader=None):
 		self._company = parentCompany
 		self._members = list(members)
 		self._leader = leader
 		if(self._leader not in self._members and self._leader is not None):
 			self._members.append(self._leader)
+		self.badge = "default_friendly"
 	
 	@property
 	def name(self, fullName=False):
@@ -212,21 +278,15 @@ class Squad:
 	def deployable(self):
 		# TODO count those over a specific threshold instead of 0.0
 		return any( (member for member in self._members if member.current_hp > 0.0) )
+	
+	def is_vehicle(self):
+		return False
 
 	def getSquadHp(self):
-		return sum( (member.current_hp for member in self._members) ), sum( (member.base_hp for member in self._members) ), len([member for member in self._members if member.current_hp > 0]), len(self._members)
-
-class Unit:
-	@property
-	def members(self):
-		"""List the members of the units to be called
-			Returns:
-				list of Individual that are still combat-available
-		"""
-		raise NotImplementedError("Base abstract class Unit")
+		return sum( (max(member.current_hp, 0.0) for member in self._members) ), sum( (member.base_hp for member in self._members) ), len([member for member in self._members if member.current_hp > 0]), len(self._members)
 
 class EnemyVehicle(collections.namedtuple("EnemyVehicle", ["name", "hp", "melee", "ranged", "description", "speed", "badge", "isTemplate"]), Unit, EnemyIndividual):
-	def  __new__(_cls, jsondata):
+	def  __new__(_cls, jsonData):
 		# ignore the refName and rename composition/badge name
 		jsonData["badge"] = jsonData.pop("unitBadge")
 		# convert the stat block into necessary hp/melee/ranged
@@ -241,6 +301,14 @@ class EnemyVehicle(collections.namedtuple("EnemyVehicle", ["name", "hp", "melee"
 	@property
 	def members(self):
 		return [self] if self.current_hp > 0.0 else []
+	
+	def is_vehicle(self):
+		return True
+
+	@property
+	def command_level(self):
+		# TODO fix
+		return 0
 
 	def clone(self):
 		assert self.isTemplate, "must use a template to initiate an enemy squad"
@@ -268,7 +336,7 @@ class EnemySquad( collections.namedtuple("EnemySquad", ["name", "composition", "
 
 	def getSquadHp(self):
 		assert not self.isTemplate, "a template cannot be used for combat"
-		return sum( (member.current_hp for member in self.composition) ), sum( (member.base_hp for member in self.composition) ), len([member for member in self.composition if member.current_hp > 0]), len(self.composition)
+		return sum( (max(member.current_hp, 0.0) for member in self.composition) ), sum( (member.base_hp for member in self.composition) ), len([member for member in self.composition if member.current_hp > 0.0]), len(self.composition)
 
 	def clone(self):
 		assert self.isTemplate, "must use a template to initiate an enemy squad"
@@ -277,6 +345,13 @@ class EnemySquad( collections.namedtuple("EnemySquad", ["name", "composition", "
 	
 	@property
 	def members(self):
-		assert self.isTemplate, "A template should not have this property accessed (members)"
+		assert not self.isTemplate, "A template should not have this property accessed (members)"
 		return [member for member in self.composition if member.current_hp > 0.0]
+	
+	def is_vehicle(self):
+		return False
 
+	@property
+	def command_level(self):
+		# TODO fix
+		return 0

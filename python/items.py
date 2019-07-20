@@ -1,4 +1,4 @@
-import python.utils as utils
+import abc
 # implement a sort of immutable frozen dict
 # TODO why is __hash__ overriden?
 class FrozenDict(dict):
@@ -30,6 +30,11 @@ class ArmoryItem:
 	def __repr__(self):
 		"""The string denoting name and classname of objects children of ArmoryItem"""
 		return "{:s}({})".format(self.name, type(self))
+
+	@abc.abstractmethod
+	def getStatDisplay(self):
+		raise NotImplementedError()
+
 
 class Item(ArmoryItem):
 	itemTypes = ["armor", "weapon", "accessory", "decoration", "vehicle_chassis", "vehicle_weapon"]
@@ -78,6 +83,9 @@ class Vehicle(ArmoryItem):
 #			utils.Debug.printDebug("Warning: Vehicle do not have image name")
 		return self.stat["name"] == name and self.type == itemType
 
+	def getStatDisplay(self):
+		return "Base: {:s}, Weaponry: {:s}".format(self.chassis.name, ", ".join(self.weapons))
+
 class Armor(Item):
 	def __init__(self, stat):
 		super(Armor, self).__init__("armor", stat)
@@ -85,6 +93,9 @@ class Armor(Item):
 	@property
 	def armor_rating(self):
 		return self.stat["def"]
+
+	def getStatDisplay(self):
+		return "Rating: {:2d}, Init: {:2d}".format(self.stat["def"], self.stat["init"])
 
 class Weapon(Item):
 	RANGED_TYPE_STRS = ("short", "medium", "long", "extreme")
@@ -105,7 +116,7 @@ class Weapon(Item):
 			self._range = 0
 #			raise ValueError("Object data do not specify the range of the weapon! String {} must contain melee|{:s}".format(stat["type"], "|".join(Weapon.RANGED_TYPE_STRS)))
 		super(Weapon, self).__init__("weapon", stat)
-	
+
 	@property
 	def range(self):
 		assert not self.is_melee, "Melee weapons do not have range"
@@ -128,6 +139,10 @@ class Weapon(Item):
 	@property
 	def hide_unaligned_arm(self):
 		return self.stat.get("hide_secondary_arm", False)
+	
+	def getStatDisplay(self):
+		return "Damage/Speed/Range: {:2d}/{:2d}/{:2d}, Hand: {:d}".format(self.stat["str"], self.stat["spd"], self._range, self.stat["hand"])
+
 
 class Accessory(Item):
 	def __init__(self, stat):
@@ -139,10 +154,35 @@ class Accessory(Item):
 	def replace_backpack(self):
 		return self.stat.get("replaceBackpack", False)
 
+	def getStatDisplay(self):
+		# TODO display trait
+		return ""
+
 class Chassis(Item):
 	def __init__(self, stat):
 		super(Chassis, self).__init__("vehicle_chassis", stat)
 
+	def getStatDisplay(self):
+		print(self.stat)
+		return "Rating: {:2d}, Movement: {:2d}".format(self.stat["def"], self.stat["spd"])
+
 class VehicleWeapon(Item):
 	def __init__(self, stat):
+		# copied from the Weapon template
+		if("melee" in stat["type"]):
+			self.is_melee = True
+			self._range = 0
+			stat["type"] = stat["type"].replace("melee", "").strip("|,")
+		elif( any((rstr in stat["type"] for rstr in Weapon.RANGED_TYPE_STRS)) ):
+			self.is_melee = False
+			rstr = next( (r for r in Weapon.RANGED_TYPE_STRS if r in stat["type"]) )
+			self._range = Weapon.RANGED_TYPE_STRS.index(rstr)
+			stat["type"] = stat["type"].replace(rstr, "").strip("|,")
+		else:
+			# inactive object (e.g shields), modify nothing
+			self.is_melee = False
+			self._range = 0
 		super(VehicleWeapon, self).__init__("vehicle_weapon", stat)
+
+	def getStatDisplay(self):
+		return "Damage/Speed/Range: {:2d}/{:2d}/{:2d}".format(self.stat["str"], self.stat["spd"], self._range)

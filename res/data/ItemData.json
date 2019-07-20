@@ -2,49 +2,49 @@
   "armour":[{
     "name":"Aquila Armour",
     "def":13,
-    "spd":5,
+    "init":5,
     "isTermi":false,
     "imgName":"aquila",
     "desc":"Mk.7 Armour, the most numerous version in the arsenal of the Chapter."
   },{
     "name":"Corvus Armour",
     "def":14,
-    "spd":6,
+    "init":6,
     "isTermi":false,
     "imgName":"corvus",
     "desc":"Mk.6 Armour, famed for excellent mobility and stealth capacity."
   },{
     "name":"Maximus Armour",
     "def":16,
-    "spd":6,
+    "init":6,
     "isTermi":false,
     "imgName":"maximus",
     "desc":"Mk.4 Armour, widely regarded as the best powered armor among all existing Mark."
   },{
     "name":"Iron Armour",
     "def":17,
-    "spd":3,
+    "init":3,
     "isTermi":false,
     "imgName":"iron",
     "desc":"Mk.3 Armour, which sacrificed its mobility in exchange for even greater protection."
   },{
     "name":"Errant Armour",
     "def":14,
-    "spd":5,
+    "init":5,
     "isTermi":false,
     "imgName":"errant",
     "desc":"Mk.8 Armour, with better protection in comparison to the more modern mark."
   },{
     "name":"Artificer Armour",
     "def":19,
-    "spd":6,
+    "init":6,
     "isTermi":false,
     "imgName":"artificer",
     "desc":"Customized armors made by the Chapter's Techmarines, these boast extreme protective power and capability."
   },{
     "name":"Terminator Armor",
     "def":26,
-    "spd":2,
+    "init":2,
     "isTermi":true,
     "imgName":"indomitus",
     "desc":"Terminator."
@@ -59,7 +59,7 @@
     "spd":2,
     "hand":1,
     "type":"melee",
-    "imgName":"__empty__",
+    "imgName":"knife",
     "desc":"In the hand of demigods, even a humble knife can be deadly."
   },{
     "name":"Chainsword",
@@ -299,16 +299,22 @@
 
   "chassis":[{
     "id":0,
+    "def":20,
+    "spd":4,
     "name":"Rhino",
     "imgName":"rhino",
     "desc":"The Rhino chassis is the most common and likewise the most versatile base."
   },{
     "id":1,
+    "def":15,
+    "spd":6,
     "name":"Land Speeder",
     "imgName":"lspeeder",
-    "desc":"The Land Speeder is a nimble skimmer vehicle that saw extensive use in the hand of the Astartes."
+    "desc":"The Land Speeder is a nimble skimmer vehicle tailored to light skirmishing and scouting missions."
   },{
     "id":2,
+    "def":35,
+    "spd":4,
     "name":"Land Raider",
     "imgName":"lraider",
     "desc":"The Land Raider performs as Superheavy troops carrier, with the firepower of a heavy tank and ability to carry Terminators into battle."
@@ -413,7 +419,7 @@
     "spd": 10,
     "type": "long,bolt",
     "imgName":"lspeed_hb",
-    "desc":"The default main armament for a Land Speeder."
+    "desc":"The default main armament for a Land Speeder, ready to lay down a curtain of bolter shells."
   },{
     "name": "Pintle-mounted Multi Melta",
     "str": 90,
@@ -456,12 +462,10 @@
   "vehicle_type":[{
     "name":"Rhino",
     "chassis": 0, "chassisName": "rhino",
-    "spd":4,
     "weapons":[],
     "weaponsName": [],
     "pintle":1, "pintleName": "rhino_pintle",
     "crew":1,
-    "armor": 25,
     "hp":50,
     "carry":10,
     "unitBadge":"own_rhino",
@@ -469,12 +473,10 @@
   },{
     "name":"Razorback",
     "chassis": 0, "chassisName": "rhino",
-    "spd":4,
     "weapons":[[3,4,5,6]],
     "weaponsName": [["raz_hb", "raz_hf", "raz_las", "raz_mm"]],
     "pintle":1, "pintleName": "rhino_pintle",
     "crew":1,
-    "armor": 29,
     "hp":65,
     "carry":5,
     "unitBadge":"own_razorback",
@@ -482,12 +484,10 @@
   },{
     "name":"Predator",
     "chassis": 0, "chassisName": "rhino",
-    "spd":4,
     "weapons":[[7,9],[8,10]],
     "weaponsName": [["pred_sponson_hb", "pred_turret_auto"],["pred_sponson_las", "pred_turret_lasc"]],
     "pintle":0, "pintleName": "pred_pintle",
     "crew":2,
-    "armor": 40,
     "hp":85,
     "carry":0,
     "unitBadge":"own_predator",
@@ -495,25 +495,21 @@
   },{
     "name":"Vindicator",
     "chassis": 0, "chassisName": "rhino",
-    "spd":4,
     "weapons":[[11]],
     "weaponsName": [["demo_cannon"]],
     "pintle":1, "pintleName": "rhino_pintle",
     "crew":2,
-    "armor":45,
-    "hp":60,
+    "hp":70,
     "carry":0,
     "unitBadge":"own_vindicator",
     "desc":"A siege vehicle armed with the devastating Demolisher Cannon and a Siege Shield, it excels at fighting in close quarters."
   },{
     "name":"Land Speeder",
     "chassis": 1, "chassisName": "lspeeder",
-    "spd":6,
     "weapons":[[13,14],[15,16]],
     "weaponsName": [["lspeed_as","lspeed_hb"],["lspeed_ml","lspeed_mm"],["lspeed_uhf", "lspeed_hf"]],
     "pintle":-1, "pintleName": null,
     "crew":2,
-    "armor":15,
     "hp":60,
     "carry":0,
     "unitBadge":"own_speeder",

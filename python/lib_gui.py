@@ -5,7 +5,9 @@ import python.lib_image as imageLib
 import python.lib_text as textLib
 import python.manager as managerLib
 import python.utils as utils
-import os, random, sys
+import python.combat as combat
+import sys
+from python.map import Map
 
 def testWindow():
 	window = createWindow()
@@ -60,49 +62,18 @@ def createPortrait(window, companyCommander=None, colorScheme=None):
 	return portrait
 
 def createDiplomacyPane(window):
-	dipWidth, dipHeight = 200, 100
+	dipWidth = dipHeight = 200
 	relationScores = [("IG", 125), ("Eldar", -26), ("Mechanicus", 50), ("Orks", -66), ("Chaos", 40), ("Inquisition", 83)]
 	diplomacyFrame = tk.Frame(window)
-	dipImage = tk.Canvas(master=diplomacyFrame, width=dipHeight * 2, height=dipHeight * 2)
-	dipImage = imageLib.drawRelationGraph(dipImage, relationScores, location=(0, 0), size=dipHeight * 2)
+	dipImage = tk.Canvas(master=diplomacyFrame, width=dipWidth, height=dipHeight)
+	dipImage = imageLib.drawRelationGraph(dipImage, relationScores, location=(0, 0), size=dipHeight)
 	dipImage.pack()
 	return diplomacyFrame
 
 def campaignMap(window):
-	safe, neutral, dangerous, stop = "green", "yellow", "red", "white"
 	# try to make a star map of interconnecting systems
-	mapWidth = 640
-	mapHeight = 480
-	starMap = tk.Canvas(master=window, width=mapWidth, height=mapHeight)
-	backgroundImage = imageLib.drawItem(starMap, "./res/texture/bg_star.jpg", scale=0.5)
-#	mapWidth, mapHeight = backgroundImage.width(), backgroundImage.height()
-	systemDir = "./res/texture/starmap/star_{:d}.png"
-	# generate random systems
-	systemList = []
-	for i in range(10):
-		x, y = random.random() * mapWidth, random.random() * mapHeight
-		systemType = random.randint(0, 6)
-		imageLib.drawItem(starMap, systemDir.format(systemType), location=(x, y), anchor="center")
-		systemList.append((systemType, x, y))
-	# link up base on distances to each other
-	# neutral on these
-	route = {}
-	routeKey = "{:d}-{:d}"
-	getKey = lambda s1, s2: routeKey.format(s1, s2) if (s1 < s2) else routeKey.format(s2, s1)
-	for idx, sys in enumerate(systemList):
-		others = list(systemList)
-		others.pop(idx)
-		others = list(enumerate(others))
-#		utils.Debug.printutils.Debug(others)
-		closestIdx, closest = min(others, key=lambda other: (sys[1]-other[1][1]) ** 2 + (sys[2]-other[1][2]) ** 2)
-		key = getKey(idx, closestIdx)
-		if(key not in route):
-			# neutral
-			route[key] = 1
-			starMap.create_line(sys[1], sys[2], closest[1], closest[2], fill=safe, dash=(3,1))
-
-#		utils.Debug.printutils.Debug(x, y, systemType)
-	starMap.update()
+	mapSize = (640, 480)
+	starMap = Map(window, mapSize, 10)
 	
 	return starMap
 
@@ -123,7 +94,7 @@ def interactionPanel(window, textFunc=None, overallManager=None):
 	conversationManager = overallManager.conversationManager
 	# get your commander for your filthy dress-up game
 	astartes = overallManager.company.commander
-	def callbackDrawAndAddText():
+	def callbackDrawAndAddText(dialogbox):
 		# write message of new astartes
 		choppaBoy = enemyManager.createIndividual("choppaboy")
 		message = "<system>Test: <\\system>New Astartes created: {} - {:s}, HP/WS/BS/I/EXP: [{:.2f}/{:.2f}]/{:.2f}/{:.2f}/{:.2f}/{:.1f}".format(astartes, astartes.name, astartes.current_hp, astartes.base_hp, astartes.ws, astartes.bs, astartes.i, astartes.exp)
@@ -168,37 +139,79 @@ def defaultGameDialog(window, DialogBoxClass, callback=None, **kwargs):
 	dialogBox = DialogBoxClass(window, **kwargs)
 	window.wait_window(dialogBox)
 	if(callback):
-		callback()
+		callback(dialogBox)
 
 class ArmoryDialogBox(DefaultDialogBox):
 	def __init__(self, master, itemManagerObj=None):
 		super(ArmoryDialogBox, self).__init__(master=master)
+		# construct the display on the right hand side
 		assert itemManagerObj is not None
 		self._itemManager = itemManagerObj
-		# Construct the table of all items
-		# TODO add a sort of scrollbar, as we are encountering overflow
 		self._armoryPane = tk.Frame(master=self)
-		self._counterLabels = []
-		def button_command(item): 
-			self._itemManager.changeItemCounts(item, 1)
-			self.updateArmoryCount()
+		self._armoryPane.grid(row=0, column=0)
+		self._interactionPane = tk.Frame(master=self)
+		self._interactionPane.grid(row=0, column=1)
+		self.buildTreeview()
 
-		for item_idx, (item, item_count) in enumerate(zip(self._itemManager.armoryItems, self._itemManager.armoryCounts)):
-			itemLabel = tk.Label(master=self._armoryPane, text=item.name)
-			itemLabel.grid(row=item_idx, column=0)
-			counterLabel = tk.Label(master=self._armoryPane, text=item_count)
-			counterLabel.grid(row=item_idx, column=1)
-			self._counterLabels.append(counterLabel)
-			# BLACK MAGIC LAMBDA!
-			# just kidding, making a lambda with this default value would capture the item at compile time, hence solving the issue
-			addButton = tk.Button(master=self._armoryPane, text="Add", command=lambda x=item: button_command(x))
-			addButton.grid(row=item_idx, column=2)
-		self._armoryPane.pack()
+	def buildTreeview(self):
+		# create the treeview
+		tree = self._armoryTreeview = ttk.Treeview(master=self._armoryPane)
+		tree.pack()
+		tree["columns"] = ("stat", "available", "damaged", "requested")
+		# declare the sizes
+		all_columns = ["#0"] + list(tree["columns"])
+		width_and_min_width = [(200, 150), (300, 150), (50, 25), (75, 25), (75, 25)]
+		for col, (w, min_w) in zip(all_columns, width_and_min_width):
+			tree.column(col, width=w, minwidth=min_w)
+		# declare the headings, set them to bind on the left
+		headings = ["Item", "Item Stat", "Ready", "Damaged", "Requested"]
+		for col, h, in zip(all_columns, headings):
+			tree.heading(col, text=h, anchor=tk.W)
 
-	def updateArmoryCount(self):
-		utils.Debug.printutils.Debug(self._itemManager.armoryCounts)
-		for label, value in zip(self._counterLabels, self._itemManager.armoryCounts):
-			label.config(text=value)
+		# populate it with the data from the itemManager
+		items_grouped = self._itemManager.getItemsByGroup()
+		for group_name, items in items_grouped.items():
+			group = tree.insert("", 1, text=group_name, values=("", "", "", ""))
+			for item in items:
+				available_count = self._itemManager.getItemCount(item)
+				damaged_count = self._itemManager.getItemCount(item, damagedItem=True)
+				tree.insert(group, "end", text=item.name, values=(item.getStatDisplay(), available_count, damaged_count, 0))
+
+	def buildInteraction(self):
+		# requisition arms and armours from the Mechanicus,
+		# TODO return when time is implemented
+		pass
+
+class RosterDialogBox(DefaultDialogBox):
+	def __init__(self, master, company):
+		super(RosterDialogBox, self).__init__(master=master)
+		self._company = company
+
+	def buildTreeview(self):
+		tree = self._tree = ttk.Treeview(master=self)
+		tree.pack()
+		tree["columns"] = ("name", "title", "level", "stat", "equipment")
+		# declare the sizes
+		all_columns = ["#0"] + list(tree["columns"])
+		width_and_min_width = [(150, 100), (150, 100), (75, 50), (200, 175), (250, 175)]
+		for col, (w, min_w) in zip(all_columns, width_and_min_width):
+			tree.column(col, width=w, minwidth=min_w)
+		# declare the headings, set them to bind on the left
+		headings = ["Name", "Rank", "Level", "Stat", "Equipment"]
+		for col, h, in zip(all_columns, headings):
+			tree.heading(col, text=h, anchor=tk.W)
+
+	def updateTree(self):
+		tree = self._tree
+		# populate it with the data from the company
+		for squad in self._company.squads:
+			squad_obj = tree.insert("", "end", text=squad.name, values=("", "", "", ""))
+			# move the squad leader to the front
+			squad_list = list(squad._members)
+			squad_list.remove(squad._leader)
+			squad_list = [squad.squad_leader] + squad_list
+			for idx, member in squad_list:
+				tree.insert(squad_obj, "end", text=member.name, values=())
 
 class LoadoutDialogBox(DefaultDialogBox):
 	LIST_SELECTOR_CONFIG = [("main", "weapon"), ("secondary", "weapon"), ("armor", "armor"), ("accessory", "accessory")]
@@ -259,7 +272,7 @@ class LoadoutDialogBox(DefaultDialogBox):
 #		self._mainCanvas.update()
 
 	def onModifyEvent(self, *args):
-		utils.Debug.printutils.Debug("Event called from: {}".format(args))
+		utils.Debug.printDebug("Event called from: {}".format(args))
 		self._populateChoices()
 		self._changeDisplay()
 
@@ -267,14 +280,17 @@ class LoadoutDialogBox(DefaultDialogBox):
 		if(cancel):
 			# reset all changes
 			self._target.equipments = self._target_original_equipments
-			utils.Debug.printutils.Debug("Revert to target original equipments: ", self._target.equipments)
+			utils.Debug.printDebug("Revert to target original equipments: ", self._target.equipments)
 		else:
-			utils.Debug.printutils.Debug("Target changed from set {} to set {}".format(self._target_original_equipments, self._target.equipments))
+			utils.Debug.printDebug("Target changed from set {} to set {}".format(self._target_original_equipments, self._target.equipments))
 		self.destroy()
 
 class BattleDialogBox(DefaultDialogBox):
 	NO_ORDER_STR = "No Order"
 	END_TURN_STR = "End Turn"
+	TOOGLE_TURN_STR = "Automatic End Turn"
+	DEFAULT_MAP_WIDTH = 350
+	DEFAULT_MAP_HEIGHT = 450
 	def __init__(self, master, yourUnits=None, battleManagerObj=None, conversationManagerObj=None, missionObj=None):
 		super(BattleDialogBox, self).__init__(master=master)
 		self._yourUnits = yourUnits
@@ -284,17 +300,81 @@ class BattleDialogBox(DefaultDialogBox):
 
 		self._constructBattleList()
 		self._updateComponent()
+		
+		width, height = (BattleDialogBox.DEFAULT_MAP_WIDTH, BattleDialogBox.DEFAULT_MAP_HEIGHT)
+		self._combatInstance = combat.Battle(self._yourUnits, self._mission.composition, battleDimensions=(width, height))
+		# construct the field
+		self._field = tk.Canvas(master=self, width=width, height=height)
+		self._field.grid(row=0, column=0)
+		# other control variables
+		self._combatEnded = False
+		self._autoEndTurn = -1.0
+		self._autoFunctionRunId = None
+
+	def _updateBattleMap(self, extra_lines=None):
+		# clear all
+		self._field = imageLib.clearCanvas(self._field)
+		if(extra_lines):
+			# draw the walk lines received during movement
+			for args, kwargs in extra_lines:
+				imageLib.drawArrow(self._field, *args, **kwargs)
+
+		for unit, pos in zip(self._combatInstance._all_units, self._combatInstance.coordinates):
+			# draw units, dead ones get transparency
+			if(pos is None):
+				continue
+			x, y = pos
+			badge = unit.badge
+			badge_path = self._battleManager.getBadgePath(badge)
+			image_is_half_transparent = not unit.alive
+			imageLib.drawItem(self._field, badge_path, location=(x, y), anchor="center", half_transparent=image_is_half_transparent)
+
+	def toggleAutoEndTurn(self):
+		if(self._autoEndTurn > 0.0):
+			utils.Debug.printDebug("Toggle AutoEndTurn to off, from interval {}".format(self._autoEndTurn))
+			self._autoEndTurn = -1.0
+			self.after_cancel(self._autoFunctionRunId)
+		else:
+			try:
+				new_auto_endturn_interval = float(self._moveTurnWaitTime.get())
+				if(new_auto_endturn_interval <= 0.0):
+					utils.Debug.printDebug("Toggle failed, wait_time is non-positive float.")
+					return
+			except ValueError:
+				utils.Debug.printDebug("Toggle failed, wait_time cannot be read from tk.Entry.")
+				return
+			self._autoEndTurn = new_auto_endturn_interval
+			self._autoFunctionRunId = self._autoEndTurnFn()
+
+	def _autoEndTurnFn(self):
+		if(self._combatEnded):
+			utils.Debug.printDebug("Combat already ended for _autoEndTurnFn")
+			self._autoEndTurn = -1.0
+			self._autoFunctionRunId = None
+			return
+		# run the end turn
+		self.endTurn()
+		# schedule the next auto and record it to allow canceling
+		assert self._autoEndTurn > 0.0, "Error! _autoEndTurnFn called with value < 0.0"
+		self._autoFunctionRunId = self.after(int(1000.0 * self._autoEndTurn), self._autoEndTurnFn)
 
 	def _constructBattleList(self):
 		# for now, just have a text box for vox channel, each unit of friendly get nametag + status (label), healthbar (progressbar), and tactic selector to override the usual 
 		vox_panel = tk.Frame(master=self)
-		vox_panel.grid(row=1, column=0)
+		vox_panel.grid(row=1, column=0, rowspan=2, columnspan=2)
 		self._voxLog = textLib.createTextWithScrollbar(vox_panel)
-		self._moveTurnButton = tk.Button(master=self, text=BattleDialogBox.END_TURN_STR, command= lambda: self._endTurn())
-		self._moveTurnButton.grid(row=1, column=1)
+		self._moveTurnButton = tk.Button(master=self, text=BattleDialogBox.END_TURN_STR, command= lambda: self.endTurn())
+		self._moveTurnButton.grid(row=1, column=2)
+		# add an entry that restrict the value in numericals
+		num_validator = lambda char, entry_val: char in "01234567890."
+		vcmd = (self.register(num_validator), "%S", "%P")
+		self._moveTurnWaitTime = tk.Entry(master=self, text="3.0", validate="key", validatecommand=vcmd)
+		self._moveTurnWaitTime.grid(row=2, column=3)
+		self._moveTurnAutoButton = tk.Button(master=self, text=BattleDialogBox.TOOGLE_TURN_STR, command= lambda: self.toggleAutoEndTurn())
+		self._moveTurnAutoButton.grid(row=2, column=2)
 
 		main_panel = tk.Frame(master=self)
-		main_panel.grid(row=0, column=1)
+		main_panel.grid(row=0, column=1, columnspan=3)
 		self._turnComponent = []
 		# friendly
 		for i, unit in enumerate(self._yourUnits):
@@ -350,12 +430,42 @@ class BattleDialogBox(DefaultDialogBox):
 				total_hp = 1
 			health_bar["value"] = 100 * current_hp / total_hp
 
-	def _endTurn(self):
+	def endTurn(self):
 		# move the turn forward
-		raise NotImplementedError()
+		# keep a dict of all the tactics forced by player
+		if(self._combatEnded or self._combatInstance.combatEnded()):
+			self._combatEnded = True
+			self._writeToVox("Combat ended, no more update!!")
+			self._updateComponent()
+			self._updateBattleMap()
+			return
+		forced_tactic = {}
+		for unit, _, tactic_var, _ in self._turnComponent:
+			if(tactic_var is None):
+				# enemy tactic, ignore
+				continue
+			tactic = self._battleManager.getTacticByName(tactic_var.get())
+			if(tactic is not None):
+				forced_tactic[unit] = tactic
+		# move units around
+		# keep the lines to be drawn later
+		line_drawer = []
+		line_recorder = lambda *args, **kwargs: line_drawer.append( (args, kwargs) )
+		self._combatInstance.moveUnitsRandomly(voxStreamFn=self._writeToVox, drawFn=line_recorder)
+		# deploy randomly
+		self._combatInstance.deployUnitsRandomly(deployChance=0.5, voxStreamFn=self._writeToVox)
+		# every units will try to attack the closest enemy within their range
+		tacticBonusCalculator = lambda a, d: self._battleManager.getOpposingSquadTacticBonus(a, d, forceTacticDict=forced_tactic, voxStreamFn=self._writeToVox)
+		self._combatInstance.initiateCombat(tacticBonusFn=tacticBonusCalculator, voxStreamFn=self._writeToVox, drawFn=line_recorder)
+		# once done, reload
+		self._updateComponent()
+		self._updateBattleMap(extra_lines=line_drawer)
 
-	def _writeToVox(self, text):
-		textLib.addFormatText(self._voxLog, text)
+	def _writeToVox(self, texts):
+		if(isinstance(texts, str)):
+			texts = [texts]
+		for text in texts:
+			textLib.addFormatText(self._voxLog, text)
 
 if __name__ == "__main__":
 	debug_level = utils.tryConvertStringToInt(sys.argv[-1])

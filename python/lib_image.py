@@ -1,5 +1,5 @@
 # here will handle all images processing
-from tkinter import PhotoImage, Label
+import tkinter as tk
 import PIL.Image as Image
 import PIL.ImageOps as ImageOps
 import PIL.ImageTk as ImageTk
@@ -9,18 +9,35 @@ from python.utils import Debug
 DEFAULT_CANVAS_WIDTH = 167.0
 DEFAULT_CANVAS_HEIGHT = 232.0
 
+class IconManager():
+	def __init__(self, location, default_images=("default_friendly, default_hostile")):
+		self._icon_location = location
+		self._default_friendly = self._icon_location.format(default_images[0])
+		self._default_hostile = self._icon_location.format(default_images[1])
+	
+	def getBadgeImage(self, badge_name, is_friendly):
+		if(os.path.isfile(self._icon_location.format(badge_name))):
+			image_dir = self._icon_location.format(badge_name)
+		else:
+			Debug.printDebug("Cannot find badge name {:s}, using default.")
+			if(is_friendly):
+				image_dir = self._default_friendly
+			else:
+				image_dir = self._default_hostile
+		return image_dir
+
 def drawOnCanvas(canvas, image, location=(0,0), scale=1.0, anchor="nw"):
 	if(image is None):
-		return canvas
-#	Debug.printDebug(type(image), vars(image))
+		return -1
+	#	Debug.printDebug(type(image), vars(image))
 	# due to a tkinter bug, canvas must keep track of images that was drawn into it.
 	if not hasattr(canvas, "image_list") or not isinstance(getattr(canvas, "image_list"), list):
 		# may bite me in the ass later, but oh well
 		canvas.image_list = []
 	canvas.image_list.append(image)
 	x, y = location
-	canvas.create_image(x, y, image=image, anchor=anchor)
-	return image
+	image_id = canvas.create_image(x, y, image=image, anchor=anchor)
+	return image_id
 
 def clearCanvas(canvas):
 	if(hasattr(canvas, "image_list")):
@@ -46,10 +63,24 @@ def tryOpenImage(imageDir):
 	This section is for the drawing and embelishment of the main campaign map
 '''
 
-def drawItem(canvas, itemDir, location=(0, 0), scale=1.0, anchor="nw"):
-	image = createImage(itemDir)
-	drawOnCanvas(canvas, image, location=location, scale=scale, anchor=anchor)
-	return image
+def drawItem(canvas, itemDir, location=(0, 0), scale=1.0, anchor="nw", half_transparent=False, return_canvas_id=False, **kwargs):
+	"""Draw an item on a specified canvas
+		half_transparent: if specified, the image will have half transparency
+		return_canvas_id: if specified, instead of returning the PhotoImage object, return the id of the object. Used for reusable items
+	"""
+	pil_image = tryOpenImage(itemDir)
+	if(half_transparent):
+		pil_image = img_half_transparent(pil_image)
+	image = createImage(pil_image)
+	item_id = drawOnCanvas(canvas, image, location=location, scale=scale, anchor=anchor)
+	if(return_canvas_id):
+		return item_id
+	else:
+		return image
+
+def drawArrow(canvas, start_pos, end_pos, color="black", have_dash=False, arrow_end=False):
+	item_id = canvas.create_line(*start_pos, *end_pos, fill=color, dash=(5, 5) if have_dash else None, arrow=tk.LAST if arrow_end else None)
+	return item_id
 
 def defaultRelationConfig(score):
 	# return name & color of relation
@@ -66,6 +97,7 @@ def defaultRelationConfig(score):
 		return "ally", "blue"
 
 def findAnchor(vectorX, vectorY):
+	"""Anchors used to put names on drawRelationGraph"""
 	# return appropriate anchor of n/s-e/w basing on the vector from center to point
 	# special: if vectorX or vectorY dominant, use n-s-e-w
 	sizeY, sizeX = abs(vectorY), abs(vectorX)
@@ -99,7 +131,7 @@ def drawRelationGraph(canvas, relationScores, location=(0, 0), size=100.0):
 		canvas.create_line(centerX, centerY, scoreX, scoreY, fill=scoreColor)
 		canvas.create_line(scoreX, scoreY, maxX, maxY, fill="black")
 		# label the point with a tag and correct anchor
-		label = Label(canvas, text=scoreName)
+		label = tk.Label(canvas, text=scoreName)
 		anchor=findAnchor(centerX - maxX, centerY - maxY)
 		Debug.printDebug("score coord ({},{}), max coord ({},{})".format(scoreName, anchor, scoreX-maxX, scoreY-maxY))
 		label.place(x=maxX, y=maxY, anchor=anchor)
@@ -117,6 +149,10 @@ def drawRelationGraph(canvas, relationScores, location=(0, 0), size=100.0):
 	canvas.create_line(maxX, maxY, firstMaxPoint[0], firstMaxPoint[1], fill="black")
 	return canvas
 	
+def drawTargetingArrow(canvas, coordinates, color="black"):
+	assert isinstance(coordinates, tuple) and len(coordinates) == 4
+	canvas.create_line(*coordinates, arrow=tk.LAST, fill=color)
+	return canvas
 
 
 '''
@@ -373,6 +409,15 @@ def colorize(image, color, careful=False):
 	# put the alpha back
 	image.putalpha(alpha)
 	return image
+
+def img_half_transparent(image, transparency=0.5):
+	if(image is None):
+		return None
+	# create a transparent mask to hog it over
+	alpha_mask = image.split()[-1].point(lambda c: c * transparency)
+	image.putalpha(alpha_mask)
+	return image
+
 
 def omit(image):
 	return None
