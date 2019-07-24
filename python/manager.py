@@ -1,4 +1,4 @@
-import json, io, os, collections
+import json, io, os, collections, math
 import python.items as itemLib
 import python.utils as utils
 from python.combat import CombatManager
@@ -67,12 +67,19 @@ class ItemManager:
 
 	def getItemsByGroup(self):
 		return {
-			"Armour": self.armorList,
-			"Weapon": self.weaponList,
-			"Accessory": self.accessoryList,
-			"Vehicle": self.vehicleList,
-			"Vehicle Modules:": self.chassisList + self.vehicleWeaponList
+			"armor": self.armorList,
+			"weapon": self.weaponList,
+			"accessory": self.accessoryList,
+			"vehicle": self.vehicleList,
+			"vehicle_modules:": self.chassisList + self.vehicleWeaponList
 		}
+
+	def getItemsByType(self, group, available=True):
+		all_items_by_type = [ (item, self.getItemCount(item)) for item in self.getItemsByGroup()[group] ]
+		if(available):
+			return [data for data in all_items_by_type if data[-1] > 0]
+		else:
+			return all_items_by_type
 
 	def _retrieveItemId(self, item):
 		return next( (idx for idx, it in enumerate(self.armoryItems) if item == it) )
@@ -339,6 +346,7 @@ class OverallManager:
 		self.conversationManager = ConversationManager(allJSONPath["conversation"])
 		self._company = units.Company(chapterName, companyName, None, self.statManager)
 		self.colorScheme = colorScheme
+		self.map = None
 	
 	def createAstartes(self, astartesConfig=None):
 		assert astartesConfig is not None, "Config must not be None to initialize"
@@ -363,6 +371,40 @@ class OverallManager:
 				num_members = utils.roll_random_int(num_members_tuple[0]-1, num_members_tuple[1])
 				new_squad = units.Squad(self._company, (self.createAstartes(squad_member_config) for _ in range(num_members)), self.createAstartes(squad_leader_config))
 				self._company.squads.append(new_squad)
+
+	def moveToSystem(self, systemIdx=None):
+		assert self.map is not None, "map is not initialized in this function"
+		if(systemIdx is None):
+			if(len(self.map._movement_stack) > 0):
+				utils.Debug.printDebug("Moving, refrain from random, stack is {}".format(self.map._movement_stack))
+				return
+			else:
+				utils.Debug.printDebug("Idle, expected stack: {}".format(self.map._movement_stack))
+			# roll for random not-duplicate value
+			new_target = utils.roll_random_int(0, self.map.systems_count-2)
+			if(new_target >= self.map._orbit_system):
+				new_target += 1
+			# estimate the turns needed to arrive
+			distance, route_str = self.map.moveToSystemEstimate(new_target)
+			eta = self.calculateFleetETA(distance, route_str)
+			utils.Debug.printDebug("Idle, rolling random target, result: {:d}:{:d}-turn".format(new_target, eta))
+			# put it on the map
+			self.map.moveToSystemConfirmed(new_target, eta)
+		else:
+			raise NotImplementedError("Not ready")
+	
+	def calculateFleetETA(self, distance, routeStrength):
+		"""Calculate an integer representing how many turn needed to cross this distance"""
+		speed = 50.0
+		distance *= (100.0 - routeStrength) / 100.0
+		eta = distance / speed
+		return int(math.ceil(eta))
+
+	def endTurn(self):
+		utils.Debug.printDebug("Running random movement across the map")
+		self.map.endTurnTrigger()
+		self.timeManager.advanceCounter()
+		self.moveToSystem()
 
 	@property
 	def company(self):

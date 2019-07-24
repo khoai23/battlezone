@@ -1,6 +1,7 @@
 import tkinter as tk
 import python.lib_image as imageLib
 import python.utils as utils
+import math
 
 class Map():
 	"""A wrapper around a Canvas to draw systems and fleet positions"""
@@ -17,15 +18,21 @@ class Map():
 		# initiate the image
 		self._fleet_img = None
 		self._destination_arrow = None
+		# initiate movement stack
+		self._movement_stack = []
 		# construct the data 
 		self._initiateDefaultData(systemsCount=systemsCount)
 		# draw the map
 		self.redrawMap()
-		self.updateFleetLocation(self._fleet_position, fleetImg=self._fleet_loc, fleetTarget=self._fleet_travel_destination)
+		self._updateFleetLocation(self._fleet_position, fleetImg=self._fleet_loc, fleetTarget=self._fleet_travel_destination)
 
 	@property
 	def canvas(self):
 		return self._canvas
+
+	@property
+	def systems_count(self):
+		return len(self._list_system)
 
 	def _constructRoutes(self):
 		"""Construct random routes between existing systems"""
@@ -49,6 +56,20 @@ class Map():
 					key = (random_selected_dest, i)
 				self._routes[key] = utils.roll_between(80.0, 100.0)
 
+	def _checkRoutes(self, outSystem, inSystem):
+		"""Return route strength between the two system, 0.0 to 100.0"""
+		if(outSystem > inSystem):
+			outSystem, inSystem = inSystem, outSystem
+		# route is (smaller, larger) key
+		route_key = (outSystem, inSystem)
+		return self._routes.get(route_key, 0.0)
+	
+	def _distance(self, outCoord, inCoord):
+		"""Return the distance between the two coordinates (in pixels?)"""
+		outX, outY = outCoord
+		inX, inY = inCoord
+		return math.sqrt( (outX-inX) ** 2 + (outY-inY) ** 2 )
+
 	def redrawMap(self):
 		"""Redraw the canvas using current data. Only draw systems and routes"""
 		# clear everything
@@ -71,8 +92,26 @@ class Map():
 				_, x2, y2 = self._list_system[j]
 				self._canvas.create_line(x1, y1, x2, y2, fill=route_color, dash=(3,1))
 		self._canvas.update()
+	
+	def _initiateDefaultData(self, size=(640, 480), systemsCount=10, **kwargs):
+		"""Construct map data using existing arguments"""
+		# randomized list systems
+		mapWidth, mapHeight = size
+		systemsList = self._list_system = []
+		for i in range(systemsCount):
+			x, y = utils.roll_between(0.0, mapWidth), utils.roll_between(0.0, mapHeight)
+			systemType = utils.roll_random_int(0, 6)
+			systemsList.append((systemType, x, y))
+		# chapter fortresses location
+		self._home_idx = 0
+		# fleet positions
+		self._fleet_position = fleetX, fleetY = self._getPosOnSystem(self._home_idx)
+		self._orbit_system = self._home_idx
+		self._fleet_travel_destination = None 
+		# create routes
+		self._constructRoutes()
 
-	def updateFleetLocation(self, fleetLocation, fleetImg="", fleetTarget=None):
+	def _updateFleetLocation(self, fleetLocation, fleetImg="", fleetTarget=None):
 		"""Update the map with new fleet position and its movement vector; create fleet if it doesn't exist"""
 		if(self._fleet_img is None):
 			self._fleet_img = imageLib.drawItem(self._canvas, fleetImg, location=(0, 0), return_canvas_id=True)
@@ -89,29 +128,53 @@ class Map():
 			self._destination_arrow = imageLib.drawArrow(self._canvas, fleetLocation, fleetTarget, color="white", arrow_end=True)
 		else:
 			self._destination_arrow = None
-	
-	def _initiateDefaultData(self, size=(640, 480), systemsCount=10, **kwargs):
-		"""Construct map data using existing arguments"""
-		# randomized list systems
-		mapWidth, mapHeight = size
-		systemsList = self._list_system = []
-		for i in range(systemsCount):
-			x, y = utils.roll_between(0.0, mapWidth), utils.roll_between(0.0, mapHeight)
-			systemType = utils.roll_random_int(0, 6)
-			systemsList.append((systemType, x, y))
-		# home planet
-		self._home_planet_idx = 0
-		# fleet positions
-		self._fleet_position = fleetX, fleetY = self._getPosOnPlanet(self._home_planet_idx)
-		self._fleet_travel_destination = None 
-		# create routes
-		self._constructRoutes()
+		self._canvas.update()
 
-	def _getPosOnPlanet(self, planetIdx):
-		_, planetX, planetY = self._list_system[planetIdx]
+	def _getPosOnSystem(self, systemIdx):
+		_, systemX, systemY = self._list_system[systemIdx]
 		offsetX, offsetY = Map.DEFAULT_MAP_FLEET_OFFSET
-		return (planetX+offsetX, planetY+offsetY)
+		return (systemX+offsetX, systemY+offsetY)
+
+	def moveToSystemEstimate(self, targetSystemIdx):
+		"""From current system (self._orbit_system) toward the new system, return tuple of (distance, route strength)"""
+		if(self._orbit_system == targetSystemIdx):
+			return None
+		route_str = self._checkRoutes(self._orbit_system, targetSystemIdx)
+		in_coordinate = self._getPosOnSystem(targetSystemIdx)
+		distance = self._distance(self._fleet_position, in_coordinate)
+		return (distance, route_str)
 	
+	def moveToSystemConfirmed(self, targetSystemIdx, estimatedTime):
+		"""Create an array of turn-end position as the fleet move toward the {targetSystemIdx} in {estimatedTime} turn"""
+		# flush everything
+		del self._movement_stack[:]
+		# generate move positions
+		inX, inY = self._getPosOnSystem(targetSystemIdx)
+		outX, outY = self._fleet_position
+		eta = estimatedTime
+		offsetX = (inX - outX) / eta
+		offsetY = (inY - outY) / eta
+		move_positions = [ (inX - offsetX * turn, inY - offsetY * turn, None if turn != 0 else targetSystemIdx) for turn in range(eta-1, -1, -1)]
+		# re-add them into stack in inverse order (for pop())
+		self._movement_stack.extend(move_positions[::-1])
+		# save the destination position
+		self._fleet_travel_destination = targetSystemIdx
+		fleet_target = self._getPosOnSystem(self._fleet_travel_destination)
+		self._updateFleetLocation(self._fleet_position, fleetTarget=fleet_target)
+
+	def endTurnTrigger(self):
+		"""Move the fleet forward if there are still movement left in the stack, else stay idle"""
+		if(len(self._movement_stack) == 0):
+			return
+		fleetX, fleetY, current_orbit = self._movement_stack.pop()
+		self._orbit_system = current_orbit
+		self._fleet_position = fleetX, fleetY
+		# if had arrived, remove the destination in waiting
+		if(self._fleet_travel_destination == self._orbit_system):
+			self._fleet_travel_destination = None
+		fleet_target = None if self._fleet_travel_destination is None else self._getPosOnSystem(self._fleet_travel_destination)
+		self._updateFleetLocation(self._fleet_position, fleetTarget=fleet_target)
+
 	def pack(self, **kwargs):
 		self._canvas.pack(**kwargs)
 

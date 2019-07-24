@@ -1,1 +1,1 @@
-python3 -m python.lib_gui
+python3 -m python.main

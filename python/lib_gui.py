@@ -3,55 +3,18 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import python.lib_image as imageLib
 import python.lib_text as textLib
-import python.manager as managerLib
 import python.utils as utils
 import python.combat as combat
-import sys
 from python.map import Map
 
-def testWindow():
-	window = createWindow()
-	mainLayout(window)
-#	window.after(ms=10000, func=lambda : window.destroy())
-	window.mainloop()
+"""Here are the functions for the main window"""
 
-def createWindow(screenName="Game", size=None):
-	# create a window with a specific screenName
-	window = tk.Tk()
-	window.title(screenName)
-	if(size is not None):
-		window.geometry(size)
-	return window
-
-def mainLayout(window):
-	assert isinstance(window, tk.Tk)
-#	utils.Debug.changeMessageLevel("INFO")
-	# load all manager
-#	statManager = managerLib.IndividualStatManager("./res/data/AstartesStat.json")
-#	itemManager = managerLib.ItemManager("./res/data/ItemData.json", "./res/texture")
-#	enemyManager = managerLib.EnemyManager("./res/data/EnemyData.json")
-#	combatManager = managerLib.CombatManager("./res/data/CombatTactic.json")
-	# have single overall manager
-#	color_scheme = ("half", "red", "blue", "gold", "brown", "cyan")
-	manager = managerLib.OverallManager("Generic Chapter", "Idunno Company")
-	manager.createDefaultCompany()
-	# create the layout
-	# for now, just use a simple grid
-	portrait = createPortrait(window, companyCommander=manager.company.commander, colorScheme=manager.colorScheme)
-	portrait.grid(row=0, column=0)
-	dipWindow = createDiplomacyPane(window)
-	dipWindow.grid(row=1, column=0)
-	starMap = campaignMap(window)
-	starMap.grid(row=0, column=1, columnspan=2)
-	textPane, addTextFunc = conversationPanel(window)
-	textPane.grid(row=1, column=1)
-	addTextFunc("<ally>Advisor: <\\ally>Chapter Master, welcome back.")
-	interactPane = interactionPanel(window, textFunc=addTextFunc, overallManager=manager)
-	interactPane.grid(row=1, column=2)
-
-def createPortrait(window, companyCommander=None, colorScheme=None):
+def createPortrait(window, companyCommander=None, colorScheme=None, existingPortrait=None):
 	# TODO import the default size from other module when complete
-	portrait = tk.Canvas(master=window, width=imageLib.DEFAULT_CANVAS_WIDTH, height=imageLib.DEFAULT_CANVAS_WIDTH + imageLib.DEFAULT_CANVAS_HEIGHT)
+	if(existingPortrait is None):
+		portrait = tk.Canvas(master=window, width=imageLib.DEFAULT_CANVAS_WIDTH, height=imageLib.DEFAULT_CANVAS_WIDTH + imageLib.DEFAULT_CANVAS_HEIGHT)
+	else:
+		portrait = imageLib.clearCanvas(existingPortrait)
 	# view the company commander
 	drawDict = companyCommander.getDisplayData()
 	portrait = imageLib.showColorizedFullGears(portrait, drawDict, colorScheme=colorScheme)
@@ -125,7 +88,12 @@ def interactionPanel(window, textFunc=None, overallManager=None):
 	combatButton = tk.Button(pane, text="Combat", command=sendWholeCompanyToTestMission)
 	combatButton.grid(row=1, column=1)
 		
+	endTurnButton = tk.Button(pane, text="End Turn", command=lambda : overallManager.endTurn())
+	endTurnButton.grid(row=2, column=0, columnspan=2)
+
 	return pane
+
+"""Here are the myriad GUI box setup, using DefaultDialogBox interface"""
 
 class DefaultDialogBox(tk.Toplevel):
 	def __init__(self, master):
@@ -466,10 +434,4 @@ class BattleDialogBox(DefaultDialogBox):
 			texts = [texts]
 		for text in texts:
 			textLib.addFormatText(self._voxLog, text)
-
-if __name__ == "__main__":
-	debug_level = utils.tryConvertStringToInt(sys.argv[-1])
-	if(debug_level in utils.Debug.MESSAGE_LEVEL_NAME or (isinstance(debug_level, int) and len(utils.Debug.MESSAGE_LEVEL_NAME) > debug_level)):
-		utils.Debug.changeMessageLevel(debug_level)
-	testWindow()
 
