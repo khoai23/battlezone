@@ -108,45 +108,48 @@ def findAnchor(vectorX, vectorY):
 	# in other case, anchor at respective combined direction
 	return ("n" if vectorY < 0 else "s") + ("e" if vectorX > 0 else "w")
 
-def drawRelationGraph(canvas, relationScores, location=(0, 0), size=100.0):
+def drawRelationGraph(canvas, relationScores, location=(0, 0), size=100.0, viewName=False):
 	# support square size x size only
 	assert len(relationScores) > 2, "Currently cannot draw scores for less than 3 factions"
 	centerX, centerY = size / 2, size / 2
 	# the size is reduced to make sure there is places for label
-	size = min(size / 2 - 20, size / 3)
+	size = min(size / 3 - 20, size / 4) if viewName else size / 2 - 10
 	numPoints = len(relationScores)
-	lastScorePoint, lastMaxPoint = None, None
+	last_score_point, last_max_point = None, None
 	for pointIdx, scoreTuple in enumerate(relationScores):
 		# retarded me forgot that circle is 2pi
-		radDegree = 2.0 * float(pointIdx) * math.pi / float(numPoints)
-		factionName, score = scoreTuple
-		scoreName, scoreColor = defaultRelationConfig(score)
+		rad_degree = 2.0 * float(pointIdx) * math.pi / float(numPoints)
+		faction_name, score = scoreTuple
+		score_name, scorecolor = defaultRelationConfig(score)
 		scoreLength = size * min(float(abs(score)) / 100.0, 1.0)
 		# calculate the map and the positions of points relating to the centerPoint
-		normalizedX, normalizedY = math.cos(radDegree), math.sin(radDegree)
+		normalizedX, normalizedY = math.cos(rad_degree), math.sin(rad_degree)
 		scoreX, scoreY = centerX + normalizedX * scoreLength, centerY + normalizedY * scoreLength
 		maxX, maxY = centerX + normalizedX * size, centerY + normalizedY * size
 		Debug.printDebug("score coord ({},{}), max coord ({},{})".format(scoreX, scoreY, maxX, maxY))
-		# draw line from center to scorePoint in scoreColor; scorePoint to maxPoint in black
-		canvas.create_line(centerX, centerY, scoreX, scoreY, fill=scoreColor)
+		# draw line from center to scorePoint in scorecolor; scorePoint to maxPoint in black
+		canvas.create_line(centerX, centerY, scoreX, scoreY, fill=scorecolor)
 		canvas.create_line(scoreX, scoreY, maxX, maxY, fill="black")
 		# label the point with a tag and correct anchor
-		label = tk.Label(canvas, text=scoreName)
-		anchor=findAnchor(centerX - maxX, centerY - maxY)
-		Debug.printDebug("score coord ({},{}), max coord ({},{})".format(scoreName, anchor, scoreX-maxX, scoreY-maxY))
-		label.place(x=maxX, y=maxY, anchor=anchor)
+		if(viewName):
+			label = tk.Frame(canvas)
+			name_label = tk.Label(label, text=faction_name, font=(0.5)); name_label.grid(row=0, column=0)
+			score_label = tk.Label(label, text=score_name, fg=scorecolor, font=(0.25)); score_label.grid(row=1, column=0)
+			anchor=findAnchor(centerX - maxX, centerY - maxY)
+			Debug.printDebug("score coord ({},{}), max coord ({},{})".format(score_name, anchor, scoreX-maxX, scoreY-maxY))
+			label.place(x=maxX, y=maxY, anchor=anchor)
 		# draw the lines connecting to previous score/max points
-		if(lastScorePoint is not None and lastMaxPoint is not None):
-			canvas.create_line(scoreX, scoreY, lastScorePoint[0], lastScorePoint[1], fill="white")
-			canvas.create_line(maxX, maxY, lastMaxPoint[0], lastMaxPoint[1], fill="black")
+		if(last_score_point is not None and last_max_point is not None):
+			canvas.create_line(scoreX, scoreY, last_score_point[0], last_score_point[1], fill="white")
+			canvas.create_line(maxX, maxY, last_max_point[0], last_max_point[1], fill="black")
 		else:
 		# record the first point
-			firstScorePoint, firstMaxPoint = (scoreX, scoreY), (maxX, maxY)
-		lastScorePoint = scoreX, scoreY
-		lastMaxPoint = maxX, maxY
+			first_score_point, first_max_point = (scoreX, scoreY), (maxX, maxY)
+		last_score_point = scoreX, scoreY
+		last_max_point = maxX, maxY
 	# do the drawing one last time to complete the whatever-gram
-	canvas.create_line(scoreX, scoreY, firstScorePoint[0], firstScorePoint[1], fill="white")
-	canvas.create_line(maxX, maxY, firstMaxPoint[0], firstMaxPoint[1], fill="black")
+	canvas.create_line(scoreX, scoreY, first_score_point[0], first_score_point[1], fill="white")
+	canvas.create_line(maxX, maxY, first_max_point[0], first_max_point[1], fill="black")
 	return canvas
 	
 def drawTargetingArrow(canvas, coordinates, color="black"):

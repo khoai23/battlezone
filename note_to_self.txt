@@ -1,0 +1,2 @@
+1. Tkinter Entry validate command is absolute bullshit, it set itself to validate=None any times something do not work. Check carefully.
+2. It is also bullshit because if you declare multiple Entry within the same function scope, they will use the same StringVar. Yes, really. How fucking professional.

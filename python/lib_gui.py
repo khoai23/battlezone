@@ -24,9 +24,11 @@ def createPortrait(window, companyCommander=None, colorScheme=None, existingPort
 	# view the 
 	return portrait
 
-def createDiplomacyPane(window):
-	dipWidth = dipHeight = 200
-	relationScores = [("IG", 125), ("Eldar", -26), ("Mechanicus", 50), ("Orks", -66), ("Chaos", 40), ("Inquisition", 83)]
+def createDiplomacyPane(window, relationScores=None):
+	dipWidth = dipHeight = 150
+	if(relationScores is None):
+		utils.Debug.printError("Relation score is None, using a constant statblock instead")
+		relationScores = [("IG", 125), ("Eldar", -26), ("Mechanicus", 50), ("Orks", -66), ("Chaos", 40), ("Inquisition", 83)]
 	diplomacyFrame = tk.Frame(window)
 	dipImage = tk.Canvas(master=diplomacyFrame, width=dipWidth, height=dipHeight)
 	dipImage = imageLib.drawRelationGraph(dipImage, relationScores, location=(0, 0), size=dipHeight)
@@ -55,6 +57,7 @@ def interactionPanel(window, textFunc=None, overallManager=None):
 	enemyManager = overallManager.enemyManager
 	combatManager = overallManager.combatManager
 	conversationManager = overallManager.conversationManager
+	diplomacyManager = overallManager.diplomacyManager
 	# get your commander for your filthy dress-up game
 	astartes = overallManager.company.commander
 	def callbackDrawAndAddText(dialogbox):
@@ -71,7 +74,7 @@ def interactionPanel(window, textFunc=None, overallManager=None):
 	gameButton = tk.Button(pane, text="Test", command=lambda: defaultGameDialog(window, DefaultDialogBox, callback=callbackDrawAndAddText))
 	gameButton.grid(row=0, column=0)
 
-	armoryButton = tk.Button(pane, text="Armory", command=lambda: defaultGameDialog(window, ArmoryDialogBox, itemManagerObj=itemManager))
+	armoryButton = tk.Button(pane, text="Armory", command=lambda: defaultGameDialog(window, ArmoryDialogBox, itemManagerObj=itemManager, diplomacyManagerObj=diplomacyManager, commissionCommand=overallManager.createCommissionEvent))
 	armoryButton.grid(row=0, column=1)
 
 	equipButton = tk.Button(pane, text="Equip", command=lambda: defaultGameDialog(window, LoadoutDialogBox, target=astartes, colorScheme=overallManager.colorScheme, itemManagerObj=itemManager, statManagerObj=statManager))
@@ -110,11 +113,13 @@ def defaultGameDialog(window, DialogBoxClass, callback=None, **kwargs):
 		callback(dialogBox)
 
 class ArmoryDialogBox(DefaultDialogBox):
-	def __init__(self, master, itemManagerObj=None):
+	def __init__(self, master, itemManagerObj=None, diplomacyManagerObj=None, commissionCommand=None):
 		super(ArmoryDialogBox, self).__init__(master=master)
-		# construct the display on the right hand side
-		assert itemManagerObj is not None
+		# save the initiations 
 		self._itemManager = itemManagerObj
+		self._diplomacyManager = diplomacyManagerObj
+		self.commissionCommand = commissionCommand
+		# construct the display on the right hand side
 		self._armoryPane = tk.Frame(master=self)
 		self._armoryPane.grid(row=0, column=0)
 		self._interactionPane = tk.Frame(master=self)
@@ -138,17 +143,116 @@ class ArmoryDialogBox(DefaultDialogBox):
 
 		# populate it with the data from the itemManager
 		items_grouped = self._itemManager.getItemsByGroup()
+		self._itemLookup = {}
 		for group_name, items in items_grouped.items():
 			group = tree.insert("", 1, text=group_name, values=("", "", "", ""))
 			for item in items:
 				available_count = self._itemManager.getItemCount(item)
 				damaged_count = self._itemManager.getItemCount(item, damagedItem=True)
-				tree.insert(group, "end", text=item.name, values=(item.getStatDisplay(), available_count, damaged_count, 0))
+				item_id = tree.insert(group, "end", text=item.name, values=(item.getStatDisplay(), available_count, damaged_count, 0))
+				self._itemLookup[item_id] = item
+		# bind to double click
+		tree.bind(sequence="<Double-1>", func=self.doubleClick)
 
-	def buildInteraction(self):
-		# requisition arms and armours from the Mechanicus,
-		# TODO return when time is implemented
-		pass
+	def doubleClick(self, event):
+		item_id = self._armoryTreeview.selection()[0]
+		item = self._itemLookup.get(item_id, None)
+		utils.Debug.printDebug("Event: {}, Clicked on: {}, Item found: {}".format(event, item_id, item))
+		if(item is None):
+			return
+		commission = CommissionSubDialog(master=self, itemManager=self._itemManager, diplomacyManager=self._diplomacyManager, item=item, commissionCommand=self.commissionCommand)
+		self.wait_window(commission)
+
+class CommissionSubDialog(tk.Toplevel):
+	def __init__(self, master, itemManager, diplomacyManager, item, commissionCommand):
+		super(CommissionSubDialog, self).__init__(master=master)
+		self._diplomacyManager = diplomacyManager
+		self._itemManager = itemManager
+		self._itemPrices = item_prices = itemManager.fetchItemPrices(item)
+		self._item = item
+		self._last_commission_set = {}
+		self._commissionCommand=commissionCommand
+		if("require" in item_prices):
+			self._initiateInterfaceRequirement(item_prices)
+		else:
+			self._initiateInterfaceRequisition(item_prices)
+		self.title("Requisition Item: {:s}".format(item.name))
+	
+	def _initiateInterfaceRequirement(self, itemPrices):
+			raise NotImplementedError()
+
+	def _initiateInterfaceRequisition(self, itemPrices):
+		"""Create an interface for requisition items from external sources"""
+		current_idx = 0
+		req_price = itemPrices["__cost__"]
+		# display the name and cost firsthand
+		item_label = tk.Label(master=self, text="Item: {:s}, Requisition cost: {:d}".format(self._item.name, req_price))
+		item_label.grid(row=current_idx, column=0, columnspan=5)
+
+		current_idx += 1
+		for col, header in enumerate(["Faction", "Amount", "Total (R) ", "Available (R)", "Turns"]):
+			header_label = tk.Label(master=self, text=header)
+			header_label.grid(row=current_idx, column=col)
+		# create a simple table calculating the costs per factions
+		for refname, origin, aff, req in self._diplomacyManager.getAffinityAndReq(itemPrices.keys()):
+			current_idx += 1
+			# TODO currently not using affinity. Check in dipManager later
+			origin_label = tk.Label(master=self, text=origin)
+			origin_label.grid(row=current_idx, column=0)
+			total_price_var = tk.StringVar(); total_price_var.set("0")
+			total_price_label = tk.Label(master=self, textvariable=total_price_var)
+			total_price_label.grid(row=current_idx, column=2)
+			current_req_label = tk.Label(master=self, text=str(req))
+			current_req_label.grid(row=current_idx, column=3)
+			expected_time_label = tk.Label(master=self, text=str(itemPrices.get(refname, None)))
+			expected_time_label.grid(row=current_idx, column=4)
+			def digit_validator(char, entry_val, faction_name=refname, available_req=req, price_var=total_price_var, debug_idx=current_idx): 
+				if(char not in "01234567890"): # not numerical character
+					return False
+				try:
+					value = int(entry_val)
+				except ValueError:
+					if(entry_val == ""): # if blank, consider as 0
+						value = 0
+					else: # is not a number, reject
+						return False
+				if(value * req_price > available_req): # not enough req
+					utils.Debug.printDebug("Requisition needed {:d} > Available {:d}, denied".format(value * req_price, available_req))
+					return False
+				else: # enough req, update the value
+					price_var.set(str(value * req_price))
+					self._last_commission_set[faction_name] = value
+					return True
+			amount_var = tk.StringVar(); amount_var.set("0")
+			amount = tk.Entry(master=self, textvariable=amount_var, width=5)
+			amount.grid(row=current_idx, column=1)
+			amount.config(validate="key", validatecommand=(amount.register(digit_validator), "%S", "%P"))
+		# ok and cancel button
+		current_idx += 1
+		ok_and_cancel_frame = tk.Frame(master=self)
+		ok_and_cancel_frame.grid(row=current_idx, column=2, columnspan=2)
+		ok_button = tk.Button(master=ok_and_cancel_frame, text="OK", command=lambda: self.exit(commission=True))
+		cancel_button = tk.Button(master=ok_and_cancel_frame, text="Cancel", command=lambda: self.exit(commission=False))
+		ok_button.pack()
+		cancel_button.pack()
+
+	def exit(self, commission=False):
+		"""Exit the dialog, deduce the necessary values from diplomacyManager if starting commission, as well as creating events using a callback function"""
+		if(not commission):
+			self.destroy()
+			return
+		for faction_name, amount in self._last_commission_set.items():
+			# always deduce first and commission right after
+			utils.Debug.printDebug(faction_name, amount)
+			current_faction_req = self._diplomacyManager._faction_requisition[faction_name]
+			deduce_amount = self._itemPrices[faction_name] * amount
+			after_commission_req = current_faction_req - deduce_amount
+			# deduce
+			self._diplomacyManager._faction_requisition[faction_name] = after_commission_req
+			# run callback
+			item_time = self._itemPrices[faction_name]
+			self._commissionCommand(item=self._item, origin=faction_name, itemAmount=amount, itemTime=item_time)
+		self.destroy()
 
 class RosterDialogBox(DefaultDialogBox):
 	def __init__(self, master, company):
@@ -419,6 +523,7 @@ class BattleDialogBox(DefaultDialogBox):
 		# keep the lines to be drawn later
 		line_drawer = []
 		line_recorder = lambda *args, **kwargs: line_drawer.append( (args, kwargs) )
+		utils.Debug.printDebug("Enter combat phases @endTurn, currently move and deploy randomly")
 		self._combatInstance.moveUnitsRandomly(voxStreamFn=self._writeToVox, drawFn=line_recorder)
 		# deploy randomly
 		self._combatInstance.deployUnitsRandomly(deployChance=0.5, voxStreamFn=self._writeToVox)
@@ -434,4 +539,3 @@ class BattleDialogBox(DefaultDialogBox):
 			texts = [texts]
 		for text in texts:
 			textLib.addFormatText(self._voxLog, text)
-

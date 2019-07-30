@@ -32,6 +32,7 @@ class ItemManager:
 		self.chassisList = json_data["chassis"]
 		self.vehicleWeaponList = json_data["vehicle_weapon"]
 		self.vehicleList = json_data["vehicle_type"]
+		self.itemPrices = json_data.get("commission")
 		# add the necessary image_dir
 		for item in self.weaponList:
 			# weapons is ./dir/view_weapon/weapon_{name}_{id}.png
@@ -100,7 +101,7 @@ class ItemManager:
 		item_counter[item_id] += amount
 	
 	def searchItemByName(self, name, itemType, searchImgName=True):
-		utils.Debug.printDebug("Searching for {} with type {}, useImgName {}".format(name, itemType, searchImgName))
+		utils.Debug.printDebug("Searching for {} with type {}, useImgName(refname) {}".format(name, itemType, searchImgName))
 		return next( (x for x in self.armoryItems if x.checkProperty(name, itemType, useImgName=searchImgName)), None)
 
 	def getItemCount(self, item, damagedItem=False):
@@ -108,6 +109,10 @@ class ItemManager:
 		item_id = self._retrieveItemId(item)
 		item_counter = self.availableItem if not damagedItem else self.damagedItem
 		return item_counter[item_id]
+
+	def fetchItemPrices(self, item):
+		item_name = item if isinstance(item, str) else item.refname
+		return self.itemPrices[item_name]
 
 class IndividualStatManager:
 	"""Manage the processing of levels of individual"""
@@ -322,6 +327,44 @@ class TimeManager:
 	def counter(self):
 		return self._currentTime
 
+class DiplomacyManager:
+	FACTION = [
+		# Proper name, race, reference name, faction
+		("Imperial Guard", "human", "guard", "Imperium"),
+		("Inquisitor", "human", "inq", "Imperium"),
+		("Adeptus Mechanicus", "human", "mech", "Imperium"),
+		("Adepta Sororitas", "human", "nun", "Imperium"),
+		("Craftword Eldar", "eldar", "eldar", "Eldar"),
+		("Ork", "ork", "ork", "Ork"),
+		("Necron", "necron", "necron", "Necron"),
+		("Chaos", "human", "chaos", "Chaos"),
+	]
+	def __init__(self, useDefaultDipScore=True):
+		self.factions = {refname:(proper_name, side, race) for proper_name, race, refname, side in DiplomacyManager.FACTION}
+		self._faction_affinity = {refname:50 for refname in self.factions.keys()}
+		self._faction_requisition = {refname:0 for refname in self.factions.keys()}
+		self._setDefaultChapterDipScore()
+	
+	def _setDefaultChapterDipScore(self):
+		self._faction_affinity.update({
+			"self": 100,
+			"inq": 40, "guard": 70, "mech": 50, "nun": 55,
+			"ork": -20, "necron": -15, "chaos": -50, "eldar": 25, 
+		})
+		self._faction_requisition.update({"self": 4000, "guard": 100, "mech": 50})
+	
+	@property
+	def relations(self):
+		"""Relation in form of (proper name, relation value) for each factions"""
+		return [(self.factions[k][0], self._faction_affinity.get(k, 50)) for k in self.factions.keys()]
+	
+	def getAffinityAndReq(self, keys=None, cheat=False):
+		if(keys is None): # make sure keys belong to self or other factions
+			keys = ["self"] + list(self.factions.keys())
+		else:
+			keys = [k for k in keys if k in ["self"] + list(self.factions.keys())]
+		return [(k, self.factions.get(k, ["Chapter"])[0], self._faction_affinity[k] if not cheat else 99, self._faction_requisition[k] if not cheat else 99999999) for k in keys]
+
 """Default values"""
 
 DEFAULT_JSON_PATH = {"stat":"./res/data/AstartesStats.json", "enemy": "./res/data/EnemyData.json",
@@ -343,10 +386,18 @@ class OverallManager:
 		self.itemManager = ItemManager(allJSONPath["item"], allJSONPath["texture_location"])
 		self.combatManager = CombatManager(allJSONPath["combat"], allJSONPath["icon_location"])
 		self.timeManager = TimeManager()
+		self.diplomacyManager = DiplomacyManager()
 		self.conversationManager = ConversationManager(allJSONPath["conversation"])
 		self._company = units.Company(chapterName, companyName, None, self.statManager)
 		self.colorScheme = colorScheme
 		self.map = None
+		self._mainPanelText = None
+
+	def hookMainPanelText(self, command):
+		self._mainPanelText = command
+
+	def mainPanelText(self, text):
+		self._mainPanelText(text)
 	
 	def createAstartes(self, astartesConfig=None):
 		assert astartesConfig is not None, "Config must not be None to initialize"
@@ -399,6 +450,15 @@ class OverallManager:
 		distance *= (100.0 - routeStrength) / 100.0
 		eta = distance / speed
 		return int(math.ceil(eta))
+
+	def createCommissionEvent(self, item, origin, itemAmount, itemTime):
+		utils.Debug.printDebug("{} item(s) {} is commisssioned, from {}".format(itemAmount, item.name, origin))
+		current_turn = self.timeManager.counter
+		# add the commission to the timeManager
+		def commission_func():
+			self.itemManager.changeItemCount(item, itemAmount)
+			self.mainPanelText("<ally>@advisor: <\\ally>Chapter Master @your_name, we have received the shipment from {:s}, containing {:d} {:s}(s). You commissioned this at turn {:d}.".format(self.diplomacyManager.factions.get(origin, ["@chapter_home"])[0], itemAmount, item.name, current_turn))
+		self.timeManager.addEvent(itemTime, commission_func)
 
 	def endTurn(self):
 		utils.Debug.printDebug("Running random movement across the map")

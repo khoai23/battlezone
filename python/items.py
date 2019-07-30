@@ -25,6 +25,7 @@ class FrozenDict(dict):
 class ArmoryItem:
 	@property
 	def name(self):
+		"""The display name of the item"""
 		return self.stat["name"]
 	
 	def __repr__(self):
@@ -61,6 +62,11 @@ class Item(ArmoryItem):
 	def checkProperty(self, name, itemType, useImgName=True):
 		return ( self.stat["name"] == name or (useImgName and self.stat["imgName"] == name)) and self.type == itemType 
 
+	@property
+	def refname(self):
+		"""The reference name of the item"""
+		return self.stat["imgName"]
+
 class Vehicle(ArmoryItem):
 	def __init__(self, stat):
 		self.type = "vehicle"
@@ -84,7 +90,12 @@ class Vehicle(ArmoryItem):
 		return self.stat["name"] == name and self.type == itemType
 
 	def getStatDisplay(self):
-		return "Base: {:s}, Weaponry: {:s}".format(self.chassis.name, ", ".join(self.weapons))
+#		print("{}-{}".format(self.name, self.weapons))
+		return "Base: {:s}, Weaponry: {:s}".format(self.chassis.name, ", ".join([w.name for w in self.weapons]))
+
+	@property
+	def refname(self):
+		return self.stat["unitBadge"]
 
 class Armor(Item):
 	def __init__(self, stat):
@@ -140,6 +151,11 @@ class Weapon(Item):
 	def hide_unaligned_arm(self):
 		return self.stat.get("hide_secondary_arm", False)
 	
+	@property
+	def weapon_rating_raw(self):
+		"""Rate the weapon strength basing on raw stats. Currently can't evaluate traits"""
+		return self.attack_damage * self.attack_speed / (self.attack_speed - 1 if self.attack_speed > 0 else 1)
+
 	def getStatDisplay(self):
 		return "Damage/Speed/Range: {:2d}/{:2d}/{:2d}, Hand: {:d}".format(self.stat["str"], self.stat["spd"], self._range, self.stat["hand"])
 

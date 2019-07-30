@@ -27,7 +27,8 @@ def mainLayout(window):
 	# for now, just use a simple grid
 	portrait = guiLib.createPortrait(window, companyCommander=manager.company.commander, colorScheme=manager.colorScheme)
 	portrait.grid(row=0, column=0)
-	dipWindow = guiLib.createDiplomacyPane(window)
+	relations = manager.diplomacyManager.relations
+	dipWindow = guiLib.createDiplomacyPane(window, relationScores=relations)
 	dipWindow.grid(row=1, column=0)
 	starMap = guiLib.campaignMap(window)
 	starMap.grid(row=0, column=1, columnspan=2)
@@ -35,6 +36,7 @@ def mainLayout(window):
 	manager.map = starMap
 	textPane, addTextFunc = guiLib.conversationPanel(window)
 	textPane.grid(row=1, column=1)
+	manager.hookMainPanelText(addTextFunc)
 	addTextFunc("<ally>Advisor: <\\ally>Chapter Master, welcome back.")
 	interactPane = guiLib.interactionPanel(window, textFunc=addTextFunc, overallManager=manager)
 	interactPane.grid(row=1, column=2)

@@ -198,6 +198,16 @@
     "imgName":"hbolt",
     "desc":"Upscaled and with dedicated feeding mechanism, it can cut through infantry with horrifying ease."
   },{
+    "name":"Heavy Flamer",
+    "str":22,
+    "spd":3,
+    "hand":3,
+    "type":"short,heavy,flame,primary,req_pack,cumbersome,two_handed,aoe",
+    "hide_primary_arm": true,
+    "hide_secondary_arm": true,
+    "imgName":"hflamer",
+    "desc":"Expert in clearing out swathes of lightly armored infantry, it is however an infuriatingly short ranged weapon."
+  },{
     "name":"Missile Launcher",
     "str":70,
     "spd":1,
@@ -268,7 +278,7 @@
   },{
     "name": "Rosarius",
     "trait": "c_field",
-    "imgName": "",
+    "imgName": "rosarius",
     "underlay": false,
     "desc": "Emit a conversion field that convert approaching kinetic energy into light."
   },{
@@ -291,7 +301,7 @@
   },{
     "name": "Teleport Homer",
     "trait": "teleport",
-    "imgName": "",
+    "imgName": "teleporter",
     "desc": "Allowing Astartes to travel through the Warp and immediately arrive at the necessary position."
   }],
 
@@ -514,5 +524,57 @@
     "carry":0,
     "unitBadge":"own_speeder",
     "desc":"The Land Speeder's excellent speed and armament allow it to be the spearhead of every Chapter's armored assault."
-  }]
+  }],
+
+  "commission": {
+    "aquila": {"self": 10, "mech": 5, "__cost__": 10},
+    "corvus": {"self": 20, "mech": 10, "__cost__": 15},
+    "maximus": {"mech": 40, "__cost__": 25},
+    "iron": {"self": 100, "mech": 20, "__cost__": 15},
+    "errant": {"self": 60, "mech": 25, "__cost__": 20},
+    "artificer": {"self": 150, "mech": 50, "inq": 15, "__cost__": 60},
+    "terminator": {"mech": 200, "mech": 100, "inq": 20, "__cost__": 50},
+    "knife": {"self": 1, "__cost__": 0},
+    "chainsword": {"self": 10, "mech": 5, "__cost__": 10},
+    "psword": {"self": 60, "mech": 30, "inq": 5, "__cost__": 20},
+    "paxe": {"self": 60, "mech": 30, "inq": 5, "__cost__": 20},
+    "pfist": {"self": 100, "mech": 50, "__cost__": 40},
+    "claw": {"self": 100, "mech": 50, "__cost__": 40},
+    "crozius": {"self": 60, "__cost__": 25},
+    "eviscerator": {"mech": 2, "guard": 10, "__cost__": 10},
+    "bolter": {"self": 5, "mech": 5, "__cost__": 10},
+    "flamer": {"self": 10, "mech": 5, "guard": 20, "__cost__": 12},
+    "sniper": {"self": 10, "mech": 5, "guard": 20, "__cost__": 12},
+    "plasma": {"self": 15, "mech": 8, "guard": 30, "__cost__": 15},
+    "melta": {"self": 15, "mech": 8, "guard": 30, "__cost__": 15},
+    "sbolter": {"self": 15, "mech": 10, "guard": 40, "__cost__": 15},
+    "bpistol": {"self": 5, "mech": 5, "guard": 10, "__cost__": 10},
+    "ppistol": {"self": 15, "mech": 10, "guard": 30, "__cost__": 12},
+    "hbolter": {"self": 20, "mech": 10, "guard": 35, "__cost__": 15},
+    "hflamer": {"self": 20, "mech": 10, "guard": 35, "__cost__": 15},
+    "missile": {"self": 20, "mech": 10, "guard": 35, "__cost__": 15},
+    "pcannon": {"self": 30, "mech": 10, "guard": 80, "__cost__": 15},
+    "lascannon": {"self": 30, "mech": 10, "guard": 80, "__cost__": 15},
+    "mmelta": {"self": 30, "mech": 10, "guard": 80, "__cost__": 15},
+    "standard": {"self": 20, "__cost__": 5},
+    "devpack": {"self": 0, "__cost__": 0},
+    "jumppack": {"self": 10, "mech": 8, "__cost__": 0},
+    "halo": {"self": 150, "mech": 75, "inq": 10, "__cost__": 60},
+    "rosarius": {"self": 150, "mech": 75, "inq": 10, "guard": 300, "__cost__": 60},
+    "psyhood": {"self": 80, "mech": 55, "inq": 10, "__cost__": 50},
+    "psyhood2": {"self": 90, "mech": 75, "inq": 12, "__cost__": 50},
+    "teleporter": {"self": 125, "mech": 60, "inq": 20, "__cost__": 60},
+    "cml": {"self": 60, "mech": 30, "__cost__": 25},
+    "rhino": {"self": 100, "mech": 25, "__cost__": 80},
+    "lspeeder": {"self": 120, "mech": 40, "__cost__": 75},
+    "lraider": {"mech": 100, "__cost__": 100},
+    "pred_pintle": {"require": ["sbolter"], "self": 0, "__cost__": 0},
+    "rhino_pintle": {"require": ["sbolter"], "self": 1, "__cost__": 2},
+    "raider_mm": {"require": ["mmelta"], "self": 0, "__cost__": 0},
+    "raz_hb": {"require": ["hbolter", "hbolter"], "self": 1, "__cost__": 1},
+    "raz_hf": {"require": ["hflamer", "hflamer"], "self": 1, "__cost__": 1},
+    "raz_mm": {"require": ["mmelta", "mmelta"], "self": 1, "__cost__": 1},
+    "raz_las": {"require": ["lascannon", "lascannon"], "self": 1, "__cost__": 1},
+    "__template__": {"self": -1, "mech": -1, "inq": -1, "guard": -1, "nuns": -1, "__cost__": -1}
+  }
 }

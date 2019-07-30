@@ -1,18 +1,4 @@
 {
-	"start_game": [
-		"<ally>Advisor: <\\ally> Captain @your_name!",
-		"<ally>Advisor: <\\ally> This is @advisor_name, your second-in-command. Can you read?",
-		"@your_name: I do. Relay the situation, brother @advisor_name, I am as dizzy as a Space Wolves in his off day.",
-		"<ally>@advisor_name: <\\ally> The damned Orks landed a lucky shot on your drop pod, milord.",
-		"<ally>@advisor_name: <\\ally> I don't see any friendly near your position, so you better make your way to our rendevouz point. I am marking it on your display.",
-		"@your_name: Understood. I will be there shortly."
-	],
-	"start_game_encounter": [
-		"<ally>@advisor_name: <\\ally> Captain @your_name, what is taking you so long?",
-		"@your_name: Some stragglers. I got distracted.",
-		"<ally>@advisor_name: <\\ally> Please return to our position shortly, milord, there would be more for you to kill here.",
-		"@your_name: Alright."
-	],
 	"group_banters": [
 		["<ally>@sergeant1: <\\ally> How boring.",
 		 "<ally>@sergeant2: <\\ally> @sergeant1, we are doing the Emperor's holy work here.",
@@ -53,9 +39,9 @@
 		["<ally>@sergeant1: <\\ally> As we are fighting @enemy, I suppose we should ask @sergeant2.",
 		 "<ally>@sergeant2: <\\ally> I don't think I will be of much use, brother @sergeant1.",
 		 "<ally>@sergeant1: <\\ally> I believe the Chapter record said that you had fought @enemy before.",
-		 "<ally>@sergeant2: <\\ally> So I did. But I found tactics in general are useful no matter what kind of enemy we fought.",
+		 "<ally>@sergeant2: <\\ally> So I did.",
 		 "<ally>@sergeant3: <\\ally> Surely you have something to share, no? What kind of things are the @enemy most vulnerable of?",
-		 "<ally>@sergeant2: <\\ally> Honest bolter rounds. And @enemy_weakness, I suppose. But unlike bolt rounds, the latter is not a certainty."
+		 "<ally>@sergeant2: <\\ally> Honest bolter rounds. And @enemy_weakness, I suppose. But unlike bolts, the latter is not a certainty."
 		]
 	],
 	"report_tactic" : {
@@ -80,7 +66,7 @@
 		],
 		"disadvantage_high": [
 			"To be outwitted by @enemy, how mortifying.",
-			"I shall seclude myself for my failure after this battle is over.",
+			"I shall atone for my failure after this battle is over.",
 			"That was my mistake, brothers. Stood with me, and repel their advance.",
 			"Position compromised. Requesting support from command.",
 			"My Holy Emperor, I have failed thee.",
@@ -96,7 +82,7 @@
 			"<i>Do you think this will be enough to fell us, @enemy? You are solely mistaken.<\\i>"
 		],
 		"balance": [
-			"My tactics did not have the desired result. We will have to prevail by the quality of our own.",
+			"My tactics did not have the desired result. We will have to prevail by force.",
 			"The time for strategizing is over. Let them see our might.",
 			"This situation is as good as any.",
 			"We have no need of outsmarting these @enemy anyway.",
@@ -119,6 +105,11 @@
 			"enemy": "Necron",
 			"enemy_slur": ["soulless machine", "metal prop", "xenos"],
 			"enemy_weakness": ["Light skirmishes", "Decapitation strikes", "Plasma weaponry"]
+		},
+		"chaos": {
+			"enemy": "Chaos",
+			"enemy_slur": ["traitors", "treasonous scums", "heretics", "daemonslaves"],
+			"enemy_weakness": ["Overwhelming forces", "Anti-infantry weaponry", "Blessed weapons"]
 		}
 	}
 }

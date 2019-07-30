@@ -1,6 +1,7 @@
-import json, collections, io, math, os
+import json, collections, io, os
 from python.items import FrozenDict
 import python.utils as utils
+import python.combat_movement as movement_modes
 
 class CombatManager:
 	def __init__(self, jsonFilePath, iconLocation):
@@ -123,13 +124,14 @@ def executeSingleAttackAction(attacker, defender, attackRange, additionalAttacke
 
 DEFAULT_INITIATIVE_BONUS = 2
 
-def executeSquadAttackAction(attackerSquad, defenderSquad, attackRange, tacticBonus=lambda x, y:(1.0, 1.0), additionalAttackerTraits=None, additionalDefenderTraits=None):
-	# each individual engage one/several target independently, attacker get an initiative bonus, and those died don't get their turn
+def executeSquadAttackAction(attackerSquad, defenderSquad, attackRange, tacticBonus=lambda x, y:(1.0, 1.0), additionalAttackerTraits=None, additionalDefenderTraits=None, moved=False):
+	"""Each individual engage one/several target independently, attacker get an initiative bonus, and those died don't get their turn"""
 	individual_full_list = [(True, ind) for ind in attackerSquad.members] + [(False, ind) for ind in defenderSquad.members]
 	# sort list by initiative with bonus; from largest to smallest
 	initiative_list = sorted(individual_full_list, key=lambda item: int(item[0])*DEFAULT_INITIATIVE_BONUS+item[1].init, reverse=True)
 	messages = []
 	bonus_atk, bonus_enemy_def = tacticBonus(attackerSquad, defenderSquad)
+	utils.Debug.printDebug("Tactics from attacker {} and defender {} giving percentage multiplier: * {:.2f} / {:.2f}".format(attackerSquad, defenderSquad, bonus_atk, bonus_enemy_def))
 	total_attack_count = 0
 	for opponent_bool, ind in initiative_list:
 		target_list = defenderSquad.members if opponent_bool else attackerSquad.members
@@ -156,7 +158,7 @@ def executeSquadAttackAction(attackerSquad, defenderSquad, attackRange, tacticBo
 				else:
 					# reduce hp base on the attack
 					hp_reduction = max(damage - target.armor, 0.0)
-					# the tactic bonus is after reduction. After all, a better tactic should not make bolter penetrate plasteel any better
+					# the tactic bonus is after reduction. After all, a better tactic should not make bolter penetrate plasteel any better, but it should make shots more damaging once penetrated.
 					hp_reduction = hp_reduction * bonus_atk / bonus_enemy_def
 					messages.append("Attempt {:d} scored {} damage on weapon stat ({}-{}-{})".format(attempt, hp_reduction, damage, speed, accuracy))
 					target.set_hp(target.current_hp - hp_reduction)
@@ -176,11 +178,14 @@ class Battle:
 		self.dimensions = battleDimensions
 		# apparently dict can't handle a namedtuple with list within. fuck.
 		self.coordinates = [None] * len(self._all_units)
+		self.moved_last_turn = [False] * len(self._all_units)
+		# movement modes
+		self._friendly_movement = self._enemy_movement = movement_modes.RandomMovement
 
 	def combatEnded(self):
 		return all( (not u.alive for u in self._friendly_units) ) or all( (not u.alive for u in self._enemy_units) )
 	
-	def _debug_ListUnits(self):
+	def _debugListUnits(self):
 		for idx, unit in enumerate(self._all_units):
 			if(self.coordinates[idx] != None):
 				x, y = self.coordinates[idx]
@@ -196,8 +201,7 @@ class Battle:
 		return self.dimensions[1]
 
 	def _getSquadsDistance(self, idx1, idx2):
-		(x1, y1), (x2, y2) = self.coordinates[idx1], self.coordinates[idx2]
-		return int(math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2)) / Battle.MOVEMENT_SCALING)
+		return int(movement_modes.distance(self.coordinates[idx1], self.coordinates[idx2]) / Battle.MOVEMENT_SCALING)
 
 	def isDeployable(self, unit_idx):
 		unit = self._all_units[unit_idx]
@@ -231,25 +235,119 @@ class Battle:
 			elif(pos is None):
 				utils.Debug.printDebug("Unit {}({}, idx {}) have not yet been deployed.".format(unit.name, type(unit), idx))
 				continue
-			current_x, current_y = pos
-			speed = unit.speed * Battle.MOVEMENT_SCALING
-			# choose a point that stay within confines of the speed and the bound of the map
-			x_movement_raw = utils.roll_between(-speed, speed)
-			y_movement_raw = utils.roll_random() * math.sqrt(speed * speed - x_movement_raw * x_movement_raw) * (-1 if utils.roll_random() < 0.5 else 1)
-			x_movement = min( max(x_movement_raw, -current_x + Battle.BADGE_MARGIN), self.battle_height - current_x - Battle.BADGE_MARGIN)
-			y_movement = min( max(y_movement_raw, -current_y + Battle.BADGE_MARGIN), self.battle_width - current_y - Battle.BADGE_MARGIN)
-			utils.Debug.printDebug("Unit {} moved by ({:.2f},{:.2f}), originally ({:.2f},{:.2f})".format(unit.name, x_movement, y_movement, current_x, current_y))
-			assert 0.0 < current_x + x_movement < self.battle_height, "Height error at {} move {}".format(current_x, x_movement)
-			assert 0.0 < current_y + y_movement < self.battle_width, "Width error at {} move {}".format(current_y, y_movement)
-			new_pos = self.coordinates[idx] = (current_x + x_movement, current_y + y_movement)
+			new_pos = self.coordinates[idx] = movement_modes.RandomMovement.moveUnit(self.dimensions, unit, pos)
 			if(voxStreamFn is not None and callable(voxStreamFn)):
-				voxStreamFn("Unit {}({}) moved: ({:.2f},{:.2f}) -> ({:.2f},{:.2f})".format(unit.name, type(unit), *pos, *new_pos))
+				voxStreamFn("Unit {} moved: ({:.2f},{:.2f}) -> ({:.2f},{:.2f})".format(unit.name, *pos, *new_pos))
 			if(drawFn is not None and callable(drawFn)):
 				# draw using imageLib.drawArrow, use same format
 				color = "green" if idx < len(self._your_units) else "yellow" if idx < len(self._friendly_units) else "red"
 				drawFn(pos, new_pos, color=color)
 
+	def unitMoveAndAttack(self, unit, movementFn=None, voxStreamFn=None, drawFn=None):
+		"""Move all units according to the movement modes instead
+			This function will run along the course of self._all_units, so do the sorting of initiative there instead
+		"""
+		idx = self._all_units.index(unit)
+		pos = self.coordinates[idx]
+		# do not consider if dead or not deployed
+		if(not unit.alive):
+			utils.Debug.printDebug("Unit {}({}, idx {}) is not alive, cannot move.".format(unit.name, type(unit), idx))
+			return
+		elif(pos is None):
+			utils.Debug.printDebug("Unit {}({}, idx {}) have not yet been deployed.".format(unit.name, type(unit), idx))
+			return
+		# try to attack/charge from this position
+		if(not self.tryAttack(unit, idx, pos, moved=False)):
+			# if not attack or charged, can move and try ranged attack
+			moved, new_pos = self.tryMoveUnit(unit, idx, pos)
+			if(moved):
+				# only try to attack again when moved
+				self.tryAttack(unit, idx, new_pos, moved=True)
+		self.coordinates[idx] = new_pos
+		# all hooked external function
+		if(movementFn is not None and callable(movementFn)):
+			movementFn(pos, new_pos)
+		if(voxStreamFn is not None and callable(voxStreamFn)):
+			tag = "ally" if self._isUnitFriendly(unit) else "enemy"
+			voxStreamFn("Unit <{:s}>{:s}<\\{:s}> moved: ({:.2f},{:.2f}) -> ({:.2f},{:.2f})".format(tag, unit.name, tag, *pos, *new_pos))
+		if(drawFn is not None and callable(drawFn)):
+			# draw using imageLib.drawArrow, use same format
+			color = "green" if idx < len(self._your_units) else "yellow" if idx < len(self._friendly_units) else "red"
+			drawFn(pos, new_pos, color=color)
+
+	def _isUnitFriendly(self, unit, verify=True):
+		"""Check if unit is on friendly side or enemy side"""
+		if(verify):
+			assert unit in self._friendly_units or unit in self._enemy_units
+		return unit in self._friendly_units
+
+	def tryMoveUnit(self, unit, idx, pos):
+		"""Move unit, as dictated by respective movement modes @movement_modes"""
+		if(self._isUnitFriendly(unit)):
+			unit_ally, unit_enemy = self._friendly_units, self._enemy_units
+			movement_mode = self._friendly_movement
+		else:
+			unit_ally, unit_enemy = self._enemy_units, self._friendly_units
+			movement_mode = self._enemy_movement
+		unit_ally_coord = [self.coordinates[self._all_units.index(funit)] for funit in unit_ally]
+		unit_enemy_coord = [self.coordinates[self._all_units.index(eunit)] for eunit in unit_enemy]
+		unit_ally.remove(unit)
+		new_pos = movement_mode.moveUnit(self.dimensions, unit, pos, unit_ally, unit_ally_coord, unit_enemy, unit_enemy_coord)
+		if(new_pos is not None):
+			return True, new_pos
+		else:
+			return False, pos
+
+	def tryAttack(self, unit, idx, pos, moved=None, voxStreamFn=None, movementFn=None, drawFn=None, tacticBonusFn=None):
+		"""Try attacking from selected position. If moved, receive a penalty for rapid and stop heavy weapon from firing. If not, allow charging into melee toward all units """
+		# search for targets
+		unit_is_friendly = self._isUnitFriendly(unit)
+		# create and sort targets by distances
+		all_targets = self._enemy_units if unit_is_friendly else self._friendly_units
+		target_ids = [self._all_units.index(t) for t in all_targets]
+		target_distance = [self._getSquadsDistance(idx, t_idx) for t_idx in target_ids]
+		all_target_sorted = list(sorted(zip(target_distance, target_ids, all_targets)))
+		utils.Debug.printDebug("By default: Selecting closest as target for unit {}, prefer melee to ranged".format(unit))
+		# select the closest
+		target_range, target_idx, target = filter(lambda it: it[0] <= unit.maximum_range, all_target_sorted)[0]
+		target_pos = self.coordinates[target_idx]
+		if(moved or unit.speed < target_range):
+			# target outside charging range, shoot
+			if(target_range > unit.maximum_range):
+				# target outside shooting and chargeable range
+				return False
+			else:
+				# target can be shot at but cannot be charged at
+				attacks_made, combat_messages = executeSquadAttackAction(unit, target, target_range, tacticBonus=tacticBonusFn, moved=moved)
+				if(voxStreamFn is not None and callable(voxStreamFn)):
+					tag_unit, tag_target = ("ally", "enemy") if unit_is_friendly else ("enemy", "ally")
+					voxStreamFn("Unit <{:s}>{:s}<\\{:s}> shot {:d} times at Unit <{:s}>{:s}<\\{:s}> ".format(tag_unit, unit.name, tag_unit, attacks_made, tag_target, target.name, tag_target))
+				if(drawFn is not None and callable(drawFn)):
+					# range attack made, draw the arrows
+					attacker_color = "green" if unit_is_friendly else "red"
+					drawFn(pos, target_pos, color=attacker_color, have_dash=True, arrow_end=True)
+		else:
+			# inside charging range or already in contact, move toward them and initiate melee
+			# TODO adding range/melee preference
+			self._coordinates[idx] = target_pos
+			if(movementFn is not None and callable(movementFn)):
+				movementFn(pos, target_pos)
+			attacks_made, combat_messages = executeSquadAttackAction(unit, target, 0, tacticBonus=tacticBonusFn, moved=moved)
+			if(voxStreamFn is not None and callable(voxStreamFn)):
+				tag_unit, tag_target = ("ally", "enemy") if unit_is_friendly else ("enemy", "ally")
+				voxStreamFn("Unit <{:s}>{:s}<\\{:s}> assaulted Unit <{:s}>{:s}<\\{:s}>, dealing {:d} blows".format(tag_unit, unit.name, tag_unit, tag_target, target.name, tag_target, attacks_made))
+		return True
+
+
+	def changeMovementModes(self, modeName, friendly=False, enemy=False):
+		assert friendly != enemy, "You can only set friendly OR enemy @changeMovementModes!"
+		if(friendly):
+			self._friendly_movement = movement_modes.selectModeByName(modeName)
+		if(enemy):
+			self._enemy_movement = movement_modes.selectModeByName(modeName)
+
 	def initiateCombat(self, tacticBonusFn=None, voxStreamFn=None, drawFn=None):
+		"""Run combat for everyone. Warning: this function have a screwed friendly check"""
 		assert callable(tacticBonusFn), "tacticBonusFn must be a function accepting fn(attacker, defender), but instead is {}".format(type(tacticBonusFn))
 		# sort by unit initiative, and retrieve the index
 		all_alive_units = [idx for idx, unit in enumerate(self._all_units) if unit.alive and self.coordinates[idx] is not None]
@@ -259,7 +357,7 @@ class Battle:
 			initiator = self._all_units[idx]
 			# check if still alive, because during combat one might already get fucked
 			if(initiator.alive):
-				initiator_is_friendly = idx < len(self._friendly_units)
+				initiator_is_friendly = self._isUnitFriendly(initiator)
 				unit_all_targets = range(len(self._friendly_units)) if not initiator_is_friendly else range(len(self._friendly_units), len(self._all_units))
 				unit_viable_targets = [tar_idx for tar_idx in unit_all_targets if self._all_units[tar_idx].alive and self.coordinates[tar_idx] is not None]
 				if(len(unit_viable_targets) == 0):

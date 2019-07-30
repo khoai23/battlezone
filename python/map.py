@@ -114,7 +114,7 @@ class Map():
 	def _updateFleetLocation(self, fleetLocation, fleetImg="", fleetTarget=None):
 		"""Update the map with new fleet position and its movement vector; create fleet if it doesn't exist"""
 		if(self._fleet_img is None):
-			self._fleet_img = imageLib.drawItem(self._canvas, fleetImg, location=(0, 0), return_canvas_id=True)
+			self._fleet_img = imageLib.drawItem(self._canvas, fleetImg, location=(0, 0), anchor="center", return_canvas_id=True)
 			print("Fleet img: ", self._fleet_img)
 		# move the fleet to location
 		offsetX, offsetY = fleetLocation

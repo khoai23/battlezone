@@ -62,6 +62,11 @@ class Astartes(Individual):
 		return hand_count, [(weapon.attack_damage, weapon.attack_speed, self.ws, weapon.weapon_traits) for weapon in all_weapons if not weapon.is_melee and weapon.range >= attackRange]
 	
 	@property
+	def maximum_range(self):
+		all_weapons_range = [weapon._range for weapon in (self.equipments["main"], self.equipments["secondary"]) if weapon is not None]
+		return max(0, *all_weapons_range)
+
+	@property
 	def armor(self):
 		armor_item = self.equipments["armor"]
 		if(armor_item == None):
@@ -251,6 +256,11 @@ class Unit:
 	@abc.abstractmethod
 	def is_vehicle(self):
 		raise NotImplementedError("Base abstract class Unit")
+
+	@property
+	@abc.abstractmethod
+	def maximum_range(self):
+		raise NotImplementedError("Base abstract class Unit")
 		
 class Squad(Unit):
 	"""Despite the name, this is an Astartes squad"""
@@ -279,6 +289,10 @@ class Squad(Unit):
 		# TODO count those over a specific threshold instead of 0.0
 		return any( (member for member in self._members if member.current_hp > 0.0) )
 	
+	@property
+	def maximum_range(self):
+		return max((member.maximum_range for member in self._members))
+
 	def is_vehicle(self):
 		return False
 
@@ -324,6 +338,9 @@ class EnemyVehicle(collections.namedtuple("EnemyVehicle", ["name", "hp", "melee"
 	def getAllPossibleRangedAttack(self, attackRange):
 		assert not self.isTemplate, "template cannot have attack"
 		return [atk for atk in self.ranged if atk[-1] >= attackRange ]
+	
+	def maximum_range(self):
+		return max((atk[-1] for atk in self.ranged))
 
 class EnemySquad( collections.namedtuple("EnemySquad", ["name", "composition", "description", "speed", "badge", "isTemplate"]), Unit ):
 	def __new__(_cls, jsonData):
@@ -342,6 +359,11 @@ class EnemySquad( collections.namedtuple("EnemySquad", ["name", "composition", "
 		assert self.isTemplate, "must use a template to initiate an enemy squad"
 		# the clone function will create a empty compostion list and isTemplate switch to false
 		return super(EnemySquad, self).__new__(EnemySquad, self.name, [], self.description, self.speed, self.badge, False)
+	
+	@property
+	def maximum_range(self):
+		assert not self.isTemplate, "A template should not have this property accessed (maximum_range)"
+		return max((m.ranged_range for m in self.members))
 	
 	@property
 	def members(self):
