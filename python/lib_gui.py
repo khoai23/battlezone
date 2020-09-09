@@ -86,7 +86,9 @@ def interactionPanel(window, textFunc=None, overallManager=None):
 		# load the entire company as yourUnits
 		yourUnits = overallManager.company.squads
 		# run defaultGameDialog
-		defaultGameDialog(window, BattleDialogBox, yourUnits=yourUnits, battleManagerObj=combatManager, conversationManagerObj=conversationManager, missionObj=testMission)
+		# old
+#		defaultGameDialog(window, BattleDialogBox, yourUnits=yourUnits, battleManagerObj=combatManager, conversationManagerObj=conversationManager, missionObj=testMission)
+		defaultGameDialog(window, BattleMotionDialogBox, yourUnits=yourUnits, battleManagerObj=combatManager, conversationManagerObj=conversationManager, missionObj=testMission)
 	# bind the button with your object
 	combatButton = tk.Button(pane, text="Combat", command=sendWholeCompanyToTestMission)
 	combatButton.grid(row=1, column=1)
@@ -363,7 +365,7 @@ class BattleDialogBox(DefaultDialogBox):
 	TOOGLE_TURN_STR = "Automatic End Turn"
 	DEFAULT_MAP_WIDTH = 350
 	DEFAULT_MAP_HEIGHT = 450
-	def __init__(self, master, yourUnits=None, battleManagerObj=None, conversationManagerObj=None, missionObj=None):
+	def __init__(self, master, battleClass=combat.Battle, yourUnits=None, battleManagerObj=None, conversationManagerObj=None, missionObj=None):
 		super(BattleDialogBox, self).__init__(master=master)
 		self._yourUnits = yourUnits
 		self._battleManager = battleManagerObj
@@ -374,7 +376,7 @@ class BattleDialogBox(DefaultDialogBox):
 		self._updateComponent()
 		
 		width, height = (BattleDialogBox.DEFAULT_MAP_WIDTH, BattleDialogBox.DEFAULT_MAP_HEIGHT)
-		self._combatInstance = combat.Battle(self._yourUnits, self._mission.composition, battleDimensions=(width, height))
+		self._combatInstance = battleClass(self._yourUnits, self._mission.composition, battleDimensions=(width, height))
 		# construct the field
 		self._field = tk.Canvas(master=self, width=width, height=height)
 		self._field.grid(row=0, column=0)
@@ -524,12 +526,12 @@ class BattleDialogBox(DefaultDialogBox):
 		line_drawer = []
 		line_recorder = lambda *args, **kwargs: line_drawer.append( (args, kwargs) )
 		utils.Debug.printDebug("Enter combat phases @endTurn, currently move and deploy randomly")
-		self._combatInstance.moveUnitsRandomly(voxStreamFn=self._writeToVox, drawFn=line_recorder)
+		self._combatInstance.moveUnitsRandomly(voxStreamFn=self._writeToVox, attackFn=line_recorder)
 		# deploy randomly
 		self._combatInstance.deployUnitsRandomly(deployChance=0.5, voxStreamFn=self._writeToVox)
 		# every units will try to attack the closest enemy within their range
 		tacticBonusCalculator = lambda a, d: self._battleManager.getOpposingSquadTacticBonus(a, d, forceTacticDict=forced_tactic, voxStreamFn=self._writeToVox)
-		self._combatInstance.initiateCombat(tacticBonusFn=tacticBonusCalculator, voxStreamFn=self._writeToVox, drawFn=line_recorder)
+		self._combatInstance.initiateCombat(tacticBonusFn=tacticBonusCalculator, voxStreamFn=self._writeToVox, attackFn=line_recorder)
 		# once done, reload
 		self._updateComponent()
 		self._updateBattleMap(extra_lines=line_drawer)
@@ -539,3 +541,136 @@ class BattleDialogBox(DefaultDialogBox):
 			texts = [texts]
 		for text in texts:
 			textLib.addFormatText(self._voxLog, text)
+
+class BattleMotionDialogBox(BattleDialogBox):
+	"""Upgraded version that show animation-esque movement and attack"""
+	def __init__(self, master, animation_interval=0.1, animation_length=15, **kwargs):
+		battleClass = kwargs.get("battleClass", combat.CarouselBattle)
+		if(not isinstance(battleClass, combat.CarouselBattle)):
+			# issue warning
+			utils.Debug.printError("The BattleMotionDialogBox class can only use the Battle object type {:s}, but instead was given class {:s}.".format(combat.CarouselBattle.__name__, battleClass.__name__))
+		super(BattleMotionDialogBox, self).__init__(master, battleClass=battleClass, **kwargs)
+		self._animation_interval = animation_interval
+		self._animation_length = animation_length
+		self._animation_id = []
+
+	def animation(self, imgObjs, origin=None, dest=None, turnsLeft=None, delta=None, debug=False):
+		"""Move the specific image from location origin to location destination
+		Args: (for initiation)
+			imgObjs: the object(s) to be moved. Could be one or many
+			origin: the original location
+			dest: the target location
+			(for loop)
+			turnsLeft: the number of loops left to recurse call the animation func
+			delta: the delta of the movement each loop
+			(both)
+			debug: print to console the animation delta & loop number
+			"""
+		if(turnsLeft is None):
+			# one unit to be moved
+			if(not isinstance(imgObjs, (list, tuple))):
+				imgObjs = [imgObjs]
+			assert origin is not None and dest is not None, "{} Origin point, {} Destination".format(origin, dest)
+			# no turn left, so it is not calling itself(e.g start of loop)
+			animation_delta = tuple( [(d-o)/self._animation_length for o, d in zip(origin, dest)] )
+			# initiate the waiting loop
+			self._animation_id.append(self.after( int(1000.0 * self._animation_interval), 
+									lambda: self.animation(imgObjs, turnsLeft=self._animation_length, delta=animation_delta, debug=debug) ))
+			if(debug):
+				utils.Debug.printDebug("Animation queued with delta {} and step {}".format(delta, self._animation_length))
+		elif(turnsLeft > 0):
+			# still in animation. first, execute the delta movement
+			[self._field.move(img, *delta) for img in imgObjs]
+			# then, remove the previous animation id from the list
+			self._animation_id.pop()
+			turnsLeft -= 1;
+			self._animation_id.append(self.after( int(1000.0 * self._animation_interval), 
+									lambda: self.animation(imgObjs, turnsLeft=turnsLeft, delta=delta, debug=debug) ))
+			utils.Debug.printDebug("Animation continuing with delta {} and step {}".format(delta, turnsLeft))
+		elif(debug):
+			# no longer in animation, exiting and adding no wait
+			utils.Debug.printDebug("Animation exited at step {}".format(turnsLeft))
+	
+	def _updateBattleMap(self, acted_unit=None, unit_moved_data=None, unit_attack_data=None, unit_charge_data=None):
+		# clear all
+		self._field = imageLib.clearCanvas(self._field)
+		# also clear all animation queue
+		[self.after_cancel(idx) for idx in self._animation_id]
+		if(unit_moved_data):
+			# draw the walk line received during movement
+			line_arg, line_kwargs = unit_moved_data
+			print(line_arg, line_kwargs)
+			imageLib.drawArrow(self._field, *line_arg, **line_kwargs)
+			move_start_location, move_end_location = line_arg
+		else:
+			move_start_location, move_end_location = None, None
+
+		if(unit_attack_data):
+			# draw the attack line received during movement
+			line_arg, line_kwargs = unit_attacked_data
+			imageLib.drawArrow(self._field, *line_arg, **line_kwargs)
+
+		# the charging units will get extra markers on their image
+		a_charge, d_charge, move_start_location, move_end_location = unit_charge_data if unit_charge_data is not None \
+				else (None, None, move_start_location, move_end_location)
+
+		for unit, pos in zip(self._combatInstance._all_units, self._combatInstance.coordinates):
+			# draw units, dead ones get transparency, undeployed units are left as-is
+			if(pos is None):
+				continue
+			x, y = pos if unit is not acted_unit or unit_moved_data is None else move_start_location
+			badge = unit.badge
+			badge_path = self._battleManager.getBadgePath(badge)
+			image_is_half_transparent = not unit.alive
+			unit_img = imageLib.drawItem(self._field, badge_path, location=(x, y), anchor="center", half_transparent=image_is_half_transparent)
+			if(unit is a_charge):
+				# create a glow that move along the charge. Prioritize over acted_unit
+				attacker_glow_path = self._battleManager.getAttackerGlowPath()
+				attacker_glow_img = imageLib.drawItem(attacker_glow_path, location=(x, y), anchor="center", half_transparent=image_is_half_transparent)
+				self.animation([unit_img, attacker_glow_img], origin=move_start_location, dest=move_end_location)
+			elif(unit is d_charge):
+				defender_glow_path = self._battleManager.getDefenderGlowPath()
+				defender_glow_img = imageLib.drawItem(defender_glow_path, location=(x, y), anchor="center", half_transparent=image_is_half_transparent)
+				# defender of the charge, create its stationary glow
+			elif(unit is acted_unit and move_end_location is not None):
+				# perform moving animation for pure movement
+				self.animation(unit_img, origin=move_start_location, dest=move_end_location)
+
+
+	def endTurn(self):
+		# move the turn forward
+		# keep a dict of all the tactics forced by player
+		if(self._combatEnded or self._combatInstance.combatEnded()):
+			self._combatEnded = True
+			self._writeToVox("Combat ended, no more update!!")
+			self._updateComponent()
+			self._updateBattleMap()
+			return
+		forced_tactic = {}
+		for unit, _, tactic_var, _ in self._turnComponent:
+			if(tactic_var is None):
+				# enemy tactic, ignore
+				continue
+			tactic = self._battleManager.getTacticByName(tactic_var.get())
+			if(tactic is not None):
+				forced_tactic[unit] = tactic
+		# move units around
+		# keep the lines to be drawn later
+		charge_move_attack_kwargs = {}
+		move_recorder = lambda *line_args, **line_kwargs: charge_move_attack_kwargs.update( unit_moved_data=(line_args, line_kwargs) )
+		attack_recorder = lambda *line_args, **line_kwargs: charge_move_attack_kwargs.update( unit_attack_data=(line_args, line_kwargs) )
+		charge_recorder = lambda a_charge, d_charge, a_pos, d_pos: charge_move_charge_kwargs.update( unit_charge_data=(a_charge, d_charge, a_pos, d_pos) )
+		
+		if(self._combatInstance._start_of_turn):
+			# Deploy and mark the end of the start of turn
+			utils.Debug.printDebug("Deploy phase @endTurn.")
+			self._combatInstance.deployUnitsRandomly(deployChance=0.5, voxStreamFn=self._writeToVox)
+			self._combatInstance._start_of_turn = False
+
+		tacticBonusCalculator = lambda a, d: self._battleManager.getOpposingSquadTacticBonus(a, d, forceTacticDict=forced_tactic, voxStreamFn=self._writeToVox)
+		acted_unit = self._combatInstance.runTurn(tacticBonusFn=tacticBonusCalculator, chargeFn=charge_recorder, movementFn=move_recorder, attackFn=attack_recorder, voxStreamFn=self._writeToVox)
+		utils.Debug.printDebug("Combat phase ended @endTurn, Unit acted during the turn: {}".format(acted_unit))
+		# once done, reload
+		self._updateComponent()
+		# stupid, but it works. Sort of.
+		self._updateBattleMap(acted_unit=acted_unit, **charge_move_attack_kwargs)

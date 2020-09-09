@@ -3,7 +3,7 @@ import python.utils as utils
 
 class Movement:
 	name = None
-	MOVEMENT_SCALING = 50.0
+	MOVEMENT_SCALING = 20.0
 	BADGE_MARGIN = 20.0
 	@staticmethod
 	def updateConstants(movement_scaling=None, badge_margin=None):
@@ -18,6 +18,25 @@ class Movement:
 			Returns the new friendly_coord if can move, or None if not
 		"""
 		raise NotImplementedError()
+
+	@abc.abstractstaticmethod
+	def tryMoveUnit(field, unit, unit_coord, ally, ally_coord, enemy, enemy_coord, **kwargs):
+		"""Unlike moveUnit, this function evaluate if the coordinate from moveUnit should be done or not.
+		Returns:
+			tuple of (moved, position)
+			"""
+		raise NotImplementedError()
+
+	def chargeUnit(field, unit, unit_coord, ally, ally_coord, enemy, enemy_coord, **kwargs):
+		"""Attempt to find an eligible unit to charge.
+		Returns:
+			a target to charge in form of (unit, pos), or None if not available
+			"""
+		raise NotImplementedError()
+
+	@staticmethod
+	def distance(p1, p2):
+		return distance(p1, p2)
 
 class RandomMovement(Movement):
 	name = "Random"
@@ -36,6 +55,20 @@ class RandomMovement(Movement):
 		assert 0.0 < current_x + x_movement < battle_height, "Height error at {} move {}".format(current_x, x_movement)
 		assert 0.0 < current_y + y_movement < battle_width, "Width error at {} move {}".format(current_y, y_movement)
 		return (current_x + x_movement, current_y + y_movement)
+
+	@staticmethod
+	def tryMoveUnit(field, unit, unit_coord, *args, percentage=50.0, **kwargs):
+		will_move = utils.roll_percentage(percentage)
+		return will_move, RandomMovement.moveUnit(field, unit, unit_coord, *args, **kwargs) if will_move else unit_coord
+
+	@staticmethod
+	def chargeUnit(field, unit, unit_coord, ally, ally_coord, enemy, enemy_coord, **kwargs):
+		# only select available targets from deployed units (coord is not none)
+		available_targets = sorted( ((e, e_pos) for e, e_pos in zip(enemy, enemy_coord) if e_pos is not None and distance(unit_coord, e_pos) <= unit.speed), key=lambda x: distance(unit_coord, x[1]))
+		if(len(available_targets) == 0):
+			return None
+		else:
+			return available_targets[0]
 
 class EnemyMassMovement(Movement):
 	name = "Target Enemy Mass"
@@ -70,12 +103,18 @@ class EnemyMassMovement(Movement):
 		move_x, move_y = movement_vector
 		return (current_x + move_x, current_y + move_y)
 
+	@staticmethod
+	def tryMoveUnit(*args, **kwargs):
+		"""Always move if possible, which is always
+		TODO: Only move if it matter (e.g bringing unit closer to gun range, put more unit into range, etc.)"""
+		return True, EnemyMassMovement.moveUnit(*args, **kwargs)
+
 class EnemyNearestMovement(Movement):
 	name = "Target Nearest Enemy"
 	NOISE = Movement.MOVEMENT_SCALING
 	@staticmethod
 	def moveUnit(field, unit, unit_coord, ally, ally_coord, enemy, enemy_coord, movement_noise=True, **kwargs):
-		"""Override: Move unit toward the enemy center mass. There is no chance for outside-the-board calculation
+		"""Override: Move unit toward the nearest enemy unit. There is no chance for outside-the-board calculation
 			movement_noise: used by default, add noise to movement so units don't just came into one place
 		"""
 		current_x, current_y = unit_coord
@@ -103,10 +142,16 @@ class EnemyNearestMovement(Movement):
 		move_x, move_y = movement_vector
 		return (current_x + move_x, current_y + move_y)
 
+	@staticmethod
+	def tryMoveUnit(*args, **kwargs):
+		"""Always move if possible, which is always
+		TODO: Only move if it matter (e.g bringing unit closer to gun range, put more unit into range, etc.)"""
+		return True, EnemyNearestMovement.moveUnit(*args, **kwargs)
+
 ALL_MOVEMENTS = [RandomMovement, EnemyMassMovement, EnemyNearestMovement]
 def selectModeByName(modeName, default=RandomMovement):
 	for movement in ALL_MOVEMENTS:
-		if(movement.name == modeName):
+		if(movement.name == modeName or type(movement).__name__ == modeName):
 			return movement
 	utils.Debug.printError("Movement name {:s} not found, returning the default {:s} instead".format(modeName, default.name))
 	return default
