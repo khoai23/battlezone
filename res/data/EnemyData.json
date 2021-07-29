@@ -220,11 +220,11 @@
     "weight": 2
   }],
 
-  "mission_tree": [
-		"ork_0": ["m_ork_feral", "m_ork_feral", "m_ork_feral"],
-		"ork_1": ["m_ork_base", "m_ork_feral", "m_ork_feral"],
-		"ork_2": ["m_ork_base", "m_ork_base", "m_ork_feral", "m_ork_feral"],
-		"ork_3": ["m_ork_base", "m_ork_base", "m_ork_center", "m_ork_feral", "m_ork_feral"],
-		"ork_3": ["m_ork_base", "m_ork_center", "m_ork_base", "m_ork_base", "m_ork_center", "m_ork_feral", "m_ork_feral"]
-]
+  "mission_tree": {
+    "ork_0": ["m_ork_feral", "m_ork_feral", "m_ork_feral"],
+    "ork_1": ["m_ork_base", "m_ork_feral", "m_ork_feral"],
+    "ork_2": ["m_ork_base", "m_ork_base", "m_ork_feral", "m_ork_feral"],
+    "ork_3": ["m_ork_base", "m_ork_base", "m_ork_center", "m_ork_feral", "m_ork_feral"],
+    "ork_3": ["m_ork_base", "m_ork_center", "m_ork_base", "m_ork_base", "m_ork_center", "m_ork_feral", "m_ork_feral"]
+  }
 }
