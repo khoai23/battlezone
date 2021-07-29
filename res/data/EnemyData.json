@@ -158,51 +158,73 @@
     "refComposition":[["meganob",10]],
     "description": "Ten Mega Nobz grouped into an elite melee squad.",
     "speed": 3,
-    "refname": "nob_squad",
+    "refname": "mnob_squad",
     "unitBadge":"enemy_nob"
   }],
 
   "mission":[{
-    "name": "Cleanse feral orks",
+    "name": "Cleanse feral orks (2M-2R)",
     "refname": "m_ork_feral_0",
     "composition":[["choppa_squad_n", 1, 2],["shoota_squad_n", 1, 2]],
     "description": "Orks had been reported to attack nearby human settlements. They will make fine practices for our recruits.",
     "missionType": 0,
     "weight": 1
   },{
-    "name": "Cleanse feral orks",
+    "name": "Cleanse feral orks (4M)",
     "refname": "m_ork_feral_1",
     "composition":[["choppa_squad_n", 2, 4]],
     "description": "Orks had been reported to attack nearby human settlements. They will make fine practices for our recruits.",
     "missionType": 0,
     "weight": 1
   },{
-    "name": "Cleanse feral orks",
+    "name": "Cleanse feral orks (4R)",
     "refname": "m_ork_feral_2",
     "composition":[["shoota_squad_n", 2, 4]],
     "description": "Orks had been reported to attack nearby human settlements. They will make fine practices for our recruits.",
     "missionType": 0,
     "weight": 1
   },{
-    "name": "Take out forward base",
+    "name": "Take out forward base (2EM)",
     "refname": "m_ork_base_0",
     "composition":[["choppa_squad_l", 2, 3],["shoota_squad_n", 2, 3], ["hardboy_squad", 1, 1], ["nob_squad", 1, 1]],
     "description": "The feral ork have been showing signs to organize. Crush them before they gain traction on the system.",
     "missionType": 0,
     "weight": 2
   },{
-    "name": "Take out forward base",
+    "name": "Take out forward base (2ER)",
     "refname": "m_ork_base_1",
     "composition":[["choppa_squad_n", 2, 3],["shoota_squad_l", 2, 3], ["loota_squad_s", 1, 1], ["nob_squad", 1, 1]],
     "description": "The feral ork have been showing signs to organize. Crush them before they gain traction on the system.",
     "missionType": 0,
     "weight": 2
   },{
-    "name": "Take out forward base",
+    "name": "Take out forward base (EM-ER)",
     "refname": "m_ork_base_2",
     "composition":[["choppa_squad_n", 2, 3],["shoota_squad_n", 2, 3], ["hardboy_squad", 1, 1], ["loota_squad_s", 1, 1], ["nob_squad", 1, 1]],
     "description": "The feral ork have been showing signs to organize. Crush them before they gain traction on the system.",
     "missionType": 0,
     "weight": 2
-  }]
+  },{
+    "name": "Decapitation Strike (MBoss)",
+    "refname": "m_ork_center_0",
+    "composition":[["choppa_squad_n", 3, 7],["shoota_squad_n", 3, 7], ["hardboy_squad", 1, 6], ["loota_squad_s", 1, 2], ["mnob_squad", 1, 1]],
+    "description": "A large congregration of greenskins had been spotted protecting an enemy warboss. Strike him out, and the greenskin threat will greatly diminish.",
+    "missionType": 0,
+    "weight": 2
+  },{
+    "name": "Decapitation Strike (RBoss)",
+    "refname": "m_ork_center_1",
+    "composition":[["choppa_squad_n", 3, 7],["shoota_squad_n", 3, 7], ["hardboy_squad", 1, 2], ["loota_squad_s", 1, 4], ["mnob_squad", 1, 1]],
+    "description": "A large congregration of greenskins had been spotted protecting an enemy warboss. Strike him out, and the greenskin threat will greatly diminish.",
+    "missionType": 0,
+    "weight": 2
+  }],
+
+  "mission_tree": [
+		"ork_0": ["m_ork_feral", "m_ork_feral", "m_ork_feral"],
+		"ork_1": ["m_ork_base", "m_ork_feral", "m_ork_feral"],
+		"ork_2": ["m_ork_base", "m_ork_base", "m_ork_feral", "m_ork_feral"],
+		"ork_3": ["m_ork_base", "m_ork_base", "m_ork_center", "m_ork_feral", "m_ork_feral"],
+		"ork_3": ["m_ork_base", "m_ork_center", "m_ork_base", "m_ork_base", "m_ork_center", "m_ork_feral", "m_ork_feral"]
+]
 }
